@@ -1,0 +1,147 @@
+.nav-btn{
+    background-color: #E1FFEE;
+
+    height: 40px;
+    width: 100px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.nav-btn:hover {
+    background-color: #E1FFEE;
+    height: 40px;
+    width: 100px;
+    margin-left: 10px;
+    margin-right: 10px;
+    animation: jelly 0.5s;
+}
+
+.nav-btn:active:focus {
+    background-color: #E1FFEE;
+    height: 40px;
+    width: 100px;
+    margin-left: 10px;
+    margin-right: 10px;
+    animation: jelly 0.5s;
+}
+
+.body-btn{
+    background-color: yellowgreen;
+
+    height: 40px;
+    width: 100px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.body-btn:hover {
+    background-color: darkgray;
+    height: 40px;
+    width: 100px;
+    margin-left: 10px;
+    margin-right: 10px;
+    animation: jelly 0.5s;
+}
+
+.body-btn:active:focus {
+    background-color: yellowgreen;
+    height: 40px;
+    width: 100px;
+    margin-left: 10px;
+    margin-right: 10px;
+    animation: jelly 0.5s;
+}
+
+.body-btn-del{
+    background-color: palevioletred;
+
+    height: 40px;
+    width: 100px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.body-btn-del:hover {
+    background-color: palevioletred;
+    height: 40px;
+    width: 100px;
+    margin-left: 10px;
+    margin-right: 10px;
+    animation: jelly 0.5s;
+}
+
+.body-btn-del:active:focus {
+    background-color: palevioletred;
+    height: 40px;
+    width: 100px;
+    margin-left: 10px;
+    margin-right: 10px;
+    animation: jelly 0.5s;
+}
+
+.list-table {
+    width: 100%;
+}
+
+.page-btn {
+    margin-right: 3px;
+    margin-left: 3px;
+    display: inline;
+    background-color: #A5F1E9;
+}
+
+.page-btn:hover {
+    margin-right: 3px;
+    margin-left: 3px;
+    display: inline;
+    background-color: #A5F1E9;
+    animation: jelly 0.5s;
+}
+
+.page-btn:active:focus {
+    margin-right: 3px;
+    margin-left: 3px;
+    display: inline;
+    background-color: #A5F1E9;
+}
+
+.page-btn-now {
+    margin-right: 3px;
+    margin-left: 3px;
+    display: inline;
+    background-color: #7FBCD2;
+}
+
+.page-btn-now:hover {
+    margin-right: 3px;
+    margin-left: 3px;
+    display: inline;
+    background-color: #7FBCD2;
+    animation: jelly 0.5s;
+}
+
+.page-btn-now:active:focus {
+    margin-right: 3px;
+    margin-left: 3px;
+    display: inline;
+    background-color: #7FBCD2;
+}
+
+@keyframes jelly {
+    25% {
+        transform: scale(0.9, 1.1);
+    }
+
+    50% {
+        transform: scale(1.1, 0.9);
+    }
+
+    75% {
+        transform: scale(0.95, 1.05);
+    }
+}
+
+.error-class {
+    color: red;
+    border-color: red;
+}
