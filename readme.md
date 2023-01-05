@@ -22,3 +22,9 @@
 
 http://localhost:8080 으로 접속하면 초기 화면이 보입니다.
 
+
+
+## ERD
+
+[ERD](https://app.diagrams.net/#G1Vh3notO6oMFYSy4GcQSlctRlbKeuyoHX)
+
