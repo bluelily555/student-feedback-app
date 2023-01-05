@@ -22,6 +22,7 @@
 
 http://localhost:8080 으로 접속하면 초기 화면이 보입니다.
 
+[웹 링크](http://ec2-3-38-111-117.ap-northeast-2.compute.amazonaws.com:8083/)
 
 
 ## ERD
