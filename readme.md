@@ -18,6 +18,8 @@
 - 회원목록 조회는 Admin만 가능 합니다.
 - 그래서 회원 가입 후 DB에 들어가 해당 User의 Role을 ADMIN으로 바꿔주어야 합니다.
 
+[Intelli J에서 구동 방법]](https://krksap.tistory.com/2183)
+
 ## 접속 방법
 
 http://localhost:8080 으로 접속하면 초기 화면이 보입니다.
