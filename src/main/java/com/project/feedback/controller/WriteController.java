@@ -33,7 +33,7 @@ public class WriteController {
     @PostMapping("board/write")
     public String boardAddWrite(BoardWriteDto boardWriteDto){
         boardService.savePost(boardWriteDto);
-        return "redirect:/";
+        return "redirect:/board/list";
     }
     @GetMapping("post/{no}")
     public String detail(@PathVariable("no")Long no, Model model){
@@ -60,12 +60,16 @@ public class WriteController {
     public String update(BoardWriteDto boardWriteDto, @PathVariable("no")Long no){
         boardService.savePost(boardWriteDto);
 
-        return "redirect:/";
+        return "redirect:/board/list";
     }
     @DeleteMapping("post/{no}")
     public String delete(@PathVariable("no")Long no){
         boardService.deletePost(no);
 
-        return "board/list";
+        return "redirect:/board/list";
+    }
+    @GetMapping("/board/codeView")
+    public String codeView(){
+        return "board/codeView";
     }
 }
