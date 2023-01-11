@@ -1,4 +1,4 @@
-package com.project.feedback.controller;
+package com.project.feedback.controller.ui;
 
 import com.project.feedback.domain.dto.user.UserJoinRequest;
 import com.project.feedback.domain.dto.user.UserListResponse;
@@ -21,7 +21,7 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 @Slf4j
-public class UserController {
+public class UserUiController {
 
     private final UserService userService;
 

@@ -1,4 +1,4 @@
-package com.project.feedback.controller;
+package com.project.feedback.controller.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
