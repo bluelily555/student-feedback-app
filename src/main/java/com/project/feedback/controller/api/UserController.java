@@ -1,4 +1,4 @@
-package com.project.feedback.controller;
+package com.project.feedback.controller.api;
 
 import com.project.feedback.domain.dto.user.UserJoinRequest;
 import com.project.feedback.domain.dto.user.UserListResponse;
