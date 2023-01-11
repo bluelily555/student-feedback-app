@@ -1,4 +1,4 @@
-package com.project.feedback.controller;
+package com.project.feedback.controller.ui;
 
 import com.project.feedback.domain.Response;
 import com.project.feedback.domain.dto.board.BoardWriteDto;
