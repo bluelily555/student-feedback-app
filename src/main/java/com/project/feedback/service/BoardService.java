@@ -21,6 +21,7 @@ public class BoardService {
 
         return boardRepository.save(boardWriteDto.toEntity()).getId();
     }
+
     @Transactional
     public List<BoardWriteDto> getBoardList(){
         List<BoardEntity> boardEntities = boardRepository.findAll();

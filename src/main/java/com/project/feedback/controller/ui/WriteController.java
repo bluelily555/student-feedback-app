@@ -27,7 +27,6 @@ public class WriteController {
         List<BoardWriteDto> boardWriteDtoList = boardService.getBoardList();
 
         model.addAttribute("boardList", boardWriteDtoList);
-        System.out.println(boardWriteDtoList);
         return "board/list";
     }
     @PostMapping("board/write")
