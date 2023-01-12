@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header.html :: head"/>
+<body>
+    <div th:replace="fragments/header.html :: header"/>
+    <div class="row">
+        <form class="offset-3 col-6 form-group" th:object="${taskDetail}"  th:method="post" th:action="|@{/tasks/{taskId}/edit (taskId=${taskDetail.id})}|">
+            <br/><br/>
+            <div>
+                <label th:for="title">제목 : </label>
+                <input type="text" th:field="*{title}" readonly>
+            </div>
+            <br/>
+            <div th:text="'작성자 : ' + *{userName}"></div>
+            <br/>
+            <div th:text="'작성일 : ' + ${#temporals.format(taskDetail.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></div>
+            <br/>
+            <div th:text="'최근 수정일 : ' + ${#temporals.format(taskDetail.lastModifiedAt, 'yyyy-MM-dd HH:mm:ss')}"></div>
+            <br/>
+            <div>
+                <label th:for="description">내용 : </label>
+                <textarea rows="10" style="width: 100%;" th:field="*{description}" readonly/>
+            </div>
+            <br/>
+            <div align="center" id="div2" hidden>
+                <button class="btn body-btn" id="button2" type="submit">등록</button>
+            </div>
+        </form>
+        <div align="center" id="div1">
+            <button class="btn body-btn" onclick="firstClick()" id="button1">수정</button>
+            <button class="btn body-btn-del" onclick="deletePost()"
+                    >삭제</button>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        function deleteTask() {
+            if ([[${changeable}]] == true) {
+                window.location.href = '/tasks/' + [[${taskDetail.id}]] + "/delete"
+            } else {
+                alert("작성자만 삭제 가능합니다")
+            }
+        }
+        function firstClick() {
+            if ([[${changeable}]] == true) {
+                document.getElementById("div1").style.display = 'none'
+                document.getElementById("div2").removeAttribute("hidden")
+                document.getElementById("title").removeAttribute("readonly")
+                document.getElementById("body").removeAttribute("readonly")
+            } else {
+                alert("작성자만 수정 가능합니다")
+            }
+        }
+    </script>
+</body>
+</html>
