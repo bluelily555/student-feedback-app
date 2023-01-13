@@ -1,6 +1,10 @@
+.btn {
+    font-weight: bold;
+}
+
 .blank{
-    margin-left: 10px;
-    margin-right: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 .nav-btn{
     background-color: #E1FFEE;

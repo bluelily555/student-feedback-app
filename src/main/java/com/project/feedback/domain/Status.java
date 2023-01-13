@@ -1,5 +1,8 @@
 package com.project.feedback.domain;
 
 public enum Status {
-    SIGNUP, DONE, ERROR, INPROGRESS;
+    SIGNUP,
+    DONE,
+    ERROR,
+    INPROGRESS;
 }

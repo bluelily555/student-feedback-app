@@ -27,6 +27,10 @@ public class TaskEntity extends BaseEntity{
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id")
+    private CourseEntity courseEntity;
+
     @Enumerated(EnumType.STRING)
     private Status status;
 

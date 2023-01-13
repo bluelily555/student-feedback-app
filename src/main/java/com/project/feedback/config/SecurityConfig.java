@@ -46,6 +46,8 @@ public class SecurityConfig {
                 .authorizeRequests()
                 //user 목록 admin만 가져올 수 있음
                 .antMatchers(HttpMethod.GET, "/users").hasAuthority(Role.ADMIN.name())
+                //task 등록 admin만 가능
+                .antMatchers(HttpMethod.GET, "/tasks/write").hasAuthority(Role.ADMIN.name())
                 .antMatchers(HttpMethod.POST, "/api/v1/tasks").hasAuthority(Role.ADMIN.name())
                 .antMatchers(HttpMethod.DELETE, "/api/v1/tasks").hasAuthority(Role.ADMIN.name())
                 .antMatchers(HttpMethod.PUT, "/api/v1/tasks").hasAuthority(Role.ADMIN.name())

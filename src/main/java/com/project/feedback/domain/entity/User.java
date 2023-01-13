@@ -30,8 +30,8 @@ public class User extends BaseEntity{
     private List<TaskEntity> tasks;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private PeriodMemberEntity periodMemberEntity;
+    @JoinColumn(name = "user")
+    private CourseEntity courseEntity;
 
 
     public void setRole(Role role) {

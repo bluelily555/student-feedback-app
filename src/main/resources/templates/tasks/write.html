@@ -7,22 +7,41 @@
         <form class="offset-3 col-6 form-group" th:method="post" th:action="@{/tasks/write}" th:object="${taskCreateRequest}">
             <br/><br/>
             <div>
-                <label>태스크 명</label>
-                <input class ="blank" type="text" th:field="*{title}" placeholder="태스크명을 입력해 주세요"/>
-                <label>WEEK(주차)</label>
-                <input class ="blank"  type="text" th:field="*{week}" name="week">
-                <label>DAY(일차)</label>
-                <input class ="blank"  type="text" th:field="*{day}" name="day"><br>
+                <label>태스크 명 : </label>
+                <input class ="blank" type="text" th:field="*{title}"/>
             </div>
             <br/>
             <div>
+                <label>기수 : </label>
+                <input class ="blank" type="text" th:field="*{courseName}" />
+            </div>
+            </br>
+            <div>
+                <label>상태 : </label>
+                <select class ="blank" th:field="*{status}" style="width:200px;height:40px;">
+                    <option value="">==상태 값 선택 ==</option>
+                    <option value="SIGNUP">등록</option>
+                    <option value="INPROGRESS">진행중</option>
+                    <option value="ERROR">에러</option>
+                    <option value="DONE">완료</option>
+                </select>
+                <label>주차 : </label>
+                <input class ="blank" type="text" th:field="*{week}" name="week">
+                <label>일차 : </label>
+                <input class ="blank" type="text" th:field="*{day}" name="day">
+            </div>
+
+            <br/>
+            <div>
+                <label>설명 : </label>
                 <textarea rows="10" style="width: 100%;" th:field="*{description}" placeholder="설명을 입력해 주세요"/>
             </div>
-            <div align="right">
+            <div align="center">
                 <button class="btn body-btn" type="submit">등록</button>
                 <button class="btn body-btn" onclick="history.back()">취소</button>
             </div>
         </form>
     </div>
 </body>
+<footer th:replace="fragments/footer.html :: footer"/>
 </html>
