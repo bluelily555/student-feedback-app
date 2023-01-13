@@ -34,7 +34,7 @@ public class TaskApiController {
     private final TaskService taskService;
 
     @Operation(summary = "태스크 작성")
-    @PostMapping("")
+    @PostMapping("/")
     public Response<TaskCreateResponse> write(@RequestBody TaskCreateRequest req, @ApiIgnore Authentication auth) {
         // authentication.getName()을 통해 로그인한 유저의 userName을 꺼내 올 수 있음
         TaskCreateResponse res = taskService.saveTask(req, auth.getName());

@@ -16,11 +16,15 @@ import lombok.Setter;
 public class TaskCreateRequest {
     private String title;
     private String description;
+    private String week;
+    private String day;
 
     public TaskEntity toEntity(User user) {
         return TaskEntity.builder()
                 .title(this.title)
                 .description(this.description)
+                .week(this.week)
+                .day(this.day)
                 .status(Status.SIGNUP)
                 .user(user)
                 .build();

@@ -7,15 +7,20 @@
         <form class="offset-3 col-6 form-group" th:method="post" th:action="@{/tasks/write}" th:object="${taskCreateRequest}">
             <br/><br/>
             <div>
-                <input type="text" th:field="*{title}" placeholder="제목을 입력해 주세요"/>
+                <label>태스크 명</label>
+                <input class ="blank" type="text" th:field="*{title}" placeholder="태스크명을 입력해 주세요"/>
+                <label>WEEK(주차)</label>
+                <input class ="blank"  type="text" th:field="*{week}" name="week">
+                <label>DAY(일차)</label>
+                <input class ="blank"  type="text" th:field="*{day}" name="day"><br>
             </div>
             <br/>
             <div>
-                <textarea rows="10" style="width: 100%;" th:field="*{description}" placeholder="내용을 입력해 주세요"/>
+                <textarea rows="10" style="width: 100%;" th:field="*{description}" placeholder="설명을 입력해 주세요"/>
             </div>
-            <br/>
-            <div align="center">
+            <div align="right">
                 <button class="btn body-btn" type="submit">등록</button>
+                <button class="btn body-btn" onclick="history.back()">취소</button>
             </div>
         </form>
     </div>

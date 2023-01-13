@@ -29,6 +29,11 @@ public class User extends BaseEntity{
     @OneToMany(mappedBy = "user")
     private List<TaskEntity> tasks;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private PeriodMemberEntity periodMemberEntity;
+
+
     public void setRole(Role role) {
         this.role = role;
     }
