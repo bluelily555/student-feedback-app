@@ -2,7 +2,7 @@ spring:
   # 배포 시에 환경변수에 DB 정보를 넣어줘서 서버 DB 사용
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/feedback
+    url: jdbc:mysql://localhost:3306/feedback?useSSL=false
     username: root
     password: 1234
 
@@ -22,6 +22,9 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+    hiddenmethod:
+      filter:
+        enabled: true
 
 
 thymeleaf:
