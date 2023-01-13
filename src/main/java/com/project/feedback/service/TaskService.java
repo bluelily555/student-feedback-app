@@ -8,6 +8,7 @@ import com.project.feedback.domain.dto.task.TaskListDto;
 import com.project.feedback.domain.dto.task.TaskListResponse;
 import com.project.feedback.domain.dto.task.TaskUpdateRequest;
 import com.project.feedback.domain.dto.task.TaskUpdateResponse;
+import com.project.feedback.domain.entity.CourseEntity;
 import com.project.feedback.domain.entity.TaskEntity;
 import com.project.feedback.domain.entity.User;
 import com.project.feedback.exception.CustomException;
@@ -30,13 +31,13 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final FindService findService;
 
-    public TaskCreateResponse saveTask(TaskCreateRequest req, String userName) {
+    public TaskCreateResponse saveTask(TaskCreateRequest req, String userName, String courseName) {
 
         // UserName이 존재하는지 체크
         User writeUser = findService.findUserByUserName(userName);
-
+        CourseEntity courseEntity = findService.findUserByCourseName(courseName);
         // 태스크  등록 시 Authentication에서 User을 꺼내와 Post Entity에 넣어줌
-        TaskEntity savedPost = taskRepository.save(req.toEntity(writeUser));
+        TaskEntity savedPost = taskRepository.save(req.toEntity(writeUser, courseEntity));
 
         return TaskCreateResponse.of(savedPost.getId());
     }

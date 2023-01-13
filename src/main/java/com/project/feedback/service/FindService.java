@@ -1,10 +1,12 @@
 package com.project.feedback.service;
 
 import com.project.feedback.domain.Role;
+import com.project.feedback.domain.entity.CourseEntity;
 import com.project.feedback.domain.entity.TaskEntity;
 import com.project.feedback.domain.entity.User;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
+import com.project.feedback.repository.CourseRepository;
 import com.project.feedback.repository.TaskRepository;
 import com.project.feedback.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ public class FindService {
 
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
+    private final CourseRepository courseRepository;
 
     /**
      * userName으로 User을 찾아오는 기능
@@ -26,6 +29,13 @@ public class FindService {
         return userRepository.findByUserName(userName)
                 .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
     }
+
+    public CourseEntity findUserByCourseName(String courseName) {
+        return courseRepository.findByName(courseName)
+            .orElseThrow(() -> new CustomException(ErrorCode.COURSE_NOT_FOUND));
+    }
+
+
 
 
     /**

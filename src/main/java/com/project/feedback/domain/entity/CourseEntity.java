@@ -18,11 +18,12 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PeriodMemberEntity  extends BaseEntity{
+public class CourseEntity extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //기수 이름
     private String name;
 
     //시작일
@@ -31,7 +32,10 @@ public class PeriodMemberEntity  extends BaseEntity{
     //종료일
     private LocalDate endDate;
 
-    @OneToMany(mappedBy = "periodMemberEntity")
+    @OneToMany(mappedBy = "courseEntity")
+    private List<TaskEntity> taskEntities;
+
+    @OneToMany(mappedBy = "courseEntity")
     private List<User> users;
 
 }

@@ -1,7 +1,7 @@
 package com.project.feedback.domain.dto.task;
 
-import com.project.feedback.domain.Role;
 import com.project.feedback.domain.Status;
+import com.project.feedback.domain.entity.CourseEntity;
 import com.project.feedback.domain.entity.TaskEntity;
 import com.project.feedback.domain.entity.User;
 import lombok.AllArgsConstructor;
@@ -16,16 +16,19 @@ import lombok.Setter;
 public class TaskCreateRequest {
     private String title;
     private String description;
+    private String status;
+    private String courseName;
     private String week;
     private String day;
 
-    public TaskEntity toEntity(User user) {
+    public TaskEntity toEntity(User user, CourseEntity course) {
         return TaskEntity.builder()
                 .title(this.title)
                 .description(this.description)
                 .week(this.week)
                 .day(this.day)
-                .status(Status.SIGNUP)
+                .status(Status.valueOf(status))
+                .courseEntity(course)
                 .user(user)
                 .build();
     }
