@@ -26,6 +26,10 @@ spring:
       filter:
         enabled: true
 
+
+thymeleaf:
+    cache=false:
+
 # Jwt Secret Key
 jwt:
   token:
@@ -37,3 +41,5 @@ server:
   servlet:
     encoding:
       force-response: true
+
+

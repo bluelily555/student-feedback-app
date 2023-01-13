@@ -1,6 +1,9 @@
+.blank{
+    margin-left: 10px;
+    margin-right: 10px;
+}
 .nav-btn{
     background-color: #E1FFEE;
-
     height: 40px;
     width: 100px;
     margin-left: 10px;

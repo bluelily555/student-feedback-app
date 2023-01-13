@@ -1,9 +1,11 @@
 package com.project.feedback.service;
 
 import com.project.feedback.domain.Role;
+import com.project.feedback.domain.entity.TaskEntity;
 import com.project.feedback.domain.entity.User;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
+import com.project.feedback.repository.TaskRepository;
 import com.project.feedback.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Component;
 public class FindService {
 
     private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
 
     /**
      * userName으로 User을 찾아오는 기능
@@ -37,5 +40,15 @@ public class FindService {
             return false;
         }
         return true;
+    }
+
+    /**
+     * taskId로 Task를 찾아오는 기능
+     * taskId에 해당하는 Task가 없으면 TASk_NOT_FOUND 에러 발생
+     * taskId로 찾은 Task return
+     */
+    public TaskEntity findTaskById(Long taskId) {
+        return taskRepository.findById(taskId)
+            .orElseThrow(() -> new CustomException(ErrorCode.TASK_NOT_FOUND));
     }
 }
