@@ -4,6 +4,8 @@ import com.project.feedback.domain.dto.board.BoardWriteDto;
 import com.project.feedback.domain.entity.BoardEntity;
 import com.project.feedback.repository.BoardRepository;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -11,14 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@AllArgsConstructor
 @Service
+@Getter
+@RequiredArgsConstructor
 public class BoardService {
-    private BoardRepository boardRepository;
+    private final BoardRepository boardRepository;
 
     @Transactional
     public Long savePost(BoardWriteDto boardWriteDto){
-
         return boardRepository.save(boardWriteDto.toEntity()).getId();
     }
 

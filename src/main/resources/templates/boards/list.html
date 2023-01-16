@@ -6,7 +6,7 @@
     <title>글 목록</title>
 </head>
 <body>
-    <div th:replace="fragments/header.html :: header"/>
+    <div th:replace="fragments/header.html :: header"></div>
     <div class="container table-responsive">
         <table class="table">
             <thead class="thead-dark">
@@ -15,7 +15,7 @@
                 <th scope="col">글제목</th>
                 <th scope="col">작성자</th>
                 <th scope="col">작성일</th>
-                <th scope="col">수정 및 삭제</th>
+                <th scope="col">*</th>
             </tr>
             </thead>
             <tbody>
@@ -29,22 +29,24 @@
 <!--                        <span th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm')}"></span>-->
                     </td>
                     <td>
-                        <a th:href="@{'/post/edit/' + ${board.id}}">
-                            <button style="float:left;margin-right: 5px;">수정</button>
-                        </a>
+<!--                        <a th:href="@{'/post/edit/' + ${board.id}}">-->
+<!--                            <button style="float:left;margin-right: 5px;">수정</button>-->
+<!--                        </a>-->
 
-                        <form id="delete-form" th:action="@{'/post/' + ${board.id}}" method="post">
+                        <form id="delete-form" th:action="@{'/boards/' + ${board.id}}" method="post">
                             <input type="hidden" name="_method" value="delete"/>
-                            <button id="delete-btn">삭제</button>
+                            <button id="delete-btn" class="btn body-btn">삭제</button>
                         </form>
-
+                        <a th:href="@{'/boards/writeDetail/' + ${board.id}}">
+                            <button class="btn body-btn">상세보기</button>
+                        </a>
                     </td>
                 </tr>
             </tbody>
         </table>
 
     </div>
-    <a th:href="@{/board/write}">글 쓰러 가기</a>
+    <a th:href="@{/templates/boards/write}">글 쓰러 가기</a>
 
 </body>
 </html>
