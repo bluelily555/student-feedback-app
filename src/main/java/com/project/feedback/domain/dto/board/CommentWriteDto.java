@@ -21,7 +21,6 @@ public class CommentWriteDto {
 
     public CommentEntity toEntity(){
         CommentEntity commentEntity = CommentEntity.builder()
-                .id(id)
                 .writer(writer)
                 .content(content)
                 .boardId(boardId)
