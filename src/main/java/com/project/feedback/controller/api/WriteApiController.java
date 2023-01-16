@@ -58,7 +58,7 @@ public class WriteApiController {
     @ApiOperation(value="댓글 작성", notes="해당 글에 댓글 작성")
     @PostMapping("/{postId}/comments")
     public Object commentPost(CommentWriteDto commentWriteDto, @PathVariable("postId")Long no){
-        commentService.savePost(commentWriteDto, no);
+        commentService.saveComment(commentWriteDto, no);
         return Response.success(commentWriteDto);
     }
 }

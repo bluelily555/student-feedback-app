@@ -1,12 +1,10 @@
 package com.project.feedback.controller.ui;
 
-import com.project.feedback.domain.Response;
 import com.project.feedback.domain.dto.board.BoardWriteDto;
 import com.project.feedback.domain.dto.board.CommentWriteDto;
 import com.project.feedback.service.BoardService;
 import com.project.feedback.service.CommentService;
 import lombok.AllArgsConstructor;
-import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -91,7 +89,7 @@ public class WriteController {
     // 해당 게시글에 대해 댓글 쓰기
     @PostMapping("/{no}")
     public String commentWrite(@PathVariable("no")Long no,CommentWriteDto commentWriteDto){
-        commentService.savePost(commentWriteDto, no);
+        commentService.saveComment(commentWriteDto, no);
         return "redirect:/boards/writeDetail/" + no.toString();
     }
 }

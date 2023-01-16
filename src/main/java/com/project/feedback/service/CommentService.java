@@ -54,9 +54,11 @@ public class CommentService {
         }
         return commentWriteDtoList;
     }
-    public Long savePost(CommentWriteDto commentWriteDto, Long boardId){
-        commentWriteDto.setBoardId(boardId);
-        return commentRepository.save(commentWriteDto.toEntity()).getId();
+    public Long saveComment(CommentWriteDto commentWriteDto, Long boardId){
+        CommentEntity commentEntity = commentWriteDto.toEntity();
+        commentEntity.setBoardId(boardId);
+        CommentEntity savedCommentEntity = commentRepository.save(commentEntity);
+        return savedCommentEntity.getId();
     }
     @Transactional
     public CommentWriteDto getPost(Long id){
