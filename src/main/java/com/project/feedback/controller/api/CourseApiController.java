@@ -2,6 +2,7 @@ package com.project.feedback.controller.api;
 
 
 import com.project.feedback.domain.Response;
+import com.project.feedback.domain.dto.course.AddStudentRequest;
 import com.project.feedback.domain.dto.course.CourseCreateRequest;
 import com.project.feedback.domain.dto.course.CourseCreateResponse;
 import com.project.feedback.service.CourseService;
@@ -32,12 +33,11 @@ public class CourseApiController {
         return Response.success(res);
     }
 
-    //TO DO
-    @Operation(summary = "기수 조회(1개)")
-    @GetMapping("/{courseId}")
-    public void show(@PathVariable Long courseId) {
-        courseService.getOneCourse(courseId);
+    @Operation(summary = "기수에 학생 등록")
+    @PostMapping("/register/{courseId}")
+    public String registerStudent(@PathVariable Long courseId, @RequestBody AddStudentRequest studentRequest, @ApiIgnore Authentication auth) {
+        courseService.registerStudent(courseId, studentRequest);
+        return "success";
     }
-
 
 }
