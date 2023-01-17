@@ -1,4 +1,4 @@
-package com.project.feedback.api_controller;
+package com.project.feedback.controller.api;
 
 import com.project.feedback.domain.Response;
 import com.project.feedback.service.UserService;
