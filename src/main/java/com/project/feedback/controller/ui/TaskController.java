@@ -47,7 +47,7 @@ public class TaskController {
     }
 
     @PostMapping("/write")
-    public String write(@ModelAttribute TaskCreateRequest req, Model model, Authentication auth) {
+    public String write(@ModelAttribute TaskCreateRequest req, Authentication auth) {
         taskService.createTask(req, auth.getName());
         return "redirect:/";
     }

@@ -1,5 +1,6 @@
 package com.project.feedback.domain.entity;
 
+import com.project.feedback.domain.CourseStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,8 +22,14 @@ public class CourseEntity extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //코스 이름
+    //기수 이름
     private String name;
+
+    //설명
+    private String description;
+
+    @Enumerated(EnumType.STRING)
+    private CourseStatus courseStatus;
 
     //시작일
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -35,7 +42,11 @@ public class CourseEntity extends BaseEntity{
     @OneToMany(mappedBy = "courseEntity")
     private List<TaskEntity> taskEntities;
 
-    @OneToMany(mappedBy = "courseEntity")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToMany(targetEntity = User.class)
     private List<User> users;
 
 }

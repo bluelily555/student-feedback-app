@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header.html :: head"/>
+<body class="container">
+    <div th:replace="fragments/header.html :: header"/>
+    <br/><br/>
+    <div class="row">
+        <form class="offset-3 col-6 form-group" th:method="post" th:action="@{/courses/write}" th:object="${courseCreateRequest}">
+            <div class="mb-3 row">
+                <label for="courseName" class="col-sm-2 col-form-label">기수 명</label>
+                <div class="col-sm-10">
+                    <input class ="form-control" id="courseName" type="text" th:field="*{name}"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label for="taskStatus" class="col-form-label">상태</label>
+                </div>
+                <div class="col-md-6">
+                    <select id="taskStatus" class ="form-select" th:field="*{status}" style="width:200px;height:40px;">
+                        <option value="">==상태 값 선택 ==</option>
+                        <option value="CREATED">등록</option>
+                        <option value="IN_PROGRESS">진행중</option>
+                        <option value="DONE">완료</option>
+                    </select>
+                </div>
+                <div class="mb-3 row">
+                    <label for="startDate" class="col-sm-2 col-form-label">시작일</label>
+                    <div class="col-sm-10">
+                        <input class ="form-control" id="startDate" type="date" th:field="*{startDate}" name="startDate" th:value="${startDate}" value="${startDate}">
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="endDate" class="col-sm-2 col-form-label">종료일</label>
+                    <div class="col-sm-10">
+                        <input class ="form-control" id="endDate" type="date" th:field="*{endDate}" name="endDate" th:value="${endDate}" value="${endDate}">
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label>설명 : </label>
+                <textarea class="form-control" rows="10" th:field="*{description}" placeholder="설명을 입력해 주세요"/>
+            </div>
+            <div align="center">
+                <button class="btn body-btn" type="submit">등록</button>
+                <button class="btn body-btn" onclick="history.back()">취소</button>
+            </div>
+        </form>
+    </div>
+<!--    <script th:inline="javascript">-->
+<!--        /*<![CDATA[*/-->
+<!--            const page = /[[${courseList}]]/;-->
+<!--            console.log(page);-->
+<!--        console.log("week:", /[[${week}]]/);-->
+<!--        /*]]>*/-->
+<!--    </script>-->
+</body>
+<footer th:replace="fragments/footer.html :: footer"/>
+</html>

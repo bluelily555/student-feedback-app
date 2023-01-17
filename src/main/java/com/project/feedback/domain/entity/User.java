@@ -29,9 +29,8 @@ public class User extends BaseEntity{
     @OneToMany(mappedBy = "user")
     private List<TaskEntity> tasks;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user")
-    private CourseEntity courseEntity;
+    @ManyToMany(targetEntity = CourseEntity.class)
+    private List<CourseEntity> courseEntity;
 
 
     public void setRole(Role role) {

@@ -26,12 +26,12 @@ public class CourseController {
     @GetMapping("/write")
     public String writePage(Model model) {
         model.addAttribute("courseCreateRequest", new CourseCreateRequest());
-        return "tasks/write";
+        return "courses/write";
     }
 
     @PostMapping("/write")
-    public String write(@ModelAttribute CourseCreateRequest req, Model model, Authentication auth) {
-        courseService.createCourse(req);
+    public String write(@ModelAttribute CourseCreateRequest req, Authentication auth) {
+        courseService.createCourse(req, auth.getName());
         return "redirect:/";
     }
 

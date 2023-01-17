@@ -18,6 +18,7 @@ public class TaskCreateRequest {
     private String courseName;
     private Integer week;
     private Integer day;
+
     public TaskEntity toEntity(User user, CourseEntity course) {
         return TaskEntity.builder()
                 .title(this.title)

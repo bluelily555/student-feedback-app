@@ -71,11 +71,11 @@ public class UserService {
 
         Role newRole;
 
-        // "admin" 또는 "user"을 입력받는다면 입력받은 값으로 Role 수정
+        // "admin" 또는 "student"을 입력받는다면 입력받은 값으로 Role 수정
         if(req.getRole().toLowerCase().equals("admin")) {
             newRole = Role.ADMIN;
-        } else if(req.getRole().toLowerCase().equals("user")) {
-            newRole = Role.USER;
+        } else if(req.getRole().toLowerCase().equals("student")) {
+            newRole = Role.STUDENT;
         } else {
             throw new RuntimeException();
         }
