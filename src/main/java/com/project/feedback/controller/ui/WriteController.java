@@ -60,7 +60,8 @@ public class WriteController {
     @GetMapping("/writeDetail/{no}")
     public String writeDetail(@PathVariable("no")Long no, Model model){
         BoardWriteDto boardWriteDto = boardService.getPost(no);
-
+        List<CommentWriteDto> commentWriteDtoList = commentService.searchPosts(no);
+        model.addAttribute("commentList", commentWriteDtoList);
         model.addAttribute("boardList", boardWriteDto);
         return "boards/writeDetail";
     }
@@ -80,16 +81,26 @@ public class WriteController {
     public String codeView(){
         return "boards/codeView";
     }
-    @GetMapping("/{no}")
-    public String commentList(@PathVariable("no")Long no, Model model){
-        List<CommentWriteDto> commentWriteDtoList = commentService.searchPosts(no);
-        model.addAttribute("commentList", commentWriteDtoList);
-        return "boards/writeDetail" + no.toString();
-    }
+//    @GetMapping("/{no}")
+//    public String commentList(@PathVariable("no")Long no, Model model){
+//        List<CommentWriteDto> commentWriteDtoList = commentService.searchPosts(no);
+//        model.addAttribute("commentList", commentWriteDtoList);
+//        return "boards/writeDetail" + no.toString();
+//    }
     // 해당 게시글에 대해 댓글 쓰기
-    @PostMapping("/{no}")
+    @PostMapping("writeDetail/{no}")
     public String commentWrite(@PathVariable("no")Long no,CommentWriteDto commentWriteDto){
         commentService.saveComment(commentWriteDto, no);
         return "redirect:/boards/writeDetail/" + no.toString();
+    }
+    @DeleteMapping("/writeDetail/{commentId}/{boardId}")
+    public String commentDelete(@PathVariable("commentId")Long commentId, @PathVariable("boardId")Long boardId){
+        commentService.deletePost(commentId);
+        return "redirect:/boards/writeDetail/"+boardId.toString();
+    }
+    @PutMapping("/writeDetail/{commentId}/{boardId}")
+    public String commentUpdate(@PathVariable("commentId")Long commentId, CommentWriteDto commentWriteDto, @PathVariable("boardId")Long boardId){
+        commentService.updateComment(commentWriteDto, commentId);
+        return "redirect:/boards/writeDetail/"+boardId.toString();
     }
 }

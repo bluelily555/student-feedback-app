@@ -60,6 +60,12 @@ public class CommentService {
         CommentEntity savedCommentEntity = commentRepository.save(commentEntity);
         return savedCommentEntity.getId();
     }
+    public Long updateComment(CommentWriteDto commentWriteDto, Long commentId){
+        CommentEntity commentEntity = commentWriteDto.toEntity();
+        commentEntity.setId(commentId);
+        CommentEntity savedCommentEntity = commentRepository.save(commentEntity);
+        return savedCommentEntity.getId();
+    }
     @Transactional
     public CommentWriteDto getPost(Long id){
         Optional<CommentEntity> commentEntityWrapper = commentRepository.findById(id);

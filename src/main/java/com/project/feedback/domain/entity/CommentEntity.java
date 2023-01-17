@@ -35,4 +35,5 @@ public class CommentEntity extends TimeEntity{
     public void setBoardId(Long boardId) {
         this.boardId = boardId;
     }
+    public void setId(Long id){this.id = id;}
 }
