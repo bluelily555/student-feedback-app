@@ -32,7 +32,7 @@ public class FindService {
 
     public CourseEntity findCourseByName(String courseName) {
         return courseRepository.findByName(courseName)
-            .orElseThrow(() -> new CustomException(ErrorCode.COURSE_NOT_FOUND));
+            .orElseThrow(() -> new CustomException(ErrorCode.COURSE_NOT_FOUND, String.format("코스명: %s(이)가 없습니다.", courseName)));
     }
 
 

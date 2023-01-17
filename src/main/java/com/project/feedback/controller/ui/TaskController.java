@@ -1,11 +1,14 @@
 package com.project.feedback.controller.ui;
 
+import com.project.feedback.domain.dto.course.CourseDto;
 import com.project.feedback.domain.dto.task.TaskCreateRequest;
 import com.project.feedback.domain.dto.task.TaskDetailResponse;
+import com.project.feedback.domain.dto.task.TaskListDto;
 import com.project.feedback.domain.dto.task.TaskUpdateRequest;
 import com.project.feedback.domain.entity.User;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
+import com.project.feedback.service.CourseService;
 import com.project.feedback.service.FindService;
 import com.project.feedback.service.TaskService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/tasks")
 @RequiredArgsConstructor
@@ -26,15 +31,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class TaskController {
     private final TaskService taskService;
     private final FindService findService;
+    private final CourseService courseService;
 
     @GetMapping("/write")
     public String writePage(Model model) {
         model.addAttribute("taskCreateRequest", new TaskCreateRequest());
+        List<CourseDto> courses = courseService.courses();
+
+        model.addAttribute("courseList", courses);
+
+        // todo week, day는 Course의 시작일을 기준으로 주차를 구함
+        model.addAttribute("week", 2);
+        model.addAttribute("day", 1);
         return "tasks/write";
     }
 
     @PostMapping("/write")
-    public String write(@ModelAttribute TaskCreateRequest req, Authentication auth) {
+    public String write(@ModelAttribute TaskCreateRequest req, Model model, Authentication auth) {
         taskService.createTask(req, auth.getName());
         return "redirect:/";
     }
