@@ -1,7 +1,7 @@
 package com.project.feedback.domain.dto.task;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.project.feedback.domain.Status;
+import com.project.feedback.domain.TaskStatus;
 import com.project.feedback.domain.entity.TaskEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,9 +17,9 @@ public class TaskDetailResponse {
     private Long id;
     private String title;
     private String description;
-    private Status status;
-    private String week;
-    private String day;
+    private TaskStatus taskStatus;
+    private Integer week;
+    private Integer day;
     private String userName;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -34,7 +34,7 @@ public class TaskDetailResponse {
                 .description(task.getDescription())
                 .week(task.getWeek())
                 .day(task.getDay())
-                .status(task.getStatus())
+                .taskStatus(task.getTaskStatus())
                 .userName(task.getUser().getUserName())
                 .createdAt(task.getCreatedAt())
                 .lastModifiedAt(task.getLastModifiedAt())

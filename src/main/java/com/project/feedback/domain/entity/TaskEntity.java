@@ -1,6 +1,6 @@
 package com.project.feedback.domain.entity;
 
-import com.project.feedback.domain.Status;
+import com.project.feedback.domain.TaskStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,18 +32,18 @@ public class TaskEntity extends BaseEntity{
     private CourseEntity courseEntity;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private TaskStatus taskStatus;
 
     // 몇주
-    private String week;
+    private Integer week;
 
     // 몇일
-    private String day;
+    private Integer day;
 
-    public void update(String newTitle, String newDesc, Status status, String week, String day) {
+    public void update(String newTitle, String newDesc, TaskStatus taskStatus, Integer week, Integer day) {
         this.title = newTitle;
         this.description = newDesc;
-        this.status = status;
+        this.taskStatus = taskStatus;
         this.week = week;
         this.day = day;
     }

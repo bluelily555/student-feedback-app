@@ -1,4 +1,4 @@
-package com.project.feedback.controller;
+package com.project.feedback.controller.ui;
 
 import com.project.feedback.domain.dto.task.TaskCreateRequest;
 import com.project.feedback.domain.dto.task.TaskDetailResponse;
@@ -35,7 +35,7 @@ public class TaskController {
 
     @PostMapping("/write")
     public String write(@ModelAttribute TaskCreateRequest req, Authentication auth) {
-        taskService.saveTask(req, auth.getName(), req.getCourseName());
+        taskService.createTask(req, auth.getName());
         return "redirect:/";
     }
 
