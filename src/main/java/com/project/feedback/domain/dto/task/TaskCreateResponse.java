@@ -10,10 +10,12 @@ import lombok.Getter;
 public class TaskCreateResponse {
     private String message;
     private Long taskId;
+    private String title;
 
-    public static TaskCreateResponse of(Long taskId) {
+    public static TaskCreateResponse of(Long taskId, String title) {
         return TaskCreateResponse.builder()
                 .message("task 등록 완료")
+                .title(title)
                 .taskId(taskId)
                 .build();
     }

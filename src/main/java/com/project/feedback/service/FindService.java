@@ -30,12 +30,10 @@ public class FindService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
     }
 
-    public CourseEntity findUserByCourseName(String courseName) {
+    public CourseEntity findCourseByName(String courseName) {
         return courseRepository.findByName(courseName)
             .orElseThrow(() -> new CustomException(ErrorCode.COURSE_NOT_FOUND));
     }
-
-
 
 
     /**

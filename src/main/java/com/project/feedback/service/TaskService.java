@@ -31,15 +31,15 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final FindService findService;
 
-    public TaskCreateResponse saveTask(TaskCreateRequest req, String userName, String courseName) {
+    public TaskCreateResponse createTask(TaskCreateRequest req, String userName) {
 
         // UserName이 존재하는지 체크
         User writeUser = findService.findUserByUserName(userName);
-        CourseEntity courseEntity = findService.findUserByCourseName(courseName);
+        CourseEntity courseEntity = findService.findCourseByName(req.getCourseName());
         // 태스크  등록 시 Authentication에서 User을 꺼내와 Post Entity에 넣어줌
         TaskEntity savedPost = taskRepository.save(req.toEntity(writeUser, courseEntity));
 
-        return TaskCreateResponse.of(savedPost.getId());
+        return TaskCreateResponse.of(savedPost.getId(), savedPost.getTitle());
     }
 
     public TaskDetailResponse getOneTask(Long taskId) {
@@ -60,7 +60,7 @@ public class TaskService {
         }
 
         // 수정
-        findTask.update(req.getTitle(), req.getDescription(), req.getStatus(), req.getWeek(), req.getDay());
+        findTask.update(req.getTitle(), req.getDescription(), req.getTaskStatus(), req.getWeek(), req.getDay());
         taskRepository.save(findTask);
 
         return TaskUpdateResponse.of(findTask.getId());

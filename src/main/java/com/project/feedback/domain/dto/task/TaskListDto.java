@@ -1,6 +1,5 @@
 package com.project.feedback.domain.dto.task;
 
-import com.project.feedback.domain.Status;
 import com.project.feedback.domain.entity.TaskEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

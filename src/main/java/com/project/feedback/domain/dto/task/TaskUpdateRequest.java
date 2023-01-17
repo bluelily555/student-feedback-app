@@ -1,6 +1,6 @@
 package com.project.feedback.domain.dto.task;
 
-import com.project.feedback.domain.Status;
+import com.project.feedback.domain.TaskStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,7 +9,7 @@ import lombok.Getter;
 public class TaskUpdateRequest {
     private String title;
     private String description;
-    private Status status;
-    private String day;
-    private String week;
+    private TaskStatus taskStatus;
+    private Integer week;
+    private Integer day;
 }
