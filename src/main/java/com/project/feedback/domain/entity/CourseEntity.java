@@ -4,9 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -24,10 +25,12 @@ public class CourseEntity extends BaseEntity{
     private String name;
 
     //시작일
-    private LocalDate startDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date startDate;
 
     //종료일
-    private LocalDate endDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date endDate;
 
     @OneToMany(mappedBy = "courseEntity")
     private List<TaskEntity> taskEntities;
