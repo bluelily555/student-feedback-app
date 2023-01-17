@@ -6,6 +6,31 @@
     <title>상세페이지</title>
 </head>
 <body>
+<script type="text/javascript">
+    function toggleBtn(){
+        const btn1 = document.getElementById("update-form")
+        if(btn1.style.display === 'none'){
+            btn1.style.display = 'block';
+        }else{
+            btn1.style.display = 'none';
+        }
+    }
+
+
+    // $(document).ready(function (){
+    //     $("#update-btn").click(function(){
+    //         const status = $("#update-form").css("display")
+    //         if(status === "none") {
+    //             console.log("tlqkfdk")
+    //             $("update-form").css("display", "");
+    //         }else{
+    //             console.log("rotorRI")
+    //             $("update-form").css("display", "none");
+    //         }
+    //     })
+    // })
+    /*<![CDATA[*//*]]>*/
+</script>
 <div th:replace="fragments/header :: header"></div>
 <!--  해당 글에 대한 모든 데이터를 보여주고, 수정 버튼 누르면 수정하는 곳으로 이동-->
 <section>
@@ -32,7 +57,7 @@
                                         <p th:text="${boardList.content}"></p>
                                     </div>
                                     <div style="display: block">
-                                        <a th:href="@{'/post/edit/' + ${boardList.id}}">
+                                        <a th:href="@{'/boards/edit/' + ${boardList.id}}">
                                             <button class="btn btn-danger" style="float:right;margin-right: 5px;">수정</button>
                                         </a>
                                     </div>
@@ -59,16 +84,9 @@
 <!--                    <input type="text" id="addANote" class="form-control" placeholder="Type comment..." />-->
 <!--                    <label class="form-label" for="addANote">+ Add a note</label>-->
 <!--                </div>-->
-                <div class="card mb-4">
-                    <script th:inline="javascript">
-                        /*<![CDATA[*/
-                        let bl = [[${boardList.id}]]
-                        let cl = [[${commentList}]]
-                        console.log(bl)
-                        console.log(cl)
-                        /*]]>*/
-                    </script>
-                    <div class="card-body" th:each="comment : ${commentList}">
+                <div class="card mb-4" th:each="comment : ${commentList}">
+
+                    <div class="card-body" >
                         <p th:text="${comment.content}"></p>
                         <div class="d-flex justify-content-between">
                             <div class="d-flex flex-row align-items-center">
@@ -77,10 +95,27 @@
                                 <p th:text="${comment.id}"></p>
                                 <p class="small mb-0 ms-2" th:text="${comment.writer}"></p>
                             </div>
-                            <div class="d-flex flex-row align-items-center">
-                                <p class="small text-muted mb-0">Upvote?</p>
-                                <i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i>
-                                <p class="small text-muted mb-0">3</p>
+                            <div class="btn-group d-flex flex-row align-items-center">
+                                <button id="update-btn" class="btn btn-secondary" onclick="toggleBtn()">수정</button>
+                                <form id="delete-form" th:action="@{'/boards/writeDetail/' + ${comment.id}+ '/' +${comment.boardId}}" method="post">
+                                    <input type="hidden" name="_method" value="delete"/>
+                                    <button id="delete-btn" class="btn btn-secondary">삭제</button>
+                                </form>
+                                <br/>
+                                <form id="update-form" th:action="@{'/boards/writeDetail/'+ ${comment.id}+ '/'2 +${comment.boardId}}" autocomplete="off" method="post" style="display: none">
+                                    <input type="hidden" name="_method" value="put"/>
+                                    <input type="hidden" th:id="id" name="id" th:value="${comment.id}"/>
+                                    <input type="hidden" th:value="${comment.writer}" th:id="writer" name="writer"  maxlength='10' placeholder="작성자">
+                                    <!--                                    <form th:action="@{'/boards/writeDetail/' + ${boardList.id}}" autocomplete="off" method="post">-->
+                                    <div>
+                                    </div>
+                                    <div class="form-outline">
+                                        <textarea class="form-control" th:text="${comment.content}" th:id="content" name="content" rows="1"></textarea>
+                                        <input type="submit" id="submiBtn2"  class="btn btn-outline-primary mr-2" value="작성">
+                                    </div>
+                                    <!--                                    </form>-->
+
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -162,17 +197,11 @@
                                         <br/>
                                     </div>
                                     <div class="form-outline">
-                                        <textarea class="form-control" th:id="content" rows="4"></textarea>
+                                        <textarea class="form-control" th:id="content" name="content" rows="4"></textarea>
                                         <label class="form-label" th:for="content">What is your view?</label>
                                         <br>
                                         <input type="submit" id="submiBtn"  class="btn btn-outline-primary mr-2" value="작성">
                                     </div>
-<!--                                    <div class="d-flex justify-content-between mt-3">-->
-<!--&lt;!&ndash;                                    <button type="button" class="btn btn-success">Danger</button>&ndash;&gt;-->
-<!--                                        <button type="button" class="btn btn-success" style="float: right">-->
-<!--                                            Post <i class="fas fa-long-arrow-alt-right ms-1"></i>-->
-<!--                                        </button>-->
-<!--                                    </div>-->
                                 </form>
 
                             </div>
@@ -183,5 +212,6 @@
         </div>
     </div>
 </section>
+
 </body>
 </html>
