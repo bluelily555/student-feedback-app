@@ -4,6 +4,7 @@ package com.project.feedback.controller.api;
 import com.project.feedback.domain.Response;
 import com.project.feedback.domain.dto.task.*;
 import com.project.feedback.service.TaskService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @RestController
 @RequestMapping("/api/v1/tasks")
 @RequiredArgsConstructor
+@Api(tags = {"태스크(Task)"})
 public class TaskApiController {
 
     private final TaskService taskService;

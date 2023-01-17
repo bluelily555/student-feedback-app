@@ -5,6 +5,7 @@ import com.project.feedback.domain.dto.board.BoardWriteDto;
 import com.project.feedback.domain.dto.board.CommentWriteDto;
 import com.project.feedback.service.BoardService;
 import com.project.feedback.service.CommentService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 //import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/boards")
+@Api(tags = {"글작성"})
 public class WriteApiController {
     private BoardService boardService;
     private CommentService commentService;
