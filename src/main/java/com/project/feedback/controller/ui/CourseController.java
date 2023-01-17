@@ -35,22 +35,4 @@ public class CourseController {
         return "redirect:/";
     }
 
-    @GetMapping("/{courseId}")
-    public String show(@PathVariable Long courseId, Model model, Authentication auth) {
-//        CourseDto res = courseService.getOneCourse(courseId);
-//        model.addAttribute("courseDetail", res);
-//
-//        // 화면에 changeable을 true로 넘겨주면 수정, 삭제 가능
-//        User taskUser = findService.findUserByUserName(res.getUserName());
-//        User loginUser = findService.findUserByUserName(auth.getName());
-//        if(auth != null && findService.checkAuth(taskUser, loginUser)) {
-//            model.addAttribute("changeable", true);
-//        } else {
-//            model.addAttribute("changeable", false);
-//        }
-//
-        return "tasks/show";
-    }
-
-
 }
