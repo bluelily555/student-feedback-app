@@ -51,6 +51,9 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, "/api/v1/tasks").hasAuthority(Role.ADMIN.name())
                 .antMatchers(HttpMethod.DELETE, "/api/v1/tasks").hasAuthority(Role.ADMIN.name())
                 .antMatchers(HttpMethod.PUT, "/api/v1/tasks").hasAuthority(Role.ADMIN.name())
+                //코스 생성 관련 권한 ADMIN, MANAGER
+                .antMatchers(HttpMethod.GET, "/courses/write").hasAnyAuthority(Role.ADMIN.name(), Role.MANAGER.name())
+                .antMatchers(HttpMethod.POST, "/api/v1/tasks").hasAnyAuthority(Role.ADMIN.name(), Role.MANAGER.name())
 
 
             .antMatchers(HttpMethod.POST, "/api/v1/users/**/role/change").hasAuthority(Role.ADMIN.name())
