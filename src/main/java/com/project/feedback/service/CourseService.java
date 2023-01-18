@@ -13,6 +13,7 @@ import com.project.feedback.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,16 +40,15 @@ public class CourseService {
 
 
     // to do 작성 중
-    public void registerStudent(Long courseId, AddStudentRequest req) {
-        CourseEntity course = courseRepository.findById(courseId)
-            .orElseThrow(() -> new CustomException(ErrorCode.COURSE_NOT_FOUND));
+    public void registerStudent(AddStudentRequest req) {
+        CourseEntity course = findService.findCourseByName(req.getCourseName());
+        System.out.println("service"+course.getName());
 
-        User user = userRepository.findById(req.getUserId())
-            .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
-
-        // user 추가
+        // 추가해야하는 user 리스트
         List<User> users = course.getUsers();
-        users.add(user);
+        for(User user : req.getUserList()){
+            users.add(user);
+        }
         course.setUsers(users);
         courseRepository.save(course);
     }

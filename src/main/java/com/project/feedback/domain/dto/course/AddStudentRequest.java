@@ -15,5 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddStudentRequest {
-    private Long userId;
+  //  private Long courseId;
+    private String courseName;
+    private List<User> userList; // multi-checkbox
 }

@@ -1,10 +1,13 @@
 package com.project.feedback.controller.ui;
 
+import com.project.feedback.domain.dto.course.AddStudentRequest;
+import com.project.feedback.domain.dto.course.CourseDto;
 import com.project.feedback.domain.dto.user.UserJoinRequest;
 import com.project.feedback.domain.dto.user.UserListResponse;
 import com.project.feedback.domain.dto.user.UserLoginRequest;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
+import com.project.feedback.service.CourseService;
 import com.project.feedback.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 @RequestMapping("/users")
@@ -24,9 +28,13 @@ import javax.servlet.http.HttpSession;
 public class UserUiController {
 
     private final UserService userService;
+    private final CourseService courseService;
 
     @GetMapping
     public String list(Model model, @PageableDefault(size = 20) Pageable pageable) {
+        List<CourseDto> courses = courseService.courses();
+        model.addAttribute("courseList", courses);
+        model.addAttribute("addStudentRequest", new AddStudentRequest());
         UserListResponse res = userService.getUserList(pageable);
         model.addAttribute("userList", res.getContent());
         model.addAttribute("nowPage", res.getPageable().getPageNumber() + 1);

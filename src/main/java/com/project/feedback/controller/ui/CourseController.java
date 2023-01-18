@@ -1,5 +1,6 @@
 package com.project.feedback.controller.ui;
 
+import com.project.feedback.domain.dto.course.AddStudentRequest;
 import com.project.feedback.domain.dto.course.CourseCreateRequest;
 import com.project.feedback.service.CourseService;
 import com.project.feedback.service.TaskService;
@@ -14,13 +15,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Controller
 @RequestMapping("/courses")
 @RequiredArgsConstructor
 @Slf4j
 public class CourseController {
-    private final TaskService taskService;
     private final CourseService courseService;
 
     @GetMapping("/write")
@@ -34,5 +37,21 @@ public class CourseController {
         courseService.createCourse(req, auth.getName());
         return "redirect:/";
     }
+
+    @GetMapping("/register")
+    public String register(Model model) {
+        List<Long> users = new ArrayList<>();
+        model.addAttribute("addStudentRequest", new AddStudentRequest());
+        model.addAttribute("chk", users);
+        System.out.println("check" + users);
+        return  "users/show";
+    }
+
+    @PostMapping("/register")
+    public String register(@ModelAttribute("addStudentRequest") AddStudentRequest req, Authentication auth) {
+        courseService.registerStudent(req);
+        return  "home";
+    }
+
 
 }
