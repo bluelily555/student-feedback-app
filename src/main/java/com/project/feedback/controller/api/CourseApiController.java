@@ -34,7 +34,7 @@ public class CourseApiController {
     }
 
     @Operation(summary = "기수에 학생 등록")
-    @PostMapping("/register/{courseId}")
+    @PostMapping("/{courseId}/students")
     public String registerStudent(@PathVariable Long courseId, @RequestBody AddStudentRequest studentRequest, @ApiIgnore Authentication auth) {
         courseService.registerStudent(courseId, studentRequest);
         return "success";
