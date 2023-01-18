@@ -44,11 +44,12 @@ public class CourseEntity extends BaseEntity{
     @OneToMany(mappedBy = "courseEntity")
     private List<TaskEntity> taskEntities;
 
+    //기수 만든 사람
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToMany(targetEntity = User.class)
-    private List<User> users;
+    @OneToMany(mappedBy = "courseEntity")
+    private List<CourseEntityUser> courseEntityUsers;
 
 }

@@ -5,15 +5,14 @@ import com.project.feedback.domain.dto.course.CourseCreateRequest;
 import com.project.feedback.domain.dto.course.CourseCreateResponse;
 import com.project.feedback.domain.dto.course.CourseDto;
 import com.project.feedback.domain.entity.CourseEntity;
+import com.project.feedback.domain.entity.CourseEntityUser;
 import com.project.feedback.domain.entity.User;
-import com.project.feedback.exception.CustomException;
-import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.repository.CourseRepository;
+import com.project.feedback.repository.CourseUserRepository;
 import com.project.feedback.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
 public class CourseService {
 
     private final CourseRepository courseRepository;
-    private final UserRepository userRepository;
+    private final CourseUserRepository courseUserRepository;
     private final FindService findService;
 
     public List<CourseDto> courses() {
@@ -39,17 +38,20 @@ public class CourseService {
     }
 
 
-    // to do 작성 중
     public void registerStudent(AddStudentRequest req) {
         CourseEntity course = findService.findCourseByName(req.getCourseName());
-        System.out.println("service"+course.getName());
 
-        // 추가해야하는 user 리스트
-        List<User> users = course.getUsers();
-        for(User user : req.getUserList()){
-            users.add(user);
+        //기수 등록해야하는 학생 list
+        List<User> users = req.getUserList();
+
+        for(User user : users){
+            if(!courseUserRepository.findCourseEntityUserByUserId(user.getId()).isPresent()){
+                CourseEntityUser courseEntityUser = new CourseEntityUser();
+                courseEntityUser.setUser(user);
+                courseEntityUser.setCourseEntity(course);
+                courseUserRepository.save(courseEntityUser);
+            }
         }
-        course.setUsers(users);
         courseRepository.save(course);
     }
 

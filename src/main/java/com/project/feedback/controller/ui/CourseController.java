@@ -42,8 +42,6 @@ public class CourseController {
     public String register(Model model) {
         List<Long> users = new ArrayList<>();
         model.addAttribute("addStudentRequest", new AddStudentRequest());
-        model.addAttribute("chk", users);
-        System.out.println("check" + users);
         return  "users/show";
     }
 

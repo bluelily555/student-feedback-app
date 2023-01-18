@@ -41,8 +41,8 @@ public class CourseCreateRequest {
                 .description(this.description)
                 .courseStatus(CourseStatus.valueOf(this.status))
                 .startDate(this.startDate)
+                .user(user)
                 .endDate(this.endDate)
-                .users(users)
                 .build();
     }
 }
