@@ -36,6 +36,8 @@ http://localhost:8080 으로 접속하면 초기 화면이 보입니다.
 
 [스웨거](http://ec2-3-38-111-117.ap-northeast-2.compute.amazonaws.com:8083/swagger-ui/)
 
-## ERD
+## 문서
 
-[ERD](https://app.diagrams.net/#G1Vh3notO6oMFYSy4GcQSlctRlbKeuyoHX)
+| [ERD](https://app.diagrams.net/#G1Vh3notO6oMFYSy4GcQSlctRlbKeuyoHX) | [기능정의서](https://docs.google.com/document/d/12keAVS-9ssKvohILyIxJpomUiF9TDVY66Gzj2VVPef8/edit) |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+
