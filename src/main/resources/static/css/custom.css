@@ -100,6 +100,14 @@
     background-color: #A5F1E9;
 }
 
+.course-page-btn {
+    margin-right: 3px;
+    margin-left: 3px;
+    margin-bottom: 3px;
+    display: inline;
+    background-color: #A5C1F1FF;
+}
+
 .page-btn:hover {
     margin-right: 3px;
     margin-left: 3px;
