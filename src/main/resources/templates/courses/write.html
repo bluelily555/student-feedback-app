@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header.html :: head"/>
-<body class="container">
-    <div th:replace="fragments/header.html :: header"/>
+<head th:replace="~{fragments/header.html :: head}"/>
+<body>
+    <div th:insert="~{fragments/navbar :: navbar}"></div>
     <br/><br/>
     <div class="row">
         <form class="offset-3 col-6 form-group" th:method="post" th:action="@{/courses/write}" th:object="${courseCreateRequest}">

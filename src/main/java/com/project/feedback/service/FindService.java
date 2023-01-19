@@ -44,13 +44,13 @@ public class FindService {
      */
     public boolean checkAuth(User postUser, User loginUser) {
         if(!postUser.getUserName().equals(loginUser.getUserName()) &&
-                loginUser.getRole() != Role.ADMIN) {
+                loginUser.getRole() != Role.ROLE_ADMIN) {
             return false;
         }
         return true;
     }
     public boolean checkAdmin(User loginUser){
-        if(loginUser.getRole() != Role.ADMIN){
+        if(loginUser.getRole() != Role.ROLE_ADMIN){
             return false;
         }
         return true;

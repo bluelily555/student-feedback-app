@@ -19,7 +19,7 @@ public class UserJoinRequest {
         return User.builder()
                 .userName(this.userName)
                 .password(encodedPassword)
-                .role(Role.STUDENT)
+                .role(Role.ROLE_STUDENT)
                 .build();
     }
 }

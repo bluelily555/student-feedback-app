@@ -1,4 +1,4 @@
-package com.project.feedback.controller.api;
+package com.project.feedback.controller;
 
 import com.project.feedback.domain.entity.User;
 import com.project.feedback.service.FindService;

@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Slf4j
 // OncePerRequestFilter : 매번 들어갈 때 마다 체크 해주는 필터
 public class JwtTokenFilter extends OncePerRequestFilter {
 
@@ -64,6 +66,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
             // userName으로 User 찾아오기
             User loginUser = findService.findUserByUserName(userName);
+
+            log.info("role:{}", loginUser.getRole().name());
 
             // 권한을 주거나 안주기
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
