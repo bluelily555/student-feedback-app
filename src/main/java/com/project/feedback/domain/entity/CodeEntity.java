@@ -1,10 +1,10 @@
 package com.project.feedback.domain.entity;
 
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 
 @NoArgsConstructor
 @Getter
