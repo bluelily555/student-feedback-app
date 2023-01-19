@@ -10,8 +10,6 @@ import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,9 +32,9 @@ public class CourseApiController {
     }
 
     @Operation(summary = "기수에 학생 등록")
-    @PostMapping("/{courseId}/students")
-    public String registerStudent(@PathVariable Long courseId, @RequestBody AddStudentRequest studentRequest, @ApiIgnore Authentication auth) {
-        courseService.registerStudent(courseId, studentRequest);
+    @PostMapping("/register")
+    public String registerStudent(@RequestBody AddStudentRequest studentRequest) {
+        courseService.registerStudent(studentRequest);
         return "success";
     }
 

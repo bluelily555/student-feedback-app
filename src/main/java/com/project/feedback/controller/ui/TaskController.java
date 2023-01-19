@@ -3,7 +3,6 @@ package com.project.feedback.controller.ui;
 import com.project.feedback.domain.dto.course.CourseDto;
 import com.project.feedback.domain.dto.task.TaskCreateRequest;
 import com.project.feedback.domain.dto.task.TaskDetailResponse;
-import com.project.feedback.domain.dto.task.TaskListDto;
 import com.project.feedback.domain.dto.task.TaskUpdateRequest;
 import com.project.feedback.domain.entity.User;
 import com.project.feedback.exception.CustomException;

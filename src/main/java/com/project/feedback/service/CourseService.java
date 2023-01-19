@@ -5,10 +5,10 @@ import com.project.feedback.domain.dto.course.CourseCreateRequest;
 import com.project.feedback.domain.dto.course.CourseCreateResponse;
 import com.project.feedback.domain.dto.course.CourseDto;
 import com.project.feedback.domain.entity.CourseEntity;
+import com.project.feedback.domain.entity.CourseEntityUser;
 import com.project.feedback.domain.entity.User;
-import com.project.feedback.exception.CustomException;
-import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.repository.CourseRepository;
+import com.project.feedback.repository.CourseUserRepository;
 import com.project.feedback.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class CourseService {
 
     private final CourseRepository courseRepository;
-    private final UserRepository userRepository;
+    private final CourseUserRepository courseUserRepository;
     private final FindService findService;
 
     public List<CourseDto> courses() {
@@ -38,18 +38,20 @@ public class CourseService {
     }
 
 
-    // to do 작성 중
-    public void registerStudent(Long courseId, AddStudentRequest req) {
-        CourseEntity course = courseRepository.findById(courseId)
-            .orElseThrow(() -> new CustomException(ErrorCode.COURSE_NOT_FOUND));
+    public void registerStudent(AddStudentRequest req) {
+        CourseEntity course = findService.findCourseByName(req.getCourseName());
 
-        User user = userRepository.findById(req.getUserId())
-            .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
+        //기수 등록해야하는 학생 list
+        List<User> users = req.getUserList();
 
-        // user 추가
-        List<User> users = course.getUsers();
-        users.add(user);
-        course.setUsers(users);
+        for(User user : users){
+            if(!courseUserRepository.findCourseEntityUserByUserId(user.getId()).isPresent()){
+                CourseEntityUser courseEntityUser = new CourseEntityUser();
+                courseEntityUser.setUser(user);
+                courseEntityUser.setCourseEntity(course);
+                courseUserRepository.save(courseEntityUser);
+            }
+        }
         courseRepository.save(course);
     }
 
