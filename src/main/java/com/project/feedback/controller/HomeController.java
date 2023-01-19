@@ -20,7 +20,7 @@ public class HomeController {
             User userInfo = findService.findUserByUserName(auth.getPrincipal().toString());
             boolean CheckAdmin = findService.checkAdmin(userInfo);
             if(CheckAdmin){
-                return "/users/admin";
+                return "users/admin";
             }else{
                 return "home";
             }
