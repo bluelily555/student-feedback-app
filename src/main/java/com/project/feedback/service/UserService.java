@@ -1,19 +1,12 @@
 package com.project.feedback.service;
 
 import com.project.feedback.domain.Role;
+import com.project.feedback.domain.dto.user.*;
 import com.project.feedback.domain.entity.User;
 import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.auth.JwtTokenUtil;
 import com.project.feedback.repository.UserRepository;
-import com.project.feedback.domain.dto.user.UserChangeRoleRequest;
-import com.project.feedback.domain.dto.user.UserChangeRoleResponse;
-import com.project.feedback.domain.dto.user.UserJoinRequest;
-import com.project.feedback.domain.dto.user.UserJoinResponse;
-import com.project.feedback.domain.dto.user.UserListDto;
-import com.project.feedback.domain.dto.user.UserListResponse;
-import com.project.feedback.domain.dto.user.UserLoginRequest;
-import com.project.feedback.domain.dto.user.UserLoginResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -61,6 +54,7 @@ public class UserService {
 
         // JWT Token 발급
         String jwtToken = JwtTokenUtil.createToken(user.getUserName(), secretKey, expireTimeMs);
+
         return new UserLoginResponse(jwtToken);
     }
 

@@ -3,6 +3,7 @@ package com.project.feedback.controller.ui;
 import com.project.feedback.domain.dto.board.BoardWriteDto;
 import com.project.feedback.domain.dto.board.CommentWriteDto;
 import com.project.feedback.service.BoardService;
+import com.project.feedback.service.CodeService;
 import com.project.feedback.service.CommentService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ public class WriteController {
 
     private BoardService boardService;
     private CommentService commentService;
+    private CodeService codeService;
 
 
     @GetMapping("/write")
@@ -43,13 +45,6 @@ public class WriteController {
         model.addAttribute("boardList", boardWriteDto);
         return "boards/list";
     }
-//    @GetMapping("board/update/{no}")
-//    public String boardReadList(@PathVariable("no")Long no,Model model){
-//        BoardWriteDto boardWriteDto = boardService.getPost(no);
-//
-//        model.addAttribute("boardList", boardWriteDto);
-//        return "board/update";
-//    }
     @GetMapping("/edit/{no}")
     public String edit(@PathVariable("no")Long no, Model model){
         BoardWriteDto boardWriteDto = boardService.getPost(no);
@@ -81,13 +76,6 @@ public class WriteController {
     public String codeView(){
         return "boards/codeView";
     }
-//    @GetMapping("/{no}")
-//    public String commentList(@PathVariable("no")Long no, Model model){
-//        List<CommentWriteDto> commentWriteDtoList = commentService.searchPosts(no);
-//        model.addAttribute("commentList", commentWriteDtoList);
-//        return "boards/writeDetail" + no.toString();
-//    }
-    // 해당 게시글에 대해 댓글 쓰기
     @PostMapping("writeDetail/{no}")
     public String commentWrite(@PathVariable("no")Long no,CommentWriteDto commentWriteDto){
         commentService.saveComment(commentWriteDto, no);
@@ -103,4 +91,11 @@ public class WriteController {
         commentService.updateComment(commentWriteDto, commentId);
         return "redirect:/boards/writeDetail/"+boardId.toString();
     }
+
+//    @GetMapping("/codeView")
+//    public String codeList(Model model){
+//        List<CodeWriteDto> codeWriteDtoList = codeService.searchAllCode();
+//        model.addAttribute("codeList", codeWriteDtoList);
+//        return "/codeView";
+//    }
 }

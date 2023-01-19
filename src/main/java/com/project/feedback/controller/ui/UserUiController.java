@@ -2,12 +2,11 @@ package com.project.feedback.controller.ui;
 
 import com.project.feedback.domain.dto.course.AddStudentRequest;
 import com.project.feedback.domain.dto.course.CourseDto;
-import com.project.feedback.domain.dto.user.UserJoinRequest;
-import com.project.feedback.domain.dto.user.UserListResponse;
-import com.project.feedback.domain.dto.user.UserLoginRequest;
+import com.project.feedback.domain.dto.user.*;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.service.CourseService;
+import com.project.feedback.service.FindService;
 import com.project.feedback.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

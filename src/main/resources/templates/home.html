@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragments/header.html :: head"/>
 <body>
-    <div th:replace="fragments/header.html :: header"/>
-    <div>
+    <div sec:authorize="isAnonymous()">
+        <h1>로그인이 필요한 페이지 입니다.</h1>
+        <h1>로그인을 해주세요</h1>
+        <button onclick="location.href='users/login'">로그인 하러 가기</button>
     </div>
-    <div class="col" style="margin: 30px 0px 10px 0px;">
+    <div th:replace="fragments/header.html :: header" sec:authorize="isAuthenticated()" />
+    <div class="col" style="margin: 30px 0px 10px 0px;" sec:authorize="isAuthenticated()">
         <div class="offset-10">
             <button class="btn body-btn" onclick="location.href='/users'">
                 회원 목록
@@ -21,6 +24,7 @@
             </button>
         </div>
     </div>
+
 
 
 </body>

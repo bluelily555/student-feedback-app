@@ -2,12 +2,51 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <title>code view</title>
-    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js?autoload=true&amp;skin=sunburst&amp;lang=css" defer=""></script>
 </head>
 <body>
-<p>code view</p>
-<!--?prettify lang=html linenums=true?-->
-<pre type="prettyprint" id="quine"></pre>
+<div th:replace="fragments/header.html :: header"></div>
+<div class="container table-responsive">
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">번호</th>
+            <th scope="col">글제목</th>
+            <th scope="col">작성자</th>
+            <th scope="col">작성일</th>
+            <th scope="col">*</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- CONTENTS   !-->
+        <tr th:each="board : ${boardList}">
+            <th scope="row" th:text="${board.id}"></th>
+            <td th:text="${board.title}"></td>
+            <!--                    <a th:href="@{'/board/write/' + ${board.id}}"></a>-->
+            <td th:text="${board.writer}"></td>
+            <td th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm')}">
+                <!--                        <span th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm')}"></span>-->
+            </td>
+            <td>
+                <!--                        <a th:href="@{'/post/edit/' + ${board.id}}">-->
+                <!--                            <button style="float:left;margin-right: 5px;">수정</button>-->
+                <!--                        </a>-->
+
+                <form id="delete-form" th:action="@{'/boards/' + ${board.id}}" method="post">
+                    <input type="hidden" name="_method" value="delete"/>
+                    <button id="delete-btn" class="btn body-btn">삭제</button>
+                </form>
+                <a th:href="@{'/boards/writeDetail/' + ${board.id}}">
+                    <button class="btn body-btn">상세보기</button>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+<a th:href="@{/templates/boards/write}">글 쓰러 가기</a>
+
 </body>
 </html>

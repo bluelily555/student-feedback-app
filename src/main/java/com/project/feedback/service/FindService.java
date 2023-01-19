@@ -49,7 +49,12 @@ public class FindService {
         }
         return true;
     }
-
+    public boolean checkAdmin(User loginUser){
+        if(loginUser.getRole() != Role.ADMIN){
+            return false;
+        }
+        return true;
+    }
     /**
      * taskId로 Task를 찾아오는 기능
      * taskId에 해당하는 Task가 없으면 TASk_NOT_FOUND 에러 발생
