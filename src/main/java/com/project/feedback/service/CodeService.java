@@ -5,8 +5,8 @@ import com.project.feedback.domain.entity.CodeEntity;
 import com.project.feedback.repository.CodeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
