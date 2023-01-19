@@ -21,7 +21,8 @@ public class CustomErrorController implements ErrorController {
 
         HttpStatus httpStatus = HttpStatus.valueOf(Integer.valueOf(statusMsg));
 
-        model.addAttribute("msg", statusMsg + " " + httpStatus.getReasonPhrase());
+        model.addAttribute("msg", statusMsg);
+        model.addAttribute("msgPhrase", httpStatus.getReasonPhrase());
 
         return "error/error";
     }

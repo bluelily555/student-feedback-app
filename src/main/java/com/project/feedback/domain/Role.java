@@ -1,5 +1,5 @@
 package com.project.feedback.domain;
 
 public enum Role {
-    STUDENT, ADMIN, TEACHER, MANAGER
+    ROLE_STUDENT, ROLE_ADMIN, ROLE_TEACHER, ROLE_MANAGER
 }

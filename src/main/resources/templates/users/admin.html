@@ -1,10 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Admin</title>
-</head>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/header.html :: head}"/>
 <body>
-  <p>admin page 디자인 적용 예정</p>
+    <div th:insert="~{fragments/navbar :: navbar}"></div>
+    <div class="col" style="margin: 30px 0px 10px 0px;" sec:authorize="hasRole('ROLE_ADMIN')">
+        <div class="offset-10">
+            <!-- ADMIN인 경우 -->
+            <div class="d-grid gap-2 col-6 mx-auto">
+                <button class="btn btn-success" onclick="location.href = '/courses/write'">기수 등록</button>
+                <button class="btn btn-success" onclick="location.href = '/tasks/write'">Task 등록</button>
+                <button class="btn btn-success" onclick="location.href='/users'">회원 목록</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

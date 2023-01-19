@@ -1,0 +1,62 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<body>
+
+<div th:fragment="navbar">
+  <!-- Bootstrap 5.2.3 Version -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+
+  <script th:inline="javascript">
+    window.onload = function () {
+      if([[${message}]] != null) {
+        alert([[${message}]])
+        window.location.href = [[${nextUrl}]]
+      }
+    }
+  </script>
+
+  <nav class="navbar navbar-expand-lg" style="background-color: #7099cc">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Feedback</a>
+
+      <div class="justify-content-between" id="navbarNav" style="padding: 5px 30px">
+        <ul class="navbar-nav">
+          <!-- nav-item, dropdown 등 추가 예정 -->
+        </ul>
+
+        <span sec:authorize="hasRole('ADMIN')">
+          ADMIN회원 입니다.
+        </span>
+        <span th:if="${#authorization.expression('hasRole(''MENTOR'')')}">
+          MENTOR회원 입니다.
+        </span>
+        <span th:if="${#authorization.expression('hasRole(''MANAGER'')')}">
+          MANAGER회원 입니다.
+        </span>
+        <span th:if="${#authorization.expression('hasRole(''STUDENT'')')}">
+          학생회원입니다.
+        </span>
+
+        <span sec:authorize="isAuthenticated()"><span th:text="${#authentication.name}" />님 안녕하세요.</span>
+        <!-- 로그인 안 했을때 -->
+        <ul class="navbar-nav" sec:authorize="isAnonymous()">
+          <li class="nav-item">
+            <button class="btn nav-btn" onclick="location.href = '/users/login'">로그인</button>
+          </li>
+          <li class="nav-item">
+            <button class="btn nav-btn" onclick="location.href = '/users/join'">회원가입</button>
+          </li>
+        </ul>
+
+        <!-- 로그인 했을때 -->
+        <ul class="navbar-nav" sec:authorize="isAuthenticated()">
+          <button class="btn nav-btn" onclick="location.href = '/users/logout'">로그아웃</button>
+        </ul>
+
+      </div>
+    </div>
+  </nav>
+</div>
+</body>
+
+</html>
