@@ -26,9 +26,17 @@ spring:
       filter:
         enabled: true
 
+  thymeleaf:
+    cache: false
 
-thymeleaf:
-    cache=false:
+  devtools:
+  # livereload 서버 켜기
+    livereload:
+      enabled: true
+    remote:
+      restart:
+        # 원격 재시작 활성화
+        enabled: true
 
 # Jwt Secret Key
 jwt:
