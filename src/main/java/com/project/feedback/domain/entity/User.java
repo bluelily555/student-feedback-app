@@ -1,12 +1,12 @@
 package com.project.feedback.domain.entity;
 
 import com.project.feedback.domain.Role;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -16,7 +16,8 @@ import java.util.List;
 @NoArgsConstructor
 public class User extends BaseEntity{
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String userName;

@@ -33,7 +33,7 @@ thymeleaf:
 # Jwt Secret Key
 jwt:
   token:
-    secret: secret123123
+    secret: secret123123.aa.bb.kk.yy.ee.oo.nn.gg
 
 # 한글 깨지는 현상 방지
 server:

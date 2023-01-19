@@ -1,12 +1,12 @@
 package com.project.feedback.domain.entity;
 
 import com.project.feedback.domain.TaskStatus;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 
 @Entity
 @Builder
