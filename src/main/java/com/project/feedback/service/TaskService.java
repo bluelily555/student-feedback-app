@@ -60,7 +60,7 @@ public class TaskService {
         }
 
         // 수정
-        findTask.update(req.getTitle(), req.getDescription(), req.getTaskStatus(), req.getWeek(), req.getDay());
+        findTask.update(req.getTitle(), req.getDescription(), req.getTaskStatus(),req.getWeek(), req.getDay());
         taskRepository.save(findTask);
 
         return TaskUpdateResponse.of(findTask.getId());
@@ -96,5 +96,17 @@ public class TaskService {
     }
 
 
+    /**
+     * TO DO
+     * */
+    public List<TaskListDto> getTaskListByWeekAndDay(Long week, Long day){
+        List<TaskEntity> tasks = taskRepository.findByWeekAndDay(week, day);
+
+        List<TaskListDto> content = new ArrayList<>();
+        for(TaskEntity task : tasks) {
+            content.add(TaskListDto.of(task));
+        }
+        return content;
+    }
 
 }

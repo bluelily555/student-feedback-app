@@ -23,6 +23,7 @@ public class TaskEntity extends BaseEntity{
 
     private String description;
 
+    //task를 작성한 User
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -35,12 +36,12 @@ public class TaskEntity extends BaseEntity{
     private TaskStatus taskStatus;
 
     // 몇주
-    private Integer week;
+    private Long week;
 
     // 몇일
-    private Integer day;
+    private Long day;
 
-    public void update(String newTitle, String newDesc, TaskStatus taskStatus, Integer week, Integer day) {
+    public void update(String newTitle, String newDesc, TaskStatus taskStatus, Long week, Long day) {
         this.title = newTitle;
         this.description = newDesc;
         this.taskStatus = taskStatus;

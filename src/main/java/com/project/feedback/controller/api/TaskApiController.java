@@ -16,6 +16,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/tasks")
 @RequiredArgsConstructor
@@ -59,6 +61,14 @@ public class TaskApiController {
     public Response<TaskListResponse> list(
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         TaskListResponse res = taskService.getTaskList(pageable);
+        return Response.success(res);
+    }
+
+    //getTaskListByWeekAndDay
+    @Operation(summary = "week, day로 태스크 리스트 조회")
+    @GetMapping("weeks/{week}/days/{day}")
+    public Response<List<TaskListDto>> listByWeekAndDay(@PathVariable Long week, @PathVariable Long day) {
+        List<TaskListDto> res = taskService.getTaskListByWeekAndDay(week, day);
         return Response.success(res);
     }
 }

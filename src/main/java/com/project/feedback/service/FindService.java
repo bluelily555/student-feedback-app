@@ -2,15 +2,20 @@ package com.project.feedback.service;
 
 import com.project.feedback.domain.Role;
 import com.project.feedback.domain.entity.CourseEntity;
+import com.project.feedback.domain.entity.CourseEntityUser;
 import com.project.feedback.domain.entity.TaskEntity;
 import com.project.feedback.domain.entity.User;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.repository.CourseRepository;
+import com.project.feedback.repository.CourseUserRepository;
 import com.project.feedback.repository.TaskRepository;
 import com.project.feedback.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -19,6 +24,7 @@ public class FindService {
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
     private final CourseRepository courseRepository;
+    private final CourseUserRepository courseUserRepository;
 
     /**
      * userName으로 User을 찾아오는 기능
@@ -64,4 +70,34 @@ public class FindService {
         return taskRepository.findById(taskId)
             .orElseThrow(() -> new CustomException(ErrorCode.TASK_NOT_FOUND));
     }
+
+    /**
+     * 로그인한 User(student)가 속한 Course의 학생들 목록을 가져오는 api
+     */
+    public List<User> findUserByCourseId(Long courseId, User loginUser){
+        // 로그인한 user가 속한 course_id를 리턴한다.
+       CourseEntityUser courseEntityUser = courseUserRepository.findCourseEntityUserByUserId(loginUser.getId())
+           .orElseThrow(() -> new CustomException(ErrorCode.USER_COURSE_NOT_FOUND));
+
+       List<CourseEntityUser> courseEntityUsers = courseUserRepository.findCourseEntityUserByCourseEntityId(courseEntityUser.getCourseEntity().getId());
+       List<User> users = new ArrayList<>();
+
+       for(CourseEntityUser c : courseEntityUsers){
+           users.add(c.getUser());
+       }
+
+       return users;
+    }
+
+    /**
+     * course에 등록된 task 목록 조회 API : 필요한 output task명, week, day
+     */
+     public List<TaskEntity> findTaskByCourseId(Long courseId){
+         CourseEntity courses = courseRepository.findById(courseId)
+             .orElseThrow(() -> new CustomException(ErrorCode.COURSE_NOT_FOUND));
+
+         List<TaskEntity> taskEntities = courses.getTaskEntities();
+
+         return taskEntities;
+     }
 }
