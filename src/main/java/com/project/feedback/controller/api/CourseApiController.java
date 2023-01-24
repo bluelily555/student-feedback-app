@@ -5,7 +5,7 @@ import com.project.feedback.domain.Response;
 import com.project.feedback.domain.dto.course.AddStudentRequest;
 import com.project.feedback.domain.dto.course.CourseCreateRequest;
 import com.project.feedback.domain.dto.course.CourseCreateResponse;
-import com.project.feedback.domain.entity.TaskEntity;
+import com.project.feedback.domain.dto.mainInfo.CourseTaskListResponse;
 import com.project.feedback.domain.entity.User;
 import com.project.feedback.service.CourseService;
 import com.project.feedback.service.FindService;
@@ -57,13 +57,23 @@ public class CourseApiController {
     }
 
 
-    @Operation(summary = "기수에 속한 Task 목록")
+    @Operation(summary = "기수에 속한 Task와 Student 목록")
     @GetMapping("/{courseId}/tasks")
-    public String getTaaks(@PathVariable Long courseId, @ApiIgnore Authentication auth) {
-        // userid에 대한 검증 필요?
+    public Response<CourseTaskListResponse> getTasks(@PathVariable Long courseId, @ApiIgnore Authentication auth) {
         User loginUser = findService.findUserByUserName(auth.getName());
-        List<TaskEntity> taskEntities = findService.findTaskByCourseId(courseId);
-        return "success";
+        CourseTaskListResponse res = findService.getTasksAndStudents(courseId, loginUser);
+        return Response.success(res);
+    }
+
+    @Operation(summary = "기수에 속한 Task와 Student 목록 : week, day filter")
+    @GetMapping("/{courseId}/tasks/weeks/{week}/days/{day}")
+    public Response<CourseTaskListResponse> getTasksByFilter(@PathVariable Long courseId,
+                                                     @PathVariable Long week,
+                                                     @PathVariable Long day,
+                                                     @ApiIgnore Authentication auth) {
+        User loginUser = findService.findUserByUserName(auth.getName());
+        CourseTaskListResponse res = findService.getTasksAndStudentsByWeekAndDay(courseId, week, day, loginUser);
+        return Response.success(res);
     }
 
 }

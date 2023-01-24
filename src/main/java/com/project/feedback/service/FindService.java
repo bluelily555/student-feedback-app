@@ -1,6 +1,9 @@
 package com.project.feedback.service;
 
 import com.project.feedback.domain.Role;
+import com.project.feedback.domain.dto.mainInfo.CourseTaskListResponse;
+import com.project.feedback.domain.dto.mainInfo.StudentInfo;
+import com.project.feedback.domain.dto.mainInfo.TaskInfo;
 import com.project.feedback.domain.entity.CourseEntity;
 import com.project.feedback.domain.entity.CourseEntityUser;
 import com.project.feedback.domain.entity.TaskEntity;
@@ -100,4 +103,58 @@ public class FindService {
 
          return taskEntities;
      }
+
+    /**
+     * TO DO : 학생이 속한 코스의 테스크들과, 학생이 속한 코스의 다른 학생들 목록이 아래와 같이 json형태로 합쳐보여줄 수 있도록
+     * [
+     *   tasks:[{"":"", ""}, {"":"", ""}, {"":"", ""}],
+     *   students:[{"":"", ""}]
+     * ]
+     */
+
+    public CourseTaskListResponse getTasksAndStudents(Long courseId, User loginUser){
+        // task setting
+        List<TaskEntity> taskEntities = findTaskByCourseId(courseId);
+        List<TaskInfo> taskInfoList = new ArrayList<>();
+        for(TaskEntity t : taskEntities){
+            taskInfoList.add(TaskInfo.of(t));
+        }
+        // student setting
+        List<User> users = findUserByCourseId(courseId, loginUser);
+        List<StudentInfo> studentInfoList = new ArrayList<>();
+
+        for(User u : users){
+            studentInfoList.add(StudentInfo.of(u));
+        }
+
+        CourseTaskListResponse courseTaskListResponse =  CourseTaskListResponse.builder()
+                                                            .taskInfoList(taskInfoList)
+                                                            .studentInfoList(studentInfoList)
+                                                            .build();
+        return courseTaskListResponse;
+    }
+
+    public CourseTaskListResponse getTasksAndStudentsByWeekAndDay(Long courseId, Long week, Long day, User loginUser){
+        //해당 course에 week, day로 필터 걸어서 가져옴
+        List<TaskEntity> taskEntities = taskRepository.findByCourseIdAndWeekAndDay(courseId, week, day);
+
+        List<TaskInfo> taskInfoList = new ArrayList<>();
+        for(TaskEntity t : taskEntities){
+            taskInfoList.add(TaskInfo.of(t));
+        }
+        // student setting
+        List<User> users = findUserByCourseId(courseId, loginUser);
+        List<StudentInfo> studentInfoList = new ArrayList<>();
+
+        for(User u : users){
+            studentInfoList.add(StudentInfo.of(u));
+        }
+
+        CourseTaskListResponse courseTaskListResponse =  CourseTaskListResponse.builder()
+            .taskInfoList(taskInfoList)
+            .studentInfoList(studentInfoList)
+            .build();
+        return courseTaskListResponse;
+    }
+
 }
