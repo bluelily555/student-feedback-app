@@ -2,10 +2,14 @@ package com.project.feedback.service;
 
 import com.project.feedback.domain.Role;
 import com.project.feedback.domain.dto.user.*;
+import com.project.feedback.domain.entity.CourseEntity;
+import com.project.feedback.domain.entity.CourseEntityUser;
 import com.project.feedback.domain.entity.User;
 import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.auth.JwtTokenUtil;
+import com.project.feedback.repository.CourseRepository;
+import com.project.feedback.repository.CourseUserRepository;
 import com.project.feedback.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,12 +20,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+    private final CourseUserRepository courseUserRepository;
+    private final CourseRepository courseRepository;
     private final BCryptPasswordEncoder encoder;
     private final FindService findService;
 
@@ -82,10 +90,21 @@ public class UserService {
 
     public UserListResponse getUserList(Pageable pageable) {
         Page<User> users = userRepository.findAll(pageable);
-
         List<UserListDto> content = new ArrayList<>();
         for(User user : users) {
-            content.add(UserListDto.of(user));
+            String courseName = "";
+
+            Optional<CourseEntityUser> courseEntityUser = courseUserRepository.findCourseEntityUserByUserId(user.getId());
+            courseEntityUser.ifPresent(result -> courseEntityUser.get());
+
+            if(courseEntityUser.isPresent()) {
+                Optional<CourseEntity> courseEntity =
+                    courseRepository.findById(courseEntityUser.get().getCourseEntity().getId());
+                if(courseEntity.isPresent()){
+                    courseName = courseEntity.get().getName();
+                }
+            }
+            content.add(UserListDto.of(user,courseName));
         }
 
         return new UserListResponse(content, pageable, users);

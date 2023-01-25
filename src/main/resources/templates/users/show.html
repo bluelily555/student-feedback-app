@@ -28,6 +28,7 @@
                         </select>
                     </label>
                 </th>
+                <th style="width: 10%">기수</th>
                 <th style="width: 10%">id</th>
                 <th style="width: 25%">사용자명</th>
                 <th style="width: 25%">권한</th>
@@ -40,6 +41,7 @@
                             <input type="checkbox" name="check" th:field= "*{userList}" class="check" th:value="${user.id}">
                         </label>
                     </td>
+                    <td style="width: 10%" th:text="${user.courseName}"/>
                     <td style="width: 10%" th:text="${user.id}"/>
                     <td style="width: 40%" th:text="${user.userName}"/>
                     <td style="width: 25%" th:text="${user.role}"/>
