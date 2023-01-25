@@ -64,7 +64,7 @@ public class TaskApiController {
         return Response.success(res);
     }
 
-    //getTaskListByWeekAndDay
+
     @Operation(summary = "week, day로 태스크 리스트 조회")
     @GetMapping("weeks/{week}/days/{day}")
     public Response<List<TaskListDto>> listByWeekAndDay(@PathVariable Long week, @PathVariable Long day) {
