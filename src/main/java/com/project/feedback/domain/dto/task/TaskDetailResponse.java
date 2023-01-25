@@ -18,8 +18,8 @@ public class TaskDetailResponse {
     private String title;
     private String description;
     private TaskStatus taskStatus;
-    private Integer week;
-    private Integer day;
+    private Long week;
+    private Long day;
     private String userName;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
