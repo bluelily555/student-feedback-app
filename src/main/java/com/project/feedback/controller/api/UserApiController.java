@@ -9,7 +9,6 @@ import com.project.feedback.domain.dto.user.UserJoinResponse;
 import com.project.feedback.domain.dto.user.UserListResponse;
 import com.project.feedback.domain.dto.user.UserLoginRequest;
 import com.project.feedback.domain.dto.user.UserLoginResponse;
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,21 +22,18 @@ public class UserApiController {
 
     private final UserService userService;
 
-    @Operation(summary = "회원가입")
     @PostMapping("/join")
     public Response<UserJoinResponse> join(@RequestBody UserJoinRequest req) {
         UserJoinResponse res = userService.saveUser(req);
         return Response.success(res);
     }
 
-    @Operation(summary = "로그인")
     @PostMapping("/login")
     public Response<UserLoginResponse> login(@RequestBody UserLoginRequest req) {
         UserLoginResponse res = userService.login(req);
         return Response.success(res);
     }
 
-    @Operation(summary = "유저 권한 변경, ADMIN만 가능")
     @PostMapping("/{userId}/role/change")
     public Response<UserChangeRoleResponse> changeRole(@PathVariable Long userId, @RequestBody UserChangeRoleRequest req) {
         UserChangeRoleResponse res = userService.changeRole(userId, req);
@@ -45,7 +41,6 @@ public class UserApiController {
     }
 
 
-    @Operation(summary = "회원가입 USER 리스트 조회(20개), ADMIN만 가능")
     @GetMapping
     public Response<UserListResponse> list(
         @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
