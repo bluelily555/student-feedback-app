@@ -1,6 +1,7 @@
 package com.project.feedback.controller.ui;
 
 import com.project.feedback.domain.dto.board.BoardWriteDto;
+import com.project.feedback.domain.dto.board.CodeWriteDto;
 import com.project.feedback.domain.dto.board.CommentWriteDto;
 import com.project.feedback.service.BoardService;
 import com.project.feedback.service.CodeService;
@@ -73,10 +74,31 @@ public class WriteController {
         return "redirect:/boards/list";
     }
     @GetMapping("/codeView")
-    public String codeView(){
+    public String codeView(Model model){
+        List<CodeWriteDto> codeWriteDtoList = codeService.searchAllCode();
+
+        model.addAttribute("codeList", codeWriteDtoList);
         return "boards/codeView";
     }
-    @PostMapping("writeDetail/{no}")
+    @GetMapping("/codeDetail/{boardId}")
+    public String codeDetail(@PathVariable("boardId")Long boardId, Model model){
+        CodeWriteDto codeWriteDto = codeService.getCodeDetail(boardId);
+        model.addAttribute("codeInfo", codeWriteDto);
+        return "/boards/codeDetail";
+    }
+    @GetMapping("/codeWrite")
+    public String codeWrite() { return "boards/codeWrite"; }
+    @PostMapping("/codeWrite")
+    public String codeAddWrite(CodeWriteDto codeWriteDto){
+        codeService.saveCode(codeWriteDto);
+        return "redirect:/boards/codeView";
+    }
+    @DeleteMapping("/codeView/{boardId}")
+    public String codeDelete(@PathVariable("boardId")Long boardId){
+        codeService.deleteCode(boardId);
+        return "redirect:/boards/codeView";
+    }
+    @PostMapping("/writeDetail/{no}")
     public String commentWrite(@PathVariable("no")Long no,CommentWriteDto commentWriteDto){
         commentService.saveComment(commentWriteDto, no);
         return "redirect:/boards/writeDetail/" + no.toString();

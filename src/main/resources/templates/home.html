@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{fragments/header.html :: head}"/>
+<head th:replace="~{fragments/header.html :: head}"></head>
 <body>
     <div th:insert="~{fragments/navbar :: navbar}"></div>
     <div class="col" style="margin: 30px 0px 10px 0px;" sec:authorize="isAuthenticated()">
