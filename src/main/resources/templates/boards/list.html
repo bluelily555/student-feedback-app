@@ -32,8 +32,7 @@
 <!--                        <a th:href="@{'/post/edit/' + ${board.id}}">-->
 <!--                            <button style="float:left;margin-right: 5px;">수정</button>-->
 <!--                        </a>-->
-
-                        <form id="delete-form" th:action="@{'/boards/' + ${board.id}}" method="post">
+                        <form th:if="${board.userId==userId}" id="delete-form" th:action="@{'/boards/' + ${board.id}}" method="post">
                             <input type="hidden" name="_method" value="delete"/>
                             <button id="delete-btn" class="btn body-btn">삭제</button>
                         </form>

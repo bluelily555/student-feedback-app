@@ -24,13 +24,16 @@ public class BoardEntity extends TimeEntity {
 
     @Column(length = 32, nullable = false)
     private String writer;
+    @Column(nullable = false)
+    private String userId;
 
     @Builder
-    public BoardEntity(Long id, String title, String content, String writer){
+    public BoardEntity(Long id, String title, String content, String writer, String userId){
         this.id = id;
         this.writer = writer;
         this.title = title;
         this.content = content;
+        this.userId = userId;
     }
 
 }

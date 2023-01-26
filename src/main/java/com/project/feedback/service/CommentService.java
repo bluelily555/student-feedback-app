@@ -22,6 +22,7 @@ public class CommentService {
                 .content(commentEntity.getContent())
                 .writer(commentEntity.getWriter())
                 .boardId(commentEntity.getBoardId())
+                .userId(commentEntity.getUserId())
                 .createdDate(commentEntity.getCreatedDate())
                 .build();
     }
@@ -48,6 +49,7 @@ public class CommentService {
                     .content(commentEntity.getContent())
                     .writer(commentEntity.getWriter())
                     .boardId(commentEntity.getBoardId())
+                    .userId(commentEntity.getUserId())
                     .createdDate(commentEntity.getCreatedDate())
                     .build();
             commentWriteDtoList.add(commentWriteDto);
@@ -75,6 +77,7 @@ public class CommentService {
                 .boardId(commentEntity.getBoardId())
                 .content(commentEntity.getContent())
                 .writer(commentEntity.getWriter())
+                .userId(commentEntity.getUserId())
                 .createdDate(commentEntity.getCreatedDate())
                 .build();
         return  commentWriteDto;

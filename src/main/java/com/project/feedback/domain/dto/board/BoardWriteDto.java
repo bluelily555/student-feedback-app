@@ -14,6 +14,7 @@ public class BoardWriteDto {
     private String writer;
     private String title;
     private String content;
+    private String userId;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
     public BoardEntity toEntity(){
@@ -22,16 +23,18 @@ public class BoardWriteDto {
                 .writer(writer)
                 .title(title)
                 .content(content)
+                .userId(userId)
                 .build();
         return boardEntity;
     }
 
     @Builder
-    public BoardWriteDto(Long id, String title, String content, String writer, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+    public BoardWriteDto(Long id, String title, String content, String writer, String userId, LocalDateTime createdDate, LocalDateTime modifiedDate) {
         this.id = id;
         this.writer = writer;
         this.title = title;
         this.content = content;
+        this.userId = userId;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
     }

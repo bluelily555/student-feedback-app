@@ -35,6 +35,7 @@ public class BoardService {
                     .title(boardEntity.getTitle())
                     .content(boardEntity.getContent())
                     .writer(boardEntity.getWriter())
+                    .userId(boardEntity.getUserId())
                     .createdDate(boardEntity.getCreatedDate())
                     .build();
 
@@ -52,6 +53,7 @@ public class BoardService {
                 .title(boardEntity.getTitle())
                 .content(boardEntity.getContent())
                 .writer(boardEntity.getWriter())
+                .userId(boardEntity.getUserId())
                 .createdDate(boardEntity.getCreatedDate())
                 .build();
         return boardWriteDto;

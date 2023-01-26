@@ -16,6 +16,7 @@ public class CommentWriteDto {
     private String writer;
     private String content;
     private Long boardId;
+    private String userId;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
@@ -24,15 +25,17 @@ public class CommentWriteDto {
                 .writer(writer)
                 .content(content)
                 .boardId(boardId)
+                .userId(userId)
                 .build();
         return commentEntity;
     }
     @Builder
-    public CommentWriteDto(Long id,Long boardId, String content, String writer,LocalDateTime createdDate, LocalDateTime modifiedDate){
+    public CommentWriteDto(Long id,Long boardId, String content, String writer,String userId, LocalDateTime createdDate, LocalDateTime modifiedDate){
         this.id = id;
         this.writer = writer;
         this.content = content;
         this.boardId = boardId;
+        this.userId = userId;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
     }

@@ -7,6 +7,7 @@ import com.project.feedback.service.BoardService;
 import com.project.feedback.service.CodeService;
 import com.project.feedback.service.CommentService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,13 +25,14 @@ public class WriteController {
 
 
     @GetMapping("/write")
-    public String boardReadWrite(){
+    public String boardReadWrite(Model model, Authentication auth){
+        model.addAttribute("userId",auth.getName());
         return "boards/write";
     }
     @GetMapping("/list")
-    public String boardWriteList(Model model){
+    public String boardWriteList(Model model, Authentication auth){
         List<BoardWriteDto> boardWriteDtoList = boardService.getBoardList();
-
+        model.addAttribute("userId", auth.getName());
         model.addAttribute("boardList", boardWriteDtoList);
         return "boards/list";
     }
@@ -42,7 +44,6 @@ public class WriteController {
     @GetMapping("/post/{no}")
     public String detail(@PathVariable("no")Long no, Model model){
         BoardWriteDto boardWriteDto = boardService.getPost(no);
-
         model.addAttribute("boardList", boardWriteDto);
         return "boards/list";
     }
@@ -54,11 +55,12 @@ public class WriteController {
         return "boards/update";
     }
     @GetMapping("/writeDetail/{no}")
-    public String writeDetail(@PathVariable("no")Long no, Model model){
+    public String writeDetail(@PathVariable("no")Long no, Model model, Authentication auth){
         BoardWriteDto boardWriteDto = boardService.getPost(no);
         List<CommentWriteDto> commentWriteDtoList = commentService.searchPosts(no);
         model.addAttribute("commentList", commentWriteDtoList);
         model.addAttribute("boardList", boardWriteDto);
+        model.addAttribute("userId", auth.getName());
         return "boards/writeDetail";
     }
     @PutMapping("/edit/{no}")
@@ -67,7 +69,7 @@ public class WriteController {
 
         return "redirect:/boards/list";
     }
-    @DeleteMapping("post/{no}")
+    @DeleteMapping("/{no}")
     public String delete(@PathVariable("no")Long no){
         boardService.deletePost(no);
 
