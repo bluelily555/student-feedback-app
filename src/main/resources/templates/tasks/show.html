@@ -1,56 +1,51 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{fragments/header.html :: head}"/>
 <body>
-    <div th:insert="~{fragments/navbar :: navbar}"></div>
-    <div class="row">
-        <form class="offset-3 col-6 form-group" th:object="${taskDetail}"  th:method="post" th:action="|@{/tasks/{taskId}/edit (taskId=${taskDetail.id})}|">
-            <br/><br/>
-            <div>
-                <label th:for="title">제목 : </label>
-                <input type="text" th:field="*{title}" readonly>
-            </div>
-            <br/>
-            <div th:text="'작성자 : ' + *{userName}"></div>
-            <br/>
-            <div th:text="'작성일 : ' + ${#temporals.format(taskDetail.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></div>
-            <br/>
-            <div th:text="'최근 수정일 : ' + ${#temporals.format(taskDetail.lastModifiedAt, 'yyyy-MM-dd HH:mm:ss')}"></div>
-            <br/>
-            <div>
-                <label th:for="description">내용 : </label>
-                <textarea rows="10" style="width: 100%;" th:field="*{description}" readonly/>
-            </div>
-            <br/>
-            <div align="center" id="div2" hidden>
-                <button class="btn body-btn" id="button2" type="submit">등록</button>
-            </div>
-        </form>
-        <div align="center" id="div1">
-            <button class="btn body-btn" onclick="firstClick()" id="button1">수정</button>
-            <button class="btn body-btn-del" onclick="deletePost()"
-                    >삭제</button>
-        </div>
+<div th:insert="~{fragments/navbar :: navbar}"></div>
+<div class="col" style="margin: 30px 0px 10px 0px;">
+    <div class="offset-10">
+        <button class="btn body-btn" onclick="location.href='/tasks/write'">
+            TASK 등록
+        </button>
     </div>
+</div>
 
-    <script th:inline="javascript">
-        function deleteTask() {
-            if ([[${changeable}]] == true) {
-                window.location.href = '/tasks/' + [[${taskDetail.id}]] + "/delete"
-            } else {
-                alert("작성자만 삭제 가능합니다")
-            }
-        }
-        function firstClick() {
-            if ([[${changeable}]] == true) {
-                document.getElementById("div1").style.display = 'none'
-                document.getElementById("div2").removeAttribute("hidden")
-                document.getElementById("title").removeAttribute("readonly")
-                document.getElementById("body").removeAttribute("readonly")
-            } else {
-                alert("작성자만 수정 가능합니다")
-            }
-        }
-    </script>
+<div class="row">
+        <div class="offset-2 col-8">
+            <table class="table list-table table-hover text-center">
+                <thead style="background-color: #A5F1E9">
+                <tr>
+                    <th style="width: 10%">id</th>
+                    <th style="width: 25%">태스크 명</th>
+                    <th style="width: 10%">주차</th>
+                    <th style="width: 10%">일차</th>
+                    <th style="width: 25%">태스크 상태</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="task: ${taskList}">
+                    <td style="width: 10%" th:text="${task.id}"/>
+                    <td style="width: 40%" th:text="${task.title}"/>
+                    <td style="width: 10%" th:text="${task.week}"/>
+                    <td style="width: 10%" th:text="${task.day}"/>
+                    <td style="width: 25%" th:text="${task.status}"/>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+</div>
+
+<div align="center">
+    <br/>
+    <button class="btn page-btn" th:if="${nowPage != 1}" th:onclick="|location.href = '@{/(page=${1})}'|">&lt;&lt;</button>
+    <button class="btn page-btn" th:if="${nowPage != 1}" th:onclick="|location.href='@{/(page=${nowPage - 1})}'|">[[${nowPage - 1}]]</button>
+    <button class="btn page-btn-now">[[${nowPage}]]</button>
+    <button class="btn page-btn" th:if="${nowPage != lastPage}" th:onclick="|location.href='@{/(page=${nowPage + 1})}'|">[[${nowPage + 1}]]</button>
+    <button class="btn page-btn" th:if="${nowPage != lastPage}" th:onclick="|location.href='@{/(page=${lastPage})}'|">&gt;&gt;</button>
+    <br/><br/><br/>
+</div>
 </body>
 </html>
+
