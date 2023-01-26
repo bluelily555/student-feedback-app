@@ -1,17 +1,113 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{fragments/header.html :: head}"/>
+<head th:replace="~{fragments/header.html :: head}">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sidebars/">
+    <link rel="stylesheet" href="../../static/css/custom.css">
+</head>
 <body>
-    <div th:insert="~{fragments/navbar :: navbar}"></div>
-    <div class="col" style="margin: 30px 0px 10px 0px;" sec:authorize="hasRole('ROLE_ADMIN')">
-        <div class="offset-10">
-            <!-- ADMIN인 경우 -->
-            <div class="d-grid gap-2 col-6 mx-auto">
-                <button class="btn btn-success" onclick="location.href = '/courses/write'">기수 등록</button>
-                <button class="btn btn-success" onclick="location.href = '/tasks/write'">Task 등록</button>
-                <button class="btn btn-success" onclick="location.href='/users'">회원 목록</button>
+<div th:insert="~{fragments/navbar :: navbar}"></div>
+<main class="d-flex flex-nowrap">
+    <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 280px;">
+<!--        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">-->
+<!--            <svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>-->
+<!--            <span class="fs-4"></span>-->
+<!--        </a>-->
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a href="../courses/write" class="nav-link active" aria-current="page">
+                    <svg class="bi pe-none me-2" width="16" height="16"></svg>
+                    기수 등록
+                </a>
+            </li>
+            <li>
+                <a href="../tasks/write" class="nav-link text-white">
+                    <svg class="bi pe-none me-2" width="16" height="16"></svg>
+                    Task 등록
+                </a>
+            </li>
+            <li>
+<!--                <button class="btn btn-success" onclick="location.href='/users'">회원 목록</button>-->
+                <a href="../users" class="nav-link text-white">
+                    <svg class="bi pe-none me-2" width="16" height="16"></svg>
+                    회원목록
+                </a>
+            </li>
+        </ul>
+        <hr>
+<!--
+<div class="dropdown">-->
+<!--            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">-->
+<!--                <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">-->
+<!--                <strong>mdo</strong>-->
+<!--            </a>-->
+<!--            <ul class="dropdown-menu dropdown-menu-dark text-small shadow">-->
+<!--                <li><a class="dropdown-item" href="#">New project...</a></li>-->
+<!--                <li><a class="dropdown-item" href="#">Settings</a></li>-->
+<!--                <li><a class="dropdown-item" href="#">Profile</a></li>-->
+<!--                <li><hr class="dropdown-divider"></li>-->
+<!--                <li><a class="dropdown-item" href="#">Sign out</a></li>-->
+<!--            </ul>-->
+<!--        </div>-->
+    </div>
+    <div style="width: 100vw">
+        <div>
+            <h3 class="mt-4" style="margin-bottom: 20px">게시판 목록</h3>
+        </div>
+        <div class="card mb-4">
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">First</th>
+                        <th scope="col">Last</th>
+                        <th scope="col">Handle</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                        <td>@mdo</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>Jacob</td>
+                        <td>Thornton</td>
+                        <td>@fat</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3</th>
+                        <td>Larry</td>
+                        <td>the Bird</td>
+                        <td>@twitter</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
+            <nav style="float: right">
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                </ul>
+            </nav>
         </div>
     </div>
+</main>
+<!--    <div class="col" style="margin: 30px 0px 10px 0px;" sec:authorize="hasRole('ROLE_ADMIN')">-->
+<!--        <div class="offset-10">-->
+<!--            &lt;!&ndash; ADMIN인 경우 &ndash;&gt;-->
+<!--            <div class="d-grid gap-2 col-6 mx-auto">-->
+<!--                <button class="btn btn-success" onclick="location.href = '/courses/write'">기수 등록</button>-->
+<!--                 <button class="btn btn-success" onclick="location.href = '/tasks/write'">Task 등록</button>-->
+<!--                <button class="btn btn-success" onclick="location.href='/users'">회원 목록</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 </body>
 </html>

@@ -22,13 +22,13 @@ public class CodeEntity extends TimeEntity {
     private String writer;
 
     @Column(length = 32, nullable = false)
-    private Long boardId;
+    private String title;
 
     @Builder
-    public CodeEntity(Long id, String content, String writer, Long boardId){
+    public CodeEntity(Long id, String content, String title, String writer){
         this.id = id;
         this.writer = writer;
         this.content = content;
-        this.boardId = boardId;
+        this.title = title;
     }
 }
