@@ -1,9 +1,12 @@
 package com.project.feedback.controller.ui;
 
+import com.project.feedback.domain.dto.course.AddStudentRequest;
 import com.project.feedback.domain.dto.course.CourseDto;
 import com.project.feedback.domain.dto.task.TaskCreateRequest;
 import com.project.feedback.domain.dto.task.TaskDetailResponse;
+import com.project.feedback.domain.dto.task.TaskListResponse;
 import com.project.feedback.domain.dto.task.TaskUpdateRequest;
+import com.project.feedback.domain.dto.user.UserListResponse;
 import com.project.feedback.domain.entity.User;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
@@ -12,6 +15,8 @@ import com.project.feedback.service.FindService;
 import com.project.feedback.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +36,15 @@ public class TaskController {
     private final TaskService taskService;
     private final FindService findService;
     private final CourseService courseService;
+
+    @GetMapping
+    public String list(Model model, @PageableDefault(size = 20) Pageable pageable) {
+        TaskListResponse res = taskService.getTaskList(pageable);
+        model.addAttribute("taskList", res.getContent());
+        model.addAttribute("nowPage", res.getPageable().getPageNumber() + 1);
+        model.addAttribute("lastPage", res.getTotalPages());
+        return "tasks/show";
+    }
 
     @GetMapping("/write")
     public String writePage(Model model) {
