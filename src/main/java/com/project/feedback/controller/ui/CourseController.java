@@ -48,7 +48,7 @@ public class CourseController {
     @PostMapping("/register")
     public String register(@ModelAttribute("addStudentRequest") AddStudentRequest req, Authentication auth) {
         courseService.registerStudent(req);
-        return  "home";
+        return  "redirect:/users";
     }
 
 
