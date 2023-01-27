@@ -50,4 +50,6 @@ server:
     encoding:
       force-response: true
 
+dummy:
+  default-password: 11111
 

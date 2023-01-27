@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +34,8 @@ public class UserService {
 
     @Value("${jwt.token.secret}")
     private String secretKey;
+    @Value("${dummy.default-password}")
+    private String defaultPw;
     private long expireTimeMs = 1000 * 60 * 60;
 
     public UserJoinResponse saveUser(UserJoinRequest req) {
@@ -87,7 +88,44 @@ public class UserService {
 
         return UserChangeRoleResponse.of(user.getId(), newRole);
     }
+    public void setDefaultUsers(){
+        String[] defaultUserName = new String [4];
+        defaultUserName[0] = "admin";
+        defaultUserName[1] = "student";
+        defaultUserName[2] = "manager";
+        defaultUserName[3] = "teacher";
+        for(int i = 0; i < defaultUserName.length; i++){
+            try{
+                findService.findUserByUserName(defaultUserName[i]);
+            }catch (CustomException e){
+                if(e.getErrorCode() == ErrorCode.USERNAME_NOT_FOUND){
+                    UserJoinRequest req = new UserJoinRequest();
+                    req.setUserName(defaultUserName[i]);
+                    req.setPassword(defaultPw);
+                    saveUser(req);
+                    if(!defaultUserName[i].equals("student")) changeDefaultRole(defaultUserName[i]);
+                }
+            }
 
+        }
+
+    }
+    public void changeDefaultRole(String userRole){
+        User user = userRepository.findByUserName(userRole)
+                .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
+        Role newRole;
+        if(userRole.equals("admin")){
+            newRole = Role.ROLE_ADMIN;
+        } else if (userRole.equals("manager")) {
+            newRole = Role.ROLE_MANAGER;
+        } else if (userRole.equals("teacher")) {
+            newRole = Role.ROLE_TEACHER;
+        } else{
+            throw new RuntimeException();
+        }
+        user.setRole(newRole);
+        userRepository.save(user);
+    }
     public UserListResponse getUserList(Pageable pageable) {
         Page<User> users = userRepository.findAll(pageable);
         List<UserListDto> content = new ArrayList<>();
