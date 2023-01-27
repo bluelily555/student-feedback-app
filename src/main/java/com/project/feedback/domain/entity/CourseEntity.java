@@ -25,6 +25,7 @@ public class CourseEntity extends BaseEntity{
     private Long id;
 
     //기수 이름
+    @Column(unique = true)
     private String name;
 
     //설명

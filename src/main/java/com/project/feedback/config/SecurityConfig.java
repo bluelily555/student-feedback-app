@@ -76,7 +76,7 @@ public class SecurityConfig {
                 })
                 .and()
                 .addFilterBefore(new JwtTokenFilter(findService, secretkey), UsernamePasswordAuthenticationFilter.class)
-                .build();
+                .getOrBuild();
     }
 
 
