@@ -1,8 +1,18 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{fragments/header.html :: head}"></head>
+<head th:replace="~{fragments/header.html :: head}">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sign-in/">
+</head>
 <body>
-    <div th:insert="~{fragments/navbar :: navbar}"></div>
+    <main class="w-100 m-auto" sec:authorize="isAnonymous()" style="max-width: 330px;padding: 15px;max-height: 50vh;margin-top: 20%!important;">
+        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+        <h2>로그인이 필요한 서비스 입니다.</h2>
+        <button onclick="location.href = 'users/login'" class="w-100 btn btn-lg btn-primary">Sign in</button>
+        <a href="users/join">
+            <p class="mt-5 mb-3 text-muted">회원가입</p>
+        </a>
+    </main>
+    <div th:insert="~{fragments/navbar :: navbar}" sec:authorize="isAuthenticated()" ></div>
     <div class="col" style="margin: 30px 0px 10px 0px;" sec:authorize="isAuthenticated()">
         <div class="offset-10">
             <button class="btn body-btn" onclick="location.href='boards/list'">
