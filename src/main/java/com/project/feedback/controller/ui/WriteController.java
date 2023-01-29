@@ -26,13 +26,13 @@ public class WriteController {
 
     @GetMapping("/write")
     public String boardReadWrite(Model model, Authentication auth){
-        model.addAttribute("userId",auth.getName());
+        model.addAttribute("userName",auth.getName());
         return "boards/write";
     }
     @GetMapping("/list")
     public String boardWriteList(Model model, Authentication auth){
         List<BoardWriteDto> boardWriteDtoList = boardService.getBoardList();
-        model.addAttribute("userId", auth.getName());
+        model.addAttribute("userName", auth.getName());
         model.addAttribute("boardList", boardWriteDtoList);
         return "boards/list";
     }
@@ -60,7 +60,7 @@ public class WriteController {
         List<CommentWriteDto> commentWriteDtoList = commentService.searchPosts(no);
         model.addAttribute("commentList", commentWriteDtoList);
         model.addAttribute("boardList", boardWriteDto);
-        model.addAttribute("userId", auth.getName());
+        model.addAttribute("userName", auth.getName());
         return "boards/writeDetail";
     }
     @PutMapping("/edit/{no}")
@@ -89,7 +89,9 @@ public class WriteController {
         return "/boards/codeDetail";
     }
     @GetMapping("/codeWrite")
-    public String codeWrite() { return "boards/codeWrite"; }
+    public String codeWrite(Model model, Authentication auth) {
+        model.addAttribute("userName", auth.getName());
+        return "boards/codeWrite"; }
     @PostMapping("/codeWrite")
     public String codeAddWrite(CodeWriteDto codeWriteDto){
         codeService.saveCode(codeWriteDto);

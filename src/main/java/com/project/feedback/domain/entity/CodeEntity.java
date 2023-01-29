@@ -23,12 +23,15 @@ public class CodeEntity extends TimeEntity {
 
     @Column(length = 32, nullable = false)
     private String title;
+    @Column(nullable = false)
+    private String userName;
 
     @Builder
-    public CodeEntity(Long id, String content, String title, String writer){
+    public CodeEntity(Long id, String content, String title, String writer, String userName){
         this.id = id;
         this.writer = writer;
         this.content = content;
         this.title = title;
+        this.userName = userName;
     }
 }

@@ -22,7 +22,7 @@ public class CommentService {
                 .content(commentEntity.getContent())
                 .writer(commentEntity.getWriter())
                 .boardId(commentEntity.getBoardId())
-                .userId(commentEntity.getUserId())
+                .userName(commentEntity.getUserName())
                 .createdDate(commentEntity.getCreatedDate())
                 .build();
     }
@@ -37,7 +37,17 @@ public class CommentService {
         }
         return commentWriteDtoList;
     }
+    @Transactional
+    public List<CommentWriteDto> getCommentListByUserName(String userName){
+        List<CommentEntity> commentEntities = commentRepository.findAllByUserName(userName);
+        List<CommentWriteDto> commentWriteDtoList = new ArrayList<>();
 
+        if(commentEntities.isEmpty()) return commentWriteDtoList;
+        for(CommentEntity commentEntity : commentEntities){
+            commentWriteDtoList.add(this.convertEntityToDto(commentEntity));
+        }
+        return commentWriteDtoList;
+    }
     @Transactional
     public List<CommentWriteDto> getCommentList(){
         List<CommentEntity> commentEntities = commentRepository.findAll();
@@ -49,7 +59,7 @@ public class CommentService {
                     .content(commentEntity.getContent())
                     .writer(commentEntity.getWriter())
                     .boardId(commentEntity.getBoardId())
-                    .userId(commentEntity.getUserId())
+                    .userName(commentEntity.getUserName())
                     .createdDate(commentEntity.getCreatedDate())
                     .build();
             commentWriteDtoList.add(commentWriteDto);
@@ -77,7 +87,7 @@ public class CommentService {
                 .boardId(commentEntity.getBoardId())
                 .content(commentEntity.getContent())
                 .writer(commentEntity.getWriter())
-                .userId(commentEntity.getUserId())
+                .userName(commentEntity.getUserName())
                 .createdDate(commentEntity.getCreatedDate())
                 .build();
         return  commentWriteDto;

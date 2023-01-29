@@ -18,6 +18,24 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardRepository boardRepository;
+    // dto list를 리턴하는 함수
+    private List<BoardWriteDto> getBoardWriteDtos(List<BoardEntity> boardEntities) {
+        List<BoardWriteDto> boardWriteDtoList = new ArrayList<>();
+
+        for(BoardEntity boardEntity : boardEntities){
+            BoardWriteDto boardWriteDto = BoardWriteDto.builder()
+                    .id(boardEntity.getId())
+                    .title(boardEntity.getTitle())
+                    .content(boardEntity.getContent())
+                    .writer(boardEntity.getWriter())
+                    .userName(boardEntity.getUserName())
+                    .createdDate(boardEntity.getCreatedDate())
+                    .build();
+
+            boardWriteDtoList.add(boardWriteDto);
+        }
+        return boardWriteDtoList;
+    }
 
     @Transactional
     public Long savePost(BoardWriteDto boardWriteDto){
@@ -27,22 +45,15 @@ public class BoardService {
     @Transactional
     public List<BoardWriteDto> getBoardList(){
         List<BoardEntity> boardEntities = boardRepository.findAll();
-        List<BoardWriteDto> boardWriteDtoList = new ArrayList<>();
-
-        for(BoardEntity boardEntity : boardEntities){
-            BoardWriteDto boardWriteDto = BoardWriteDto.builder()
-                    .id(boardEntity.getId())
-                    .title(boardEntity.getTitle())
-                    .content(boardEntity.getContent())
-                    .writer(boardEntity.getWriter())
-                    .userId(boardEntity.getUserId())
-                    .createdDate(boardEntity.getCreatedDate())
-                    .build();
-
-            boardWriteDtoList.add(boardWriteDto);
-        }
-        return boardWriteDtoList;
+        return getBoardWriteDtos(boardEntities);
     }
+    @Transactional
+    public List<BoardWriteDto> getBoardListByUserName(String userName){
+        List<BoardEntity> boardEntities = boardRepository.findAllByUserName(userName);
+        return getBoardWriteDtos(boardEntities);
+
+    }
+
     @Transactional
     public BoardWriteDto getPost(Long id){
         Optional<BoardEntity> boardEntityWrapper = boardRepository.findById(id);
@@ -53,7 +64,7 @@ public class BoardService {
                 .title(boardEntity.getTitle())
                 .content(boardEntity.getContent())
                 .writer(boardEntity.getWriter())
-                .userId(boardEntity.getUserId())
+                .userName(boardEntity.getUserName())
                 .createdDate(boardEntity.getCreatedDate())
                 .build();
         return boardWriteDto;

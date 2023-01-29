@@ -25,15 +25,15 @@ public class BoardEntity extends TimeEntity {
     @Column(length = 32, nullable = false)
     private String writer;
     @Column(nullable = false)
-    private String userId;
+    private String userName;
 
     @Builder
-    public BoardEntity(Long id, String title, String content, String writer, String userId){
+    public BoardEntity(Long id, String title, String content, String writer, String userName){
         this.id = id;
         this.writer = writer;
         this.title = title;
         this.content = content;
-        this.userId = userId;
+        this.userName = userName;
     }
 
 }
