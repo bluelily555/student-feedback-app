@@ -24,15 +24,15 @@ public class CommentEntity extends TimeEntity{
     @Column(length = 32, nullable = false)
     private Long boardId;
     @Column(nullable = false)
-    private  String userId;
+    private  String userName;
 
     @Builder
-    public CommentEntity(Long id, String content, String writer, Long boardId, String userId){
+    public CommentEntity(Long id, String content, String writer, Long boardId, String userName){
         this.id = id;
         this.writer = writer;
         this.content = content;
         this.boardId = boardId;
-        this.userId = userId;
+        this.userName = userName;
     }
 
     public void setBoardId(Long boardId) {

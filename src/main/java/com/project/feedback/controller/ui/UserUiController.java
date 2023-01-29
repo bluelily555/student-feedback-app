@@ -1,19 +1,23 @@
 package com.project.feedback.controller.ui;
 
+import com.project.feedback.domain.dto.board.BoardWriteDto;
+import com.project.feedback.domain.dto.board.CodeWriteDto;
+import com.project.feedback.domain.dto.board.CommentWriteDto;
 import com.project.feedback.domain.dto.course.AddStudentRequest;
 import com.project.feedback.domain.dto.course.CourseDto;
 import com.project.feedback.domain.dto.user.*;
+import com.project.feedback.domain.entity.CodeEntity;
+import com.project.feedback.domain.entity.User;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
-import com.project.feedback.service.CourseService;
-import com.project.feedback.service.FindService;
-import com.project.feedback.service.UserService;
+import com.project.feedback.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +32,10 @@ public class UserUiController {
 
     private final UserService userService;
     private final CourseService courseService;
+    private final FindService findService;
+    private final BoardService boardService;
+    private final CommentService commentService;
+    private final CodeService codeService;
 
     @GetMapping
     public String list(Model model, @PageableDefault(size = 20) Pageable pageable) {
@@ -111,5 +119,18 @@ public class UserUiController {
         model.addAttribute("nextUrl", "/users/login");
         return "users/login";
     }
-
+    @GetMapping("/myPage")
+    public String myPage(Authentication auth, Model model){
+        User user = findService.findUserByUserName(auth.getName());
+        String userName = user.getUserName();
+        List<BoardWriteDto> boardWriteDtoList = boardService.getBoardListByUserName(userName);
+        List<CommentWriteDto> commentWriteDtoList = commentService.getCommentListByUserName(userName);
+        List<CodeWriteDto> codeWriteDtoList = codeService.getCodeListByUserName(userName);
+        int commentCount = commentWriteDtoList.size();
+        model.addAttribute("codeList", codeWriteDtoList);
+        model.addAttribute("commentCount", commentCount);
+        model.addAttribute("boardList", boardWriteDtoList);
+        model.addAttribute("userName", auth.getName());
+        return "/users/myPage";
+    }
 }

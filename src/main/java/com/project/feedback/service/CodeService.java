@@ -16,6 +16,22 @@ import java.util.Optional;
 public class CodeService {
     private CodeRepository codeRepository;
 
+    private List<CodeWriteDto> getCodeWriteDtos(List<CodeEntity> codeEntities) {
+        List<CodeWriteDto> codeWriteDtoList = new ArrayList<>();
+
+        for(CodeEntity codeEntity : codeEntities){
+            CodeWriteDto codeWriteDto = CodeWriteDto.builder()
+                    .id(codeEntity.getId())
+                    .content(codeEntity.getContent())
+                    .writer(codeEntity.getWriter())
+                    .title(codeEntity.getTitle())
+                    .userName(codeEntity.getUserName())
+                    .createdDate(codeEntity.getCreatedDate())
+                    .build();
+            codeWriteDtoList.add(codeWriteDto);
+        }
+        return codeWriteDtoList;
+    }
     @Transactional
     public Long saveCode(CodeWriteDto codeWriteDto){
         CodeEntity codeEntity = codeWriteDto.toEntity();
@@ -25,20 +41,14 @@ public class CodeService {
     @Transactional
     public List<CodeWriteDto> searchAllCode(){
         List<CodeEntity> codeEntities = codeRepository.findAll();
-        List<CodeWriteDto> codeWriteDtoList = new ArrayList<>();
-
-        for(CodeEntity codeEntity : codeEntities){
-            CodeWriteDto codeWriteDto = CodeWriteDto.builder()
-                    .id(codeEntity.getId())
-                    .content(codeEntity.getContent())
-                    .writer(codeEntity.getWriter())
-                    .title(codeEntity.getTitle())
-                    .createdDate(codeEntity.getCreatedDate())
-                    .build();
-            codeWriteDtoList.add(codeWriteDto);
-        }
-        return codeWriteDtoList;
+        return getCodeWriteDtos(codeEntities);
     }
+    @Transactional
+    public List<CodeWriteDto> getCodeListByUserName(String userName){
+        List<CodeEntity> codeEntities = codeRepository.findAllByUserName(userName);
+        return getCodeWriteDtos(codeEntities);
+    }
+
     @Transactional
     public void deleteCode(Long boardId){
         codeRepository.deleteById(boardId);
@@ -52,6 +62,7 @@ public class CodeService {
                 .title(codeEntity.getTitle())
                 .content(codeEntity.getContent())
                 .writer(codeEntity.getWriter())
+                .userName(codeEntity.getUserName())
                 .createdDate(codeEntity.getCreatedDate())
                 .build();
         return codeWriteDto;

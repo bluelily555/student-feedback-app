@@ -10,6 +10,7 @@
   <div>
     <form name="write-form" action="/boards/codeWrite" autocomplete="off" method="post">
       <div>
+        <input id="userId" type="hidden" name="userName" th:value="${userName}">
         <input class="mt-4" type="text" id="title" maxlength='30' name="title" placeholder="제목을 입력하세요">
         최대 30자
         <br/>
@@ -20,6 +21,11 @@
           <textarea class="form-control" style="height:100%; width:100%;" maxlength='1000' id="content" name = "content"></textarea>
         </div>
         <br/>
+<!--        <div id="editor" style="position: absolute; width: 500px; height: 400px">some text</div>-->
+<!--        <script src="../../js/editor/src/ace.js" type="text/javascript" charset="utf-8"></script>-->
+<!--        <script>-->
+<!--          const editor = ace.edit("editor");-->
+<!--        </script>-->
         <input type="submit" id="submitBtn"  class="btn btn-outline-primary mr-2" value="작성">
       </div>
     </form>

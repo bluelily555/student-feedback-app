@@ -18,6 +18,7 @@ public class CodeWriteDto {
     private String writer;
     private String content;
     private String title;
+    private String userName;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
@@ -26,6 +27,7 @@ public class CodeWriteDto {
                 .writer(writer)
                 .content(content)
                 .title(title)
+                .userName(userName)
                 .build();
         return codeEntity;
     }

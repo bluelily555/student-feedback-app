@@ -40,7 +40,7 @@
                                         <h5>작성 내용</h5>
                                         <p th:text="${boardList.content}"></p>
                                     </div>
-                                    <div th:if="${boardList.userId==userId}" style="display: block">
+                                    <div th:if="${boardList.userName==userName}" style="display: block">
                                         <a th:href="@{'/boards/edit/' + ${boardList.id}}">
                                             <button class="btn btn-danger" style="float:right;margin-right: 5px;">수정</button>
                                         </a>
@@ -80,15 +80,15 @@
                                 <p class="small mb-0 ms-2" th:text="${comment.writer}"></p>
                             </div>
                             <div class="btn-group d-flex flex-row align-items-center">
-                                <button th:if="${comment.userId==userId}" id="update-btn" class="btn btn-secondary" th:commentId="${comment.id}" th:onclick="toggleBtn(this.getAttribute('commentId'))">수정</button>
-                                <form th:if="${comment.userId==userId}" id="delete-form" th:action="@{'/boards/writeDetail/' + ${comment.id}+ '/' +${comment.boardId}}" method="post">
+                                <button th:if="${comment.userName==userName}" id="update-btn" class="btn btn-secondary" th:commentId="${comment.id}" th:onclick="toggleBtn(this.getAttribute('commentId'))">수정</button>
+                                <form th:if="${comment.userName==userName}" id="delete-form" th:action="@{'/boards/writeDetail/' + ${comment.id}+ '/' +${comment.boardId}}" method="post">
                                     <input type="hidden" name="_method" value="delete"/>
                                     <button id="delete-btn" class="btn btn-secondary">삭제</button>
                                 </form>
                                 <br/>
                                 <form th:id="${'update-form' + comment.id}" th:action="@{'/boards/writeDetail/'+ ${comment.id}+ '/' +${comment.boardId}}" autocomplete="off" method="post" style="display: none">
                                     <input type="hidden" name="_method" value="put"/>
-                                    <input type="hidden" name="userId" th:value="${userId}"/>
+                                    <input type="hidden" name="userName" th:value="${userName}"/>
                                     <input type="hidden" th:id="id" name="id" th:value="${comment.id}"/>
                                     <input type="hidden" th:value="${comment.writer}" th:id="writer" name="writer"  maxlength='10' placeholder="작성자">
                                     <!--                                    <form th:action="@{'/boards/writeDetail/' + ${boardList.id}}" autocomplete="off" method="post">-->
@@ -177,7 +177,7 @@
 
                                 <form th:action="@{'/boards/writeDetail/' + ${boardList.id}}" autocomplete="off" method="post">
                                     <div>
-                                        <input type="hidden" id="userId" name="userId" th:value="${userId}"/>
+                                        <input type="hidden" id="userName" name="userName" th:value="${userName}"/>
                                         <input type="text" th:id="writer" name="writer"  maxlength='10' value="" placeholder="작성자">
                                         최대 10자
                                         <br/>
