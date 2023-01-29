@@ -8,16 +8,19 @@ import com.project.feedback.domain.entity.CourseEntity;
 import com.project.feedback.domain.entity.CourseEntityUser;
 import com.project.feedback.domain.entity.TaskEntity;
 import com.project.feedback.domain.entity.User;
+import com.project.feedback.domain.entity.UserTask;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.repository.CourseRepository;
 import com.project.feedback.repository.CourseUserRepository;
 import com.project.feedback.repository.TaskRepository;
 import com.project.feedback.repository.UserRepository;
+import com.project.feedback.repository.UserTaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -28,6 +31,7 @@ public class FindService {
     private final TaskRepository taskRepository;
     private final CourseRepository courseRepository;
     private final CourseUserRepository courseUserRepository;
+    private final UserTaskRepository userTaskRepository;
 
     /**
      * userName으로 User을 찾아오는 기능
@@ -135,7 +139,7 @@ public class FindService {
     }
 
     public CourseTaskListResponse getTasksAndStudentsByWeekAndDay(Long courseId, Long week, Long day, User loginUser){
-        //해당 course에 week, day로 필터 걸어서 가져옴
+        //해당 course에 week, day로 필터 걸어서 task 목록을 가져옴
         List<TaskEntity> taskEntities = taskRepository.findByCourseIdAndWeekAndDay(courseId, week, day);
 
         List<TaskInfo> taskInfoList = new ArrayList<>();
@@ -146,6 +150,7 @@ public class FindService {
         List<User> users = findUserByCourseId(courseId, loginUser);
         List<StudentInfo> studentInfoList = new ArrayList<>();
 
+        //userTask
         for(User u : users){
             studentInfoList.add(StudentInfo.of(u));
         }
@@ -155,6 +160,43 @@ public class FindService {
             .studentInfoList(studentInfoList)
             .build();
         return courseTaskListResponse;
+    }
+
+
+    public List<HashMap<String, String>> getStudentsWithTask(Long courseId, Long week, Long day, User loginUser){
+        // course와 week에 해당하는 task목록
+        List<TaskEntity> taskEntities = taskRepository.findByCourseIdAndWeekAndDay(courseId, week, day);
+        // filter 정보에 해당하는 task id 정보만 저장
+        List<Long> ids = new ArrayList<>();
+        for(TaskEntity taskEntity : taskEntities){
+            ids.add(taskEntity.getId());
+        }
+
+        // course에 해당하는 USER 정보 가져오기
+        List<User> users = findUserByCourseId(courseId, loginUser);
+
+        ArrayList<HashMap<String, String>> list = new ArrayList<>();
+            for(User user : users){
+                List<UserTask> userTasks = userTaskRepository.findByUserId(user.getId());
+                HashMap<String, String> map = new HashMap<>();
+                map.put("studentName", user.getRealName());
+                int index = 1;
+                for(UserTask userTask : userTasks){
+                    // task id
+                    Long id = userTask.getTaskEntity().getId();
+                    if(ids.contains(id)){
+                        map.put("taskId"+index, id.toString());
+                        TaskEntity task =  taskRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.TASK_NOT_FOUND));
+                        map.put("taskName"+index, task.getTitle());
+                        map.put("taskStatus"+index, userTask.getStatus().toString());
+                        index++;
+                    }
+
+                }
+                list.add(map);
+            }
+
+        return list;
     }
 
 }

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -74,6 +75,17 @@ public class CourseApiController {
         User loginUser = findService.findUserByUserName(auth.getName());
         CourseTaskListResponse res = findService.getTasksAndStudentsByWeekAndDay(courseId, week, day, loginUser);
         return Response.success(res);
+    }
+
+    @Operation(summary = "students 별 Task 상태 정보 목록 : week, day filter ")
+    @GetMapping("/{courseId}/students/weeks/{week}/days/{day}")
+    public Response<List<HashMap<String, String>>> getStudentsWithTask(@PathVariable Long courseId,
+                                              @PathVariable Long week,
+                                              @PathVariable Long day,
+                                              @ApiIgnore Authentication auth) {
+        User loginUser = findService.findUserByUserName(auth.getName());
+        List<HashMap<String, String>> result = findService.getStudentsWithTask(courseId, week, day, loginUser);
+        return Response.success(result);
     }
 
 }
