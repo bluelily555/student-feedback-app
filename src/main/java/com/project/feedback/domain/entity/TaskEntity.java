@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @Entity
 @Builder
@@ -31,6 +33,9 @@ public class TaskEntity extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private CourseEntity courseEntity;
+
+    @OneToMany(mappedBy = "taskEntity")
+    private List<UserTask> userTasks;
 
     @Enumerated(EnumType.STRING)
     private TaskStatus taskStatus;

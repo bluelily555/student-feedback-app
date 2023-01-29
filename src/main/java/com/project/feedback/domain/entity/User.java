@@ -31,6 +31,9 @@ public class User extends BaseEntity{
     private List<TaskEntity> tasks;
 
     @OneToMany(mappedBy = "user")
+    private List<UserTask> userTasks;
+
+    @OneToMany(mappedBy = "user")
     private List<CourseEntityUser> courseEntityUsers;
 
     public void setRole(Role role) {
