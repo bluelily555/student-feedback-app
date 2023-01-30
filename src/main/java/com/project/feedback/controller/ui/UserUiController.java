@@ -131,6 +131,6 @@ public class UserUiController {
         model.addAttribute("commentCount", commentCount);
         model.addAttribute("boardList", boardWriteDtoList);
         model.addAttribute("userName", auth.getName());
-        return "/users/myPage";
+        return "users/myPage";
     }
 }

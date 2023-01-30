@@ -49,6 +49,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             }
 
             if (!authroizationHeader.startsWith("Bearer ")) {
+                log.info("security:{}", "토큰이 없습니다.");
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -57,6 +58,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
             // 토큰이 만료되었는지 check
             if(JwtTokenUtil.isExpired(token, secretKey)) {
+                log.info("security:{}", "토큰이 만료되었습니다.");
                 filterChain.doFilter(request, response);
                 return;
             }
