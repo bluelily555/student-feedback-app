@@ -18,6 +18,7 @@ public class TaskListDto {
     private Long week;
     private Long day;
     private String status;
+    private String courseName;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
 
@@ -25,6 +26,7 @@ public class TaskListDto {
         return TaskListDto.builder()
                 .id(task.getId())
                 .title(task.getTitle())
+                .courseName(task.getCourseEntity().getName())
                 .userName(task.getUser().getUserName())
                 .week(task.getWeek())
                 .status(task.getTaskStatus().toString())
