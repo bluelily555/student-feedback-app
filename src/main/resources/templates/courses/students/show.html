@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/header.html :: head}"/>
+<body>
+<div th:insert="~{fragments/navbar :: navbar}"></div>
+<label th:text="${courseName}" />
+<!--api로 작업 필요 TO DO-->
+<label>1주</label>
+<label>1일차</label>
+
+
+<table class="table">
+    <thead class="thead-dark">
+    <tr>
+        <th></th>
+        <div th:each="taskName : ${taskList}">
+            <th th:text="${taskName}"></th>
+        </div>
+    </tr>
+    </thead>
+    <tr th:each="studentTask, count : ${studentTaskList}">
+        <td th:text="${studentTask.studentName}"></td>
+        <!--taskStatus[n]값이 있으면 뿌려줘야함. Task의 갯수-->
+    </tr>
+</table>
+</body>
+</html>

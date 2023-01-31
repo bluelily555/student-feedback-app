@@ -108,6 +108,13 @@ public class FindService {
          return taskEntities;
      }
 
+    public CourseEntity findCourseByUserId(User loginUser){
+        CourseEntityUser courseEntityUser = courseUserRepository.findCourseEntityUserByUserId(loginUser.getId())
+            .orElseThrow(() -> new CustomException(ErrorCode.USER_COURSE_NOT_FOUND));
+
+        return courseEntityUser.getCourseEntity();
+    }
+
     /**
      * 학생이 속한 코스의 테스크들과, 학생이 속한 코스의 다른 학생들 목록이 아래와 같이 json형태로 합쳐보여줄 수 있도록
      * [
