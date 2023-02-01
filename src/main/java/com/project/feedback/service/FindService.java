@@ -111,7 +111,7 @@ public class FindService {
 
     public CourseEntity findCourseByUserId(UserEntity loginUser){
         CourseUserEntity courseUserEntity = courseUserRepository.findCourseEntityUserByUserId(loginUser.getId())
-            .orElseThrow(() -> new CustomException(ErrorCode.USER_COURSE_NOT_FOUND));
+            .orElseThrow(() -> new CustomException(ErrorCode.USER_COURSE_NOT_FOUND, String.format("%s가 속한 코스가 없습니다.", loginUser.getUserName())));
         return courseUserEntity.getCourseEntity();
     }
 

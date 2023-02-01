@@ -17,36 +17,50 @@
 <!--  style="background-color: #7099cc"-->
   <nav class="navbar navbar-expand-lg navbar-light bg-light" style="border-color:#dde0ea!important; border-bottom:.1rem solid transparent;" >
     <div class="container-fluid">
-      <a class="navbar-brand text-purple" href="/">Feedback</a>
-
-      <div class="justify-content-between" id="navbarNav" style="padding: 5px 30px">
+      <a class="navbar-brand" href="/">
+        <img src="/img/bootstrap-logo.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+        Home
+      </a>
+      <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-          <!-- nav-item, dropdown 등 추가 예정 -->
-        </ul>
-
-        <span sec:authorize="hasRole('ADMIN')">
-          ADMIN회원 입니다.
-        </span>
-        <span th:if="${#authorization.expression('hasRole(''MENTOR'')')}">
-          MENTOR회원 입니다.
-        </span>
-        <span th:if="${#authorization.expression('hasRole(''MANAGER'')')}">
-          MANAGER회원 입니다.
-        </span>
-        <span th:if="${#authorization.expression('hasRole(''STUDENT'')')}">
-          학생회원입니다.
-        </span>
-
-        <span sec:authorize="isAuthenticated()"><span th:text="${#authentication.name}" />님 안녕하세요.</span>
-        <!-- 로그인 안 했을때 -->
-        <ul class="navbar-nav" sec:authorize="isAnonymous()">
           <li class="nav-item">
-            <button class="btn nav-btn" onclick="location.href = '/users/login'">로그인</button>
+            <a class="nav-link active" aria-current="page" href="/courses/students">CourseStudents</a>
           </li>
           <li class="nav-item">
-            <button class="btn nav-btn" onclick="location.href = '/users/join'">회원가입</button>
+            <a class="nav-link" href="/boards/list">글 목록 보기</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">-예비1-</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled">-예비2-</a>
           </li>
         </ul>
+      </div>
+
+      <span sec:authorize="hasRole('ADMIN')">
+        ADMIN회원 입니다.
+      </span>
+      <span th:if="${#authorization.expression('hasRole(''MENTOR'')')}">
+        MENTOR회원 입니다.
+      </span>
+      <span th:if="${#authorization.expression('hasRole(''MANAGER'')')}">
+        MANAGER회원 입니다.
+      </span>
+      <span th:if="${#authorization.expression('hasRole(''STUDENT'')')}">
+        학생회원입니다.
+      </span>
+
+      <span sec:authorize="isAuthenticated()"><span th:text="${#authentication.name}" />님 안녕하세요.</span>
+      <!-- 로그인 안 했을때 -->
+      <ul class="navbar-nav" sec:authorize="isAnonymous()">
+        <li class="nav-item">
+          <button class="btn nav-btn" onclick="location.href = '/users/login'">로그인</button>
+        </li>
+        <li class="nav-item">
+          <button class="btn nav-btn" onclick="location.href = '/users/join'">회원가입</button>
+        </li>
+      </ul>
 
         <!-- 로그인 했을때 -->
         <ul class="navbar-nav" sec:authorize="isAuthenticated()">

@@ -89,21 +89,18 @@ public class UserService {
         return UserChangeRoleResponse.of(user.getId(), newRole);
     }
     public void setDefaultUsers(){
-        String[] defaultUserName = new String [4];
-        defaultUserName[0] = "admin";
-        defaultUserName[1] = "student";
-        defaultUserName[2] = "manager";
-        defaultUserName[3] = "teacher";
-        for(int i = 0; i < defaultUserName.length; i++){
+        UserJoinRequest[] userJoinRequests = new UserJoinRequest[4];
+        userJoinRequests[0] = new UserJoinRequest("admin", defaultPw);
+        userJoinRequests[1] = new UserJoinRequest("student", defaultPw);
+        userJoinRequests[2] = new UserJoinRequest("manager", defaultPw);
+        userJoinRequests[3] = new UserJoinRequest("teacher", defaultPw);
+        for(int i = 0; i < userJoinRequests.length; i++){
             try{
-                findService.findUserByUserName(defaultUserName[i]);
+                findService.findUserByUserName(userJoinRequests[i].getUserName());
             }catch (CustomException e){
                 if(e.getErrorCode() == ErrorCode.USERNAME_NOT_FOUND){
-                    UserJoinRequest req = new UserJoinRequest();
-                    req.setUserName(defaultUserName[i]);
-                    req.setPassword(defaultPw);
-                    saveUser(req);
-                    if(!defaultUserName[i].equals("student")) changeDefaultRole(defaultUserName[i]);
+                    saveUser(userJoinRequests[i]);
+                    if(!userJoinRequests[i].getUserName().equals("student")) changeDefaultRole(userJoinRequests[i].getUserName());
                 }
             }
 
