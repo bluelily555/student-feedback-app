@@ -4,50 +4,54 @@
 <head th:replace="~{fragments/header.html :: head}"/>
 <body>
 <div th:insert="~{fragments/navbar :: navbar}"></div>
-<div class="col" style="margin: 30px 0px 10px 0px;">
-    <div class="offset-10">
-        <button class="btn body-btn" onclick="location.href='/tasks/write'">
-            TASK 등록
-        </button>
-    </div>
-</div>
-
-<div class="row">
-        <div class="offset-2 col-8">
-            <table class="table list-table table-hover text-center">
-                <thead style="background-color: #A5F1E9">
-                <tr>
-                    <th style="width: 10%">id</th>
-                    <th style="width: 10%">기수 명</th>
-                    <th style="width: 25%">태스크 명</th>
-                    <th style="width: 10%">주차</th>
-                    <th style="width: 10%">일차</th>
-                    <th style="width: 25%">태스크 상태</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="task: ${taskList}">
-                    <td style="width: 10%" th:text="${task.id}"/>
-                    <td style="width: 40%" th:text="${task.courseName}"/>
-                    <td style="width: 40%" th:text="${task.title}"/>
-                    <td style="width: 10%" th:text="${task.week}"/>
-                    <td style="width: 10%" th:text="${task.day}"/>
-                    <td style="width: 25%" th:text="${task.status}"/>
-                </tr>
-                </tbody>
-            </table>
+<main class="d-flex flex-nowrap">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <br>
+    <div class="row" style="width: 100vh">
+<!--        class="offset-2 col-8"-->
+        <div>
+                <table class="table list-table table-hover text-center">
+                    <thead style="background-color: #A5F1E9">
+                    <tr>
+                        <th style="width: 10%">id</th>
+                        <th style="width: 10%">기수 명</th>
+                        <th style="width: 25%">태스크 명</th>
+                        <th style="width: 10%">주차</th>
+                        <th style="width: 10%">일차</th>
+                        <th style="width: 25%">태스크 상태</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="task: ${taskList}">
+                        <td style="width: 10%" th:text="${task.id}"/>
+                        <td style="width: 40%" th:text="${task.courseName}"/>
+                        <td style="width: 40%" th:text="${task.title}"/>
+                        <td style="width: 10%" th:text="${task.week}"/>
+                        <td style="width: 10%" th:text="${task.day}"/>
+                        <td style="width: 25%" th:text="${task.status}"/>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        <div align="center">
+            <br/>
+            <button class="btn page-btn" th:if="${nowPage != 1}" th:onclick="|location.href = '@{/(page=${1})}'|">&lt;&lt;</button>
+            <button class="btn page-btn" th:if="${nowPage != 1}" th:onclick="|location.href='@{/(page=${nowPage - 1})}'|">[[${nowPage - 1}]]</button>
+            <button class="btn page-btn-now">[[${nowPage}]]</button>
+            <button class="btn page-btn" th:if="${nowPage != lastPage}" th:onclick="|location.href='@{/(page=${nowPage + 1})}'|">[[${nowPage + 1}]]</button>
+            <button class="btn page-btn" th:if="${nowPage != lastPage}" th:onclick="|location.href='@{/(page=${lastPage})}'|">&gt;&gt;</button>
+            <br/><br/><br/>
         </div>
-</div>
+    </div>
+    <!--    <div class="col" style="margin: 30px 0px 10px 0px;">-->
+    <!--        <div class="offset-10">-->
+    <!--            <button class="btn body-btn" onclick="location.href='/tasks/write'">-->
+    <!--                TASK 등록-->
+    <!--            </button>-->
+    <!--        </div>-->
+    <!--    </div>-->
 
-<div align="center">
-    <br/>
-    <button class="btn page-btn" th:if="${nowPage != 1}" th:onclick="|location.href = '@{/(page=${1})}'|">&lt;&lt;</button>
-    <button class="btn page-btn" th:if="${nowPage != 1}" th:onclick="|location.href='@{/(page=${nowPage - 1})}'|">[[${nowPage - 1}]]</button>
-    <button class="btn page-btn-now">[[${nowPage}]]</button>
-    <button class="btn page-btn" th:if="${nowPage != lastPage}" th:onclick="|location.href='@{/(page=${nowPage + 1})}'|">[[${nowPage + 1}]]</button>
-    <button class="btn page-btn" th:if="${nowPage != lastPage}" th:onclick="|location.href='@{/(page=${lastPage})}'|">&gt;&gt;</button>
-    <br/><br/><br/>
-</div>
+</main>
 </body>
 </html>
 

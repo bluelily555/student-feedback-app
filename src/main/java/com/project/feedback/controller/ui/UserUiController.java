@@ -118,7 +118,7 @@ public class UserUiController {
         model.addAttribute("nextUrl", "/users/login");
         return "users/login";
     }
-    @GetMapping("/myPage")
+    @GetMapping("/my")
     public String myPage(Authentication auth, Model model){
         UserEntity user = findService.findUserByUserName(auth.getName());
         String userName = user.getUserName();
@@ -130,6 +130,6 @@ public class UserUiController {
         model.addAttribute("commentCount", commentCount);
         model.addAttribute("boardList", boardWriteDtoList);
         model.addAttribute("userName", auth.getName());
-        return "users/myPage";
+        return "users/my";
     }
 }

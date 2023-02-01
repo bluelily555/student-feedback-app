@@ -3,8 +3,10 @@
 <head th:replace="~{fragments/header.html :: head}"/>
 <body>
     <div th:insert="~{fragments/navbar :: navbar}"></div>
-    <br/><br/>
-    <div class="row">
+    <main class="d-flex flex-nowrap">
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+        <div class="row" style="margin-top: 15px;">
+        <br/><br/>
         <form class="offset-3 col-6 form-group" th:method="post" th:action="@{/tasks/write}" th:object="${taskCreateRequest}">
             <div class="mb-3 row">
                 <label for="taskName" class="col-sm-2 col-form-label">태스크 명</label>
@@ -60,6 +62,7 @@
             </div>
         </form>
     </div>
+    </main>
 <!--    <script th:inline="javascript">-->
 <!--        /*<![CDATA[*/-->
 <!--            const page = /[[${courseList}]]/;-->
