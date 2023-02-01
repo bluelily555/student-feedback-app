@@ -8,14 +8,15 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class CourseEntityUser {
+@Table(name = "course_user")
+public class CourseUserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private UserEntity user;
 
     @ManyToOne
     @JoinColumn(name = "course_entity_id")

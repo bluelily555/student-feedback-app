@@ -30,7 +30,7 @@ public class TaskListDto {
                 .userName(task.getUser().getUserName())
                 .week(task.getWeek())
                 .status(task.getTaskStatus().toString())
-                .day(task.getDay())
+                .day(task.getDayOfWeek())
                 .createdAt(task.getCreatedAt())
                 .lastModifiedAt(task.getLastModifiedAt())
                 .build();

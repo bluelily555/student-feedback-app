@@ -1,6 +1,6 @@
 package com.project.feedback.controller;
 
-import com.project.feedback.domain.entity.User;
+import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.service.FindService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -17,7 +17,7 @@ public class HomeController {
     @GetMapping(value = {"", "/", "/home"})
     public String home(Authentication auth, Model model) {
         if(auth != null){
-            User userInfo = findService.findUserByUserName(auth.getPrincipal().toString());
+            UserEntity userInfo = findService.findUserByUserName(auth.getPrincipal().toString());
             boolean CheckAdmin = findService.checkAdmin(userInfo);
             if(CheckAdmin){
                 return "users/admin";

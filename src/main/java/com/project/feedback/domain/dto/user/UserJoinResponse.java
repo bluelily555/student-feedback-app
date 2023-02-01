@@ -1,6 +1,6 @@
 package com.project.feedback.domain.dto.user;
 
-import com.project.feedback.domain.entity.User;
+import com.project.feedback.domain.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +14,7 @@ public class UserJoinResponse {
     private Long userId;
     private String userName;
 
-    public static UserJoinResponse of(User user) {
+    public static UserJoinResponse of(UserEntity user) {
         return UserJoinResponse.builder()
                 .userId(user.getId())
                 .userName(user.getUserName())

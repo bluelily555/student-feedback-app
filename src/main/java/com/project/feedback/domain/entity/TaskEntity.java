@@ -15,6 +15,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "task")
 public class TaskEntity extends BaseEntity{
 
     @Id
@@ -28,7 +29,7 @@ public class TaskEntity extends BaseEntity{
     //task를 작성한 User
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
@@ -44,13 +45,13 @@ public class TaskEntity extends BaseEntity{
     private Long week;
 
     // 몇일
-    private Long day;
+    private Long dayOfWeek;
 
     public void update(String newTitle, String newDesc, TaskStatus taskStatus, Long week, Long day) {
         this.title = newTitle;
         this.description = newDesc;
         this.taskStatus = taskStatus;
         this.week = week;
-        this.day = day;
+        this.dayOfWeek = day;
     }
 }

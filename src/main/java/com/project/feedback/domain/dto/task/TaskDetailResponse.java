@@ -33,7 +33,7 @@ public class TaskDetailResponse {
                 .title(task.getTitle())
                 .description(task.getDescription())
                 .week(task.getWeek())
-                .day(task.getDay())
+                .day(task.getDayOfWeek())
                 .taskStatus(task.getTaskStatus())
                 .userName(task.getUser().getUserName())
                 .createdAt(task.getCreatedAt())

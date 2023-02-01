@@ -48,9 +48,9 @@ public class CourseEntity extends BaseEntity{
     //기수 만든 사람
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private UserEntity user;
 
     @OneToMany(mappedBy = "courseEntity")
-    private List<CourseEntityUser> courseEntityUsers;
+    private List<CourseUserEntity> courseUserEntities;
 
 }

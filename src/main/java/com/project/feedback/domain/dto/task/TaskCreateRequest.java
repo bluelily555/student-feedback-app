@@ -3,7 +3,7 @@ package com.project.feedback.domain.dto.task;
 import com.project.feedback.domain.TaskStatus;
 import com.project.feedback.domain.entity.CourseEntity;
 import com.project.feedback.domain.entity.TaskEntity;
-import com.project.feedback.domain.entity.User;
+import com.project.feedback.domain.entity.UserEntity;
 import lombok.*;
 
 @Getter
@@ -19,12 +19,12 @@ public class TaskCreateRequest {
     private Long week;
     private Long day;
 
-    public TaskEntity toEntity(User user, CourseEntity course) {
+    public TaskEntity toEntity(UserEntity user, CourseEntity course) {
         return TaskEntity.builder()
                 .title(this.title)
                 .description(this.description)
                 .week(this.week)
-                .day(this.day)
+                .dayOfWeek(this.day)
                 .taskStatus(TaskStatus.valueOf(this.status))
                 .courseEntity(course)
                 .user(user)

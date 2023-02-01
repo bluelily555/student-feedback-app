@@ -28,7 +28,7 @@ public class UserTask {
     // 하나의 USER가 가질 수 있는 userTask는 여러개
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private UserEntity user;
 
 
     @ManyToOne(fetch = FetchType.LAZY)

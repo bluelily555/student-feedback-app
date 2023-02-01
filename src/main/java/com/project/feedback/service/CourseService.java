@@ -5,11 +5,10 @@ import com.project.feedback.domain.dto.course.CourseCreateRequest;
 import com.project.feedback.domain.dto.course.CourseCreateResponse;
 import com.project.feedback.domain.dto.course.CourseDto;
 import com.project.feedback.domain.entity.CourseEntity;
-import com.project.feedback.domain.entity.CourseEntityUser;
-import com.project.feedback.domain.entity.User;
+import com.project.feedback.domain.entity.CourseUserEntity;
+import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.repository.CourseRepository;
 import com.project.feedback.repository.CourseUserRepository;
-import com.project.feedback.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +31,7 @@ public class CourseService {
 
     public CourseCreateResponse createCourse(CourseCreateRequest req, String userName) {
         // UserName이 존재하는지 체크
-        User writeUser = findService.findUserByUserName(userName);
+        UserEntity writeUser = findService.findUserByUserName(userName);
         CourseEntity savedCourse = courseRepository.save(req.toEntity(writeUser));
         return CourseCreateResponse.of(savedCourse.getId(), savedCourse.getName());
     }
@@ -42,14 +41,14 @@ public class CourseService {
         CourseEntity course = findService.findCourseByName(req.getCourseName());
 
         //기수 등록해야하는 학생 list
-        List<User> users = req.getUserList();
+        List<UserEntity> users = req.getUserList();
 
-        for(User user : users){
+        for(UserEntity user : users){
             if(!courseUserRepository.findCourseEntityUserByUserId(user.getId()).isPresent()){
-                CourseEntityUser courseEntityUser = new CourseEntityUser();
-                courseEntityUser.setUser(user);
-                courseEntityUser.setCourseEntity(course);
-                courseUserRepository.save(courseEntityUser);
+                CourseUserEntity courseUserEntity = new CourseUserEntity();
+                courseUserEntity.setUser(user);
+                courseUserEntity.setCourseEntity(course);
+                courseUserRepository.save(courseUserEntity);
             }
         }
         courseRepository.save(course);

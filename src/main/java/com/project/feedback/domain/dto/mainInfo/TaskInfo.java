@@ -17,7 +17,7 @@ public class TaskInfo {
             .id(task.getId())
             .title(task.getTitle())
             .week(task.getWeek())
-            .day(task.getDay())
+            .day(task.getDayOfWeek())
             .build();
     }
 

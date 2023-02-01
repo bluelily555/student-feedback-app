@@ -2,7 +2,7 @@ package com.project.feedback.domain.dto.course;
 
 import com.project.feedback.domain.CourseStatus;
 import com.project.feedback.domain.entity.CourseEntity;
-import com.project.feedback.domain.entity.User;
+import com.project.feedback.domain.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,8 +33,8 @@ public class CourseCreateRequest {
     private Date endDate;
 
 
-    public CourseEntity toEntity(User user) {
-        List<User> users = new ArrayList<>();
+    public CourseEntity toEntity(UserEntity user) {
+        List<UserEntity> users = new ArrayList<>();
         users.add(user);
         return CourseEntity.builder()
                 .name(this.name)

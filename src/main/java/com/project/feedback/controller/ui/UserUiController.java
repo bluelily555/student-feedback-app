@@ -6,8 +6,7 @@ import com.project.feedback.domain.dto.board.CommentWriteDto;
 import com.project.feedback.domain.dto.course.AddStudentRequest;
 import com.project.feedback.domain.dto.course.CourseDto;
 import com.project.feedback.domain.dto.user.*;
-import com.project.feedback.domain.entity.CodeEntity;
-import com.project.feedback.domain.entity.User;
+import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.service.*;
@@ -121,7 +120,7 @@ public class UserUiController {
     }
     @GetMapping("/myPage")
     public String myPage(Authentication auth, Model model){
-        User user = findService.findUserByUserName(auth.getName());
+        UserEntity user = findService.findUserByUserName(auth.getName());
         String userName = user.getUserName();
         List<BoardWriteDto> boardWriteDtoList = boardService.getBoardListByUserName(userName);
         List<CommentWriteDto> commentWriteDtoList = commentService.getCommentListByUserName(userName);

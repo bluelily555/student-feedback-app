@@ -1,6 +1,6 @@
 package com.project.feedback.domain.dto.course;
 
-import com.project.feedback.domain.entity.User;
+import com.project.feedback.domain.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,5 +17,5 @@ import java.util.List;
 public class AddStudentRequest {
   //  private Long courseId;
     private String courseName;
-    private List<User> userList; // multi-checkbox
+    private List<UserEntity> userList; // multi-checkbox
 }

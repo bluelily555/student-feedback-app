@@ -3,10 +3,9 @@ package com.project.feedback.controller.ui;
 import com.project.feedback.domain.dto.course.AddStudentRequest;
 import com.project.feedback.domain.dto.course.CourseCreateRequest;
 import com.project.feedback.domain.dto.mainInfo.CourseTaskListResponse;
-import com.project.feedback.domain.dto.mainInfo.StatusInfo;
 import com.project.feedback.domain.dto.mainInfo.StudentInfo;
 import com.project.feedback.domain.entity.CourseEntity;
-import com.project.feedback.domain.entity.User;
+import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.service.CourseService;
 import com.project.feedback.service.FindService;
 import lombok.RequiredArgsConstructor;
@@ -16,14 +15,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -66,7 +61,7 @@ public class CourseController {
                        Model model,
                       Authentication auth) {
 
-        User loginUser = findService.findUserByUserName(auth.getName());
+        UserEntity loginUser = findService.findUserByUserName(auth.getName());
         CourseEntity course = findService.findCourseByUserId(loginUser);
 
        // List<HashMap<String, String>> result = findService.getStudentsWithTask(1L, 1L, 1L, loginUser);
