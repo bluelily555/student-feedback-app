@@ -6,6 +6,7 @@ import com.project.feedback.domain.dto.course.AddStudentRequest;
 import com.project.feedback.domain.dto.course.CourseCreateRequest;
 import com.project.feedback.domain.dto.course.CourseCreateResponse;
 import com.project.feedback.domain.dto.mainInfo.CourseTaskListResponse;
+import com.project.feedback.domain.dto.mainInfo.StudentInfo;
 import com.project.feedback.domain.entity.User;
 import com.project.feedback.service.CourseService;
 import com.project.feedback.service.FindService;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -79,13 +81,13 @@ public class CourseApiController {
 
     @Operation(summary = "students 별 Task 상태 정보 목록 : week, day filter ")
     @GetMapping("/{courseId}/students/weeks/{week}/days/{day}")
-    public Response<List<HashMap<String, String>>> getStudentsWithTask(@PathVariable Long courseId,
+    public List<StudentInfo> getStudentsWithTask(@PathVariable Long courseId,
                                               @PathVariable Long week,
                                               @PathVariable Long day,
                                               @ApiIgnore Authentication auth) {
         User loginUser = findService.findUserByUserName(auth.getName());
-        List<HashMap<String, String>> result = findService.getStudentsWithTask(courseId, week, day, loginUser);
-        return Response.success(result);
+        List<StudentInfo> result = findService.getStudentsWithTask2(courseId, week, day, loginUser);
+        return result;
     }
 
 }

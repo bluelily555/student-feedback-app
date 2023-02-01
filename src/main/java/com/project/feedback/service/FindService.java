@@ -2,6 +2,7 @@ package com.project.feedback.service;
 
 import com.project.feedback.domain.Role;
 import com.project.feedback.domain.dto.mainInfo.CourseTaskListResponse;
+import com.project.feedback.domain.dto.mainInfo.StatusInfo;
 import com.project.feedback.domain.dto.mainInfo.StudentInfo;
 import com.project.feedback.domain.dto.mainInfo.TaskInfo;
 import com.project.feedback.domain.entity.CourseEntity;
@@ -108,6 +109,12 @@ public class FindService {
          return taskEntities;
      }
 
+    public CourseEntity findCourseByUserId(User loginUser){
+        CourseEntityUser courseEntityUser = courseUserRepository.findCourseEntityUserByUserId(loginUser.getId())
+            .orElseThrow(() -> new CustomException(ErrorCode.USER_COURSE_NOT_FOUND));
+        return courseEntityUser.getCourseEntity();
+    }
+
     /**
      * 학생이 속한 코스의 테스크들과, 학생이 속한 코스의 다른 학생들 목록이 아래와 같이 json형태로 합쳐보여줄 수 있도록
      * [
@@ -198,5 +205,44 @@ public class FindService {
 
         return list;
     }
+
+    public List<StudentInfo> getStudentsWithTask2(Long courseId, Long week, Long day, User loginUser){
+        // course와 week에 해당하는 task목록
+        List<TaskEntity> taskEntities = taskRepository.findByCourseIdAndWeekAndDay(courseId, week, day);
+        // filter 정보에 해당하는 task id 정보만 저장
+        List<Long> ids = new ArrayList<>();
+        for(TaskEntity taskEntity : taskEntities){
+            ids.add(taskEntity.getId());
+        }
+
+        // course에 해당하는 USER 정보 가져오기
+        List<User> users = findUserByCourseId(courseId, loginUser);
+
+        List<StudentInfo> list = new ArrayList<>();
+        for(User user : users){
+            List<StatusInfo> status2 = new ArrayList<>();
+            List<UserTask> userTasks = userTaskRepository.findByUserId(user.getId());
+            HashMap<String, String> map = new HashMap<>();
+            map.put("studentName", user.getRealName());
+            for(TaskEntity taskEntity : taskEntities ){
+
+                // usertask에서 조회해서 가져와야함.
+                // taskid, userid로 조회한 status리스트가 있으면 넣어줌.
+                UserTask userTask = userTaskRepository.findByUserIdAndTaskEntityId(user.getId(), taskEntity.getId());
+                if(userTask != null){
+                    status2.add(StatusInfo.of(userTask.getStatus().toString()));
+                }
+                else{
+                    status2.add(StatusInfo.of("없음"));
+                }
+
+            }
+            list.add(StudentInfo.of(user, status2));
+        }
+
+        return list;
+    }
+
+
 
 }
