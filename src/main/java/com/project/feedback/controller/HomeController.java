@@ -14,8 +14,8 @@ import springfox.documentation.annotations.ApiIgnore;
 @ApiIgnore
 public class HomeController {
     private final FindService findService;
-    @GetMapping(value = {"", "/", "/home"})
-    public String home(Authentication auth, Model model) {
+    @GetMapping(value = {"", "/"})
+    public String root(Authentication auth, Model model) {
         if(auth != null){
             UserEntity userInfo = findService.findUserByUserName(auth.getPrincipal().toString());
             boolean CheckAdmin = findService.checkAdmin(userInfo);
@@ -27,6 +27,10 @@ public class HomeController {
         }else{
             return "home";
         }
-
     }
+    @GetMapping(value = {"/home"})
+    public String home(Authentication auth, Model model){
+        return "home";
+    }
+
 }

@@ -10,14 +10,18 @@ import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.repository.CourseRepository;
 import com.project.feedback.repository.CourseUserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CourseService {
 
     private final CourseRepository courseRepository;
@@ -54,5 +58,22 @@ public class CourseService {
         courseRepository.save(course);
     }
 
+    public void setDefaultCourse() {
+        CourseCreateResponse courseCreateResponse;
+
+        if (courseRepository.count() == 0) {
+            CourseCreateRequest courseCreateRequest = CourseCreateRequest.builder()
+                    .name("기본 기수1")
+                    .status("CREATED")
+                    .startDate(java.sql.Timestamp.valueOf(LocalDateTime.now()))
+                    .endDate(java.sql.Timestamp.valueOf(LocalDateTime.now().plusMinutes(1)))
+                    .description("")
+                    .build();
+
+            log.info("기본기수 등록 {}", courseCreateRequest);
+            courseCreateResponse = createCourse(courseCreateRequest, "student");
+        }
+
+    }
 
 }
