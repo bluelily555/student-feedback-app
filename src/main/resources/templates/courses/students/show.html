@@ -8,8 +8,9 @@
 <!--api로 작업 필요 TO DO-->
 <label>1주</label>
 <label>1일차</label>
-
-
+<!--<div th:each="status : ${studentTaskList.status}">-->
+<!--    <label th:text="${status[0].test}"></label>-->
+<!--</div>-->
 <table class="table">
     <thead class="thead-dark">
     <tr>
@@ -19,8 +20,13 @@
         </div>
     </tr>
     </thead>
-    <tr th:each="studentTask, count : ${studentTaskList}">
-        <td th:text="${studentTask.studentName}"></td>
+    <tr th:each="studentTask, stat : ${studentTaskList}">
+        <td th:text="${studentTask.realName}"></td>
+
+            <td th:each="status : ${studentTask.status}">
+                <label th:text="${status.taskStatus}"></label>
+            </td>
+
         <!--taskStatus[n]값이 있으면 뿌려줘야함. Task의 갯수-->
     </tr>
 </table>

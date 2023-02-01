@@ -81,12 +81,12 @@ public class CourseApiController {
 
     @Operation(summary = "students 별 Task 상태 정보 목록 : week, day filter ")
     @GetMapping("/{courseId}/students/weeks/{week}/days/{day}")
-    public List<HashMap<String, String>> getStudentsWithTask(@PathVariable Long courseId,
+    public List<StudentInfo> getStudentsWithTask(@PathVariable Long courseId,
                                               @PathVariable Long week,
                                               @PathVariable Long day,
                                               @ApiIgnore Authentication auth) {
         User loginUser = findService.findUserByUserName(auth.getName());
-        List<HashMap<String, String>> result = findService.getStudentsWithTask(courseId, week, day, loginUser);
+        List<StudentInfo> result = findService.getStudentsWithTask2(courseId, week, day, loginUser);
         return result;
     }
 

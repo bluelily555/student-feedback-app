@@ -3,6 +3,7 @@ package com.project.feedback.controller.ui;
 import com.project.feedback.domain.dto.course.AddStudentRequest;
 import com.project.feedback.domain.dto.course.CourseCreateRequest;
 import com.project.feedback.domain.dto.mainInfo.CourseTaskListResponse;
+import com.project.feedback.domain.dto.mainInfo.StatusInfo;
 import com.project.feedback.domain.dto.mainInfo.StudentInfo;
 import com.project.feedback.domain.entity.CourseEntity;
 import com.project.feedback.domain.entity.User;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -67,12 +69,15 @@ public class CourseController {
         User loginUser = findService.findUserByUserName(auth.getName());
         CourseEntity course = findService.findCourseByUserId(loginUser);
 
-        List<HashMap<String, String>> result = findService.getStudentsWithTask(1L, 1L, 1L, loginUser);
+       // List<HashMap<String, String>> result = findService.getStudentsWithTask(1L, 1L, 1L, loginUser);
+        List<StudentInfo> result = findService.getStudentsWithTask2(1L, 1L, 1L, loginUser);
         CourseTaskListResponse res =  findService.getTasksAndStudentsByWeekAndDay(1L, 1L, 1L, loginUser);
         List<String> taskNames = new ArrayList<>();
         for(int i = 0; i < res.getTaskInfoList().size(); i++){
             taskNames.add(res.getTaskInfoList().get(i).getTitle());
         }
+
+
         model.addAttribute("taskList", taskNames);
         model.addAttribute("studentTaskList", result);
         model.addAttribute("courseId", course.getId());
