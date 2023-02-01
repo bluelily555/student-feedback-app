@@ -1,6 +1,6 @@
 package com.project.feedback.domain.dto.user;
 
-import com.project.feedback.domain.entity.User;
+import com.project.feedback.domain.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,7 +28,7 @@ public class UserListResponse {
     private int numberOfElements;
     private boolean empty;
 
-    public UserListResponse(List<UserListDto> content, Pageable pageable, Page<User> users) {
+    public UserListResponse(List<UserListDto> content, Pageable pageable, Page<UserEntity> users) {
         this.content = content;
         this.pageable = pageable;
         this.last = users.isLast();

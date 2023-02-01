@@ -10,7 +10,7 @@ import com.project.feedback.domain.dto.task.TaskUpdateRequest;
 import com.project.feedback.domain.dto.task.TaskUpdateResponse;
 import com.project.feedback.domain.entity.CourseEntity;
 import com.project.feedback.domain.entity.TaskEntity;
-import com.project.feedback.domain.entity.User;
+import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.repository.TaskRepository;
@@ -34,7 +34,7 @@ public class TaskService {
     public TaskCreateResponse createTask(TaskCreateRequest req, String userName) {
 
         // UserName이 존재하는지 체크
-        User writeUser = findService.findUserByUserName(userName);
+        UserEntity writeUser = findService.findUserByUserName(userName);
         CourseEntity courseEntity = findService.findCourseByName(req.getCourseName());
         // 태스크  등록 시 Authentication에서 User을 꺼내와 Post Entity에 넣어줌
         TaskEntity savedPost = taskRepository.save(req.toEntity(writeUser, courseEntity));
@@ -51,8 +51,8 @@ public class TaskService {
         TaskEntity findTask = findService.findTaskById(taskId);
 
         // UserName이 존재하는지 체크
-        User postUser = findService.findUserByUserName(findTask.getUser().getUserName());
-        User loginUser = findService.findUserByUserName(userName);
+        UserEntity postUser = findService.findUserByUserName(findTask.getUser().getUserName());
+        UserEntity loginUser = findService.findUserByUserName(userName);
 
         // 현재 로그인한 유저가 글 작성자가 아니고 ADMIN도 아니라면 에러 발생
         if(!findService.checkAuth(postUser, loginUser)) {
@@ -70,8 +70,8 @@ public class TaskService {
         TaskEntity findTask = findService.findTaskById(taskId);
 
         // UserName이 존재하는지 체크
-        User postUser = findService.findUserByUserName(findTask.getUser().getUserName());
-        User loginUser = findService.findUserByUserName(userName);
+        UserEntity postUser = findService.findUserByUserName(findTask.getUser().getUserName());
+        UserEntity loginUser = findService.findUserByUserName(userName);
 
         // 현재 로그인한 유저가 태스크 작성자가 아니고 ADMIN도 아니라면 에러 발생
         if(!findService.checkAuth(postUser, loginUser)) {
@@ -100,7 +100,7 @@ public class TaskService {
      * TO DO
      * */
     public List<TaskListDto> getTaskListByWeekAndDay(Long week, Long day){
-        List<TaskEntity> tasks = taskRepository.findByWeekAndDay(week, day);
+        List<TaskEntity> tasks = taskRepository.findByWeekAndDayOfWeek(week, day);
 
         List<TaskListDto> content = new ArrayList<>();
         for(TaskEntity task : tasks) {

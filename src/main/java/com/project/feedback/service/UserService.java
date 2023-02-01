@@ -3,8 +3,8 @@ package com.project.feedback.service;
 import com.project.feedback.domain.Role;
 import com.project.feedback.domain.dto.user.*;
 import com.project.feedback.domain.entity.CourseEntity;
-import com.project.feedback.domain.entity.CourseEntityUser;
-import com.project.feedback.domain.entity.User;
+import com.project.feedback.domain.entity.CourseUserEntity;
+import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.auth.JwtTokenUtil;
@@ -47,14 +47,14 @@ public class UserService {
 
         // 비밀번호 인코딩 후 저장
         String encodedPassword = encoder.encode( req.getPassword() );
-        User savedUser = userRepository.save(req.toEntity(encodedPassword));
+        UserEntity savedUser = userRepository.save(req.toEntity(encodedPassword));
 
         return UserJoinResponse.of(savedUser);
     }
 
     public UserLoginResponse login(UserLoginRequest req) {
 
-        User user = findService.findUserByUserName(req.getUserName());
+        UserEntity user = findService.findUserByUserName(req.getUserName());
 
         // 비밀번호 체크
         if(!encoder.matches(req.getPassword(), user.getPassword())) {
@@ -69,7 +69,7 @@ public class UserService {
 
     public UserChangeRoleResponse changeRole(Long userId, UserChangeRoleRequest req) {
 
-        User user = userRepository.findById(userId)
+        UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
 
         Role newRole;
@@ -111,7 +111,7 @@ public class UserService {
 
     }
     public void changeDefaultRole(String userRole){
-        User user = userRepository.findByUserName(userRole)
+        UserEntity user = userRepository.findByUserName(userRole)
                 .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
         Role newRole;
         if(userRole.equals("admin")){
@@ -127,12 +127,12 @@ public class UserService {
         userRepository.save(user);
     }
     public UserListResponse getUserList(Pageable pageable) {
-        Page<User> users = userRepository.findAll(pageable);
+        Page<UserEntity> users = userRepository.findAll(pageable);
         List<UserListDto> content = new ArrayList<>();
-        for(User user : users) {
+        for(UserEntity user : users) {
             String courseName = "";
 
-            Optional<CourseEntityUser> courseEntityUser = courseUserRepository.findCourseEntityUserByUserId(user.getId());
+            Optional<CourseUserEntity> courseEntityUser = courseUserRepository.findCourseEntityUserByUserId(user.getId());
             courseEntityUser.ifPresent(result -> courseEntityUser.get());
 
             if(courseEntityUser.isPresent()) {

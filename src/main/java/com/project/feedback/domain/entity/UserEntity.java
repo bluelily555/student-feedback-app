@@ -14,7 +14,8 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User extends BaseEntity{
+@Table(name = "users")
+public class UserEntity extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +35,7 @@ public class User extends BaseEntity{
     private List<UserTask> userTasks;
 
     @OneToMany(mappedBy = "user")
-    private List<CourseEntityUser> courseEntityUsers;
+    private List<CourseUserEntity> courseUserEntities;
 
     public void setRole(Role role) {
         this.role = role;

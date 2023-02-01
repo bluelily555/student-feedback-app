@@ -1,13 +1,11 @@
 package com.project.feedback.controller.ui;
 
-import com.project.feedback.domain.dto.course.AddStudentRequest;
 import com.project.feedback.domain.dto.course.CourseDto;
 import com.project.feedback.domain.dto.task.TaskCreateRequest;
 import com.project.feedback.domain.dto.task.TaskDetailResponse;
 import com.project.feedback.domain.dto.task.TaskListResponse;
 import com.project.feedback.domain.dto.task.TaskUpdateRequest;
-import com.project.feedback.domain.dto.user.UserListResponse;
-import com.project.feedback.domain.entity.User;
+import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.service.CourseService;
@@ -71,8 +69,8 @@ public class TaskController {
         model.addAttribute("taskDetail", res);
 
         // 화면에 changeable을 true로 넘겨주면 수정, 삭제 가능
-        User taskUser = findService.findUserByUserName(res.getUserName());
-        User loginUser = findService.findUserByUserName(auth.getName());
+        UserEntity taskUser = findService.findUserByUserName(res.getUserName());
+        UserEntity loginUser = findService.findUserByUserName(auth.getName());
         if(auth != null && findService.checkAuth(taskUser, loginUser)) {
             model.addAttribute("changeable", true);
         } else {

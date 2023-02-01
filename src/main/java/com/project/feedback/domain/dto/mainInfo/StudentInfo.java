@@ -1,6 +1,6 @@
 package com.project.feedback.domain.dto.mainInfo;
 
-import com.project.feedback.domain.entity.User;
+import com.project.feedback.domain.entity.UserEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +15,7 @@ public class StudentInfo {
     private String realName;
     private List<StatusInfo> status;
 
-    public static StudentInfo of(User user, List<StatusInfo> status) {
+    public static StudentInfo of(UserEntity user, List<StatusInfo> status) {
         return StudentInfo.builder()
             .id(user.getId())
             .realName(user.getRealName())
@@ -23,7 +23,7 @@ public class StudentInfo {
             .build();
     }
 
-    public static StudentInfo of(User user) {
+    public static StudentInfo of(UserEntity user) {
         return StudentInfo.builder()
             .id(user.getId())
             .realName(user.getRealName())

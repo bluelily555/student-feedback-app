@@ -8,15 +8,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
    // Optional<TaskEntity> findByUserName(String userName);
 
     Page<TaskEntity> findAll(Pageable pageable);
 
-    List<TaskEntity> findByWeekAndDay(Long week, Long day);
+    List<TaskEntity> findByWeekAndDayOfWeek(Long week, Long day);
 
-    @Query(value = "select task from TaskEntity task where task.week = :week and task.day = :day and task.courseEntity.id = :courseId")
+    @Query(value = "select task from TaskEntity task where task.week = :week and task.dayOfWeek = :day and task.courseEntity.id = :courseId")
     List<TaskEntity> findByCourseIdAndWeekAndDay(@Param("courseId") Long courseId, @Param("week") Long week, @Param("day") Long day);
 }

@@ -7,7 +7,7 @@ import com.project.feedback.domain.dto.course.CourseCreateRequest;
 import com.project.feedback.domain.dto.course.CourseCreateResponse;
 import com.project.feedback.domain.dto.mainInfo.CourseTaskListResponse;
 import com.project.feedback.domain.dto.mainInfo.StudentInfo;
-import com.project.feedback.domain.entity.User;
+import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.service.CourseService;
 import com.project.feedback.service.FindService;
 import io.swagger.annotations.Api;
@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -53,8 +51,8 @@ public class CourseApiController {
     @Operation(summary = "기수에 속한 학생 목록")
     @GetMapping("/{courseId}/students")
     public String getStudents(@PathVariable Long courseId, @ApiIgnore Authentication auth) {
-        User loginUser = findService.findUserByUserName(auth.getName());
-        List<User> users = findService.findUserByCourseId(courseId, loginUser);
+        UserEntity loginUser = findService.findUserByUserName(auth.getName());
+        List<UserEntity> users = findService.findUserByCourseId(courseId, loginUser);
         //학생 각각의 task에 대한 진행상황
         return "success";
     }
@@ -63,7 +61,7 @@ public class CourseApiController {
     @Operation(summary = "기수에 속한 Task와 Student 목록")
     @GetMapping("/{courseId}/tasks")
     public Response<CourseTaskListResponse> getTasks(@PathVariable Long courseId, @ApiIgnore Authentication auth) {
-        User loginUser = findService.findUserByUserName(auth.getName());
+        UserEntity loginUser = findService.findUserByUserName(auth.getName());
         CourseTaskListResponse res = findService.getTasksAndStudents(courseId, loginUser);
         return Response.success(res);
     }
@@ -74,7 +72,7 @@ public class CourseApiController {
                                                      @PathVariable Long week,
                                                      @PathVariable Long day,
                                                      @ApiIgnore Authentication auth) {
-        User loginUser = findService.findUserByUserName(auth.getName());
+        UserEntity loginUser = findService.findUserByUserName(auth.getName());
         CourseTaskListResponse res = findService.getTasksAndStudentsByWeekAndDay(courseId, week, day, loginUser);
         return Response.success(res);
     }
@@ -85,7 +83,7 @@ public class CourseApiController {
                                               @PathVariable Long week,
                                               @PathVariable Long day,
                                               @ApiIgnore Authentication auth) {
-        User loginUser = findService.findUserByUserName(auth.getName());
+        UserEntity loginUser = findService.findUserByUserName(auth.getName());
         List<StudentInfo> result = findService.getStudentsWithTask2(courseId, week, day, loginUser);
         return result;
     }

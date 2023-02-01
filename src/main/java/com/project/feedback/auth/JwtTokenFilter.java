@@ -1,6 +1,6 @@
 package com.project.feedback.auth;
 
-import com.project.feedback.domain.entity.User;
+import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.service.FindService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -67,7 +67,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             String userName = JwtTokenUtil.getUserName(token, secretKey);
 
             // userName으로 User 찾아오기
-            User loginUser = findService.findUserByUserName(userName);
+            UserEntity loginUser = findService.findUserByUserName(userName);
 
             log.info("role:{}", loginUser.getRole().name());
 
