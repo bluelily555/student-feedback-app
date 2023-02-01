@@ -14,10 +14,10 @@
       }
     }
   </script>
-
-  <nav class="navbar navbar-expand-lg" style="background-color: #7099cc">
+<!--  style="background-color: #7099cc"-->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light" style="border-color:#dde0ea!important; border-bottom:.1rem solid transparent;" >
     <div class="container-fluid">
-      <a class="navbar-brand" href="/">Feedback</a>
+      <a class="navbar-brand text-purple" href="/">Feedback</a>
 
       <div class="justify-content-between" id="navbarNav" style="padding: 5px 30px">
         <ul class="navbar-nav">
@@ -51,11 +51,12 @@
         <!-- 로그인 했을때 -->
         <ul class="navbar-nav" sec:authorize="isAuthenticated()">
           <button class="btn nav-btn" onclick="location.href = '/users/logout'">로그아웃</button>
-          <button class="btn nav-btn" th:if="${#authorization.expression('hasRole(''STUDENT'')')}" onclick="location.href = '/users/myPage'">마이페이지</button>
+          <button class="btn nav-btn" th:if="${#authorization.expression('hasRole(''STUDENT'')')}" onclick="location.href = '/users/my'">마이페이지</button>
         </ul>
 
       </div>
     </div>
+    <hr>
   </nav>
 </div>
 </body>
