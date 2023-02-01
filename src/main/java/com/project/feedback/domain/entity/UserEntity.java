@@ -32,7 +32,7 @@ public class UserEntity extends BaseEntity{
     private List<TaskEntity> tasks;
 
     @OneToMany(mappedBy = "user")
-    private List<UserTask> userTasks;
+    private List<UserTaskEntity> userTaskEntities;
 
     @OneToMany(mappedBy = "user")
     private List<CourseUserEntity> courseUserEntities;

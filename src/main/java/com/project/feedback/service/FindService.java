@@ -9,7 +9,7 @@ import com.project.feedback.domain.entity.CourseEntity;
 import com.project.feedback.domain.entity.CourseUserEntity;
 import com.project.feedback.domain.entity.TaskEntity;
 import com.project.feedback.domain.entity.UserEntity;
-import com.project.feedback.domain.entity.UserTask;
+import com.project.feedback.domain.entity.UserTaskEntity;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.repository.CourseRepository;
@@ -184,18 +184,18 @@ public class FindService {
 
         ArrayList<HashMap<String, String>> list = new ArrayList<>();
             for(UserEntity user : users){
-                List<UserTask> userTasks = userTaskRepository.findByUserId(user.getId());
+                List<UserTaskEntity> userTaskEntities = userTaskRepository.findByUserId(user.getId());
                 HashMap<String, String> map = new HashMap<>();
                 map.put("studentName", user.getRealName());
                 int index = 1;
-                for(UserTask userTask : userTasks){
+                for(UserTaskEntity userTaskEntity : userTaskEntities){
                     // task id
-                    Long id = userTask.getTaskEntity().getId();
+                    Long id = userTaskEntity.getTaskEntity().getId();
                     if(ids.contains(id)){
                         map.put("taskId"+index, id.toString());
                         TaskEntity task =  taskRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.TASK_NOT_FOUND));
                         map.put("taskName"+index, task.getTitle());
-                        map.put("taskStatus"+index, userTask.getStatus().toString());
+                        map.put("taskStatus"+index, userTaskEntity.getStatus().toString());
                         index++;
                     }
 
@@ -221,16 +221,16 @@ public class FindService {
         List<StudentInfo> list = new ArrayList<>();
         for(UserEntity user : users){
             List<StatusInfo> status2 = new ArrayList<>();
-            List<UserTask> userTasks = userTaskRepository.findByUserId(user.getId());
+            List<UserTaskEntity> userTaskEntities = userTaskRepository.findByUserId(user.getId());
             HashMap<String, String> map = new HashMap<>();
             map.put("studentName", user.getRealName());
             for(TaskEntity taskEntity : taskEntities ){
 
                 // usertask에서 조회해서 가져와야함.
                 // taskid, userid로 조회한 status리스트가 있으면 넣어줌.
-                UserTask userTask = userTaskRepository.findByUserIdAndTaskEntityId(user.getId(), taskEntity.getId());
-                if(userTask != null){
-                    status2.add(StatusInfo.of(userTask.getStatus().toString()));
+                UserTaskEntity userTaskEntity = userTaskRepository.findByUserIdAndTaskEntityId(user.getId(), taskEntity.getId());
+                if(userTaskEntity != null){
+                    status2.add(StatusInfo.of(userTaskEntity.getStatus().toString()));
                 }
                 else{
                     status2.add(StatusInfo.of("없음"));

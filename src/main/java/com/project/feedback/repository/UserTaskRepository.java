@@ -1,13 +1,12 @@
 package com.project.feedback.repository;
 
-import com.project.feedback.domain.entity.UserTask;
+import com.project.feedback.domain.entity.UserTaskEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface UserTaskRepository extends JpaRepository<UserTask, Long> {
-    List<UserTask> findByUserId(Long userId);
+public interface UserTaskRepository extends JpaRepository<UserTaskEntity, Long> {
+    List<UserTaskEntity> findByUserId(Long userId);
 
-   UserTask findByUserIdAndTaskEntityId(Long userId, Long taskId);
+   UserTaskEntity findByUserIdAndTaskEntityId(Long userId, Long taskId);
 }

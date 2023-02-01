@@ -36,7 +36,7 @@ public class TaskEntity extends BaseEntity{
     private CourseEntity courseEntity;
 
     @OneToMany(mappedBy = "taskEntity")
-    private List<UserTask> userTasks;
+    private List<UserTaskEntity> userTaskEntities;
 
     @Enumerated(EnumType.STRING)
     private TaskStatus taskStatus;
