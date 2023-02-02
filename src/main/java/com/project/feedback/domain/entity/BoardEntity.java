@@ -2,6 +2,7 @@ package com.project.feedback.domain.entity;
 
 import jakarta.persistence.*;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ public class BoardEntity extends TimeEntity {
     private Long id;
 
     @Column(length = 100, nullable = false)
+    @NotEmpty
     private String title;
 
     @Column(columnDefinition = "TEXT", nullable = false)

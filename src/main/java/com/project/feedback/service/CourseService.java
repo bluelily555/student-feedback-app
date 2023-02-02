@@ -28,6 +28,9 @@ public class CourseService {
     private final CourseUserRepository courseUserRepository;
     private final FindService findService;
 
+    public int getCourseLength(){
+        return courseRepository.findAll().size();
+    }
     public List<CourseDto> courses() {
         return courseRepository.findAll().stream()
             .map(courseEntity -> CourseDto.fromEntity(courseEntity)).collect(Collectors.toList());
