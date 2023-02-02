@@ -49,6 +49,12 @@ server:
   servlet:
     encoding:
       force-response: true
+  error:
+    whitelabel:
+      enabled: true
+    include-stacktrace: always
+    include-exception: true
+    path: /error
 
 dummy:
   default-password: 11111

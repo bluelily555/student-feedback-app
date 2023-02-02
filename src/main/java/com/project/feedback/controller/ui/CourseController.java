@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +34,13 @@ public class CourseController {
 
     @GetMapping("/write")
     public String writePage(Model model) {
+        LocalDate now = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        String dateNow  = now.format(formatter);
+        int cnt = courseService.getCourseLength()+1;
+//        String cnt = String.valueOf(courseService.getCourseLength()+1);
+        model.addAttribute("cnt", cnt);
+        model.addAttribute("date", dateNow);
         model.addAttribute("courseCreateRequest", new CourseCreateRequest());
         return "courses/write";
     }
