@@ -2,6 +2,7 @@ package com.project.feedback.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.feedback.auth.JwtTokenFilter;
+import com.project.feedback.controller.ui.CustomErrorController;
 import com.project.feedback.domain.Response;
 import com.project.feedback.domain.Role;
 import com.project.feedback.exception.CustomException;
@@ -26,7 +27,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @EnableWebSecurity
 @Configuration
@@ -82,11 +85,20 @@ public class SecurityConfig {
 
     // Security Filter Chain에서 발생하는 Exception은 ExceptionManager 까지 가지 않기 때문에 여기서 직접 처리
     public void makeErrorResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
-        response.setCharacterEncoding("UTF-8");
         response.setStatus(errorCode.getStatus().value());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(response.getWriter(), Response.error(new CustomException(errorCode)));
+        response.setContentType("text/html; charset=utf-8");
+        String msg = "잘못된 접근입니다.";
+        String url = "../resources/templates/users/login";
+        PrintWriter w = response.getWriter();
+        w.write("<script>alert('"+msg+"');location.href='"+url+"';</script>");
+        w.flush();
+        w.close();
+//        response.setCharacterEncoding("UTF-8");
+//        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+//        response.sendRedirect("../resources/templates/users/login");
+//        throw new CustomException(ErrorCode.INVALID_PERMISSION);
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        objectMapper.writeValue(response.getWriter(), Response.error(new CustomException(errorCode)));
     }
 
 }
