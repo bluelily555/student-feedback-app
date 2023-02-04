@@ -5,6 +5,14 @@
     <meta charset="utf-8" />
 </head>
 <body>
+<script>
+    /*<![CDATA[*/
+    let msg = "[[${msg}]]"
+    /*]]>*/
+    if(msg !== ""){
+        alert(msg);
+    }
+</script>
 <p>에러</p>
 <div th:text="${code}"/>
 <div th:text="${msgPhrase}"/>
