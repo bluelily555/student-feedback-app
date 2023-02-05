@@ -15,8 +15,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -64,31 +66,37 @@ public class CourseController {
         return  "redirect:/users";
     }
 
-   // @GetMapping("/{courseId}/students/weeks/{week}/days/{day}")
     @GetMapping("/students")
-    public String list(
-                       Model model,
-                      Authentication auth) {
+    public String addCourseId(Authentication auth, RedirectAttributes redirectAttributes) {
 
         UserEntity loginUser = findService.findUserByUserName(auth.getName());
         CourseEntity course = findService.findCourseByUserId(loginUser);
 
-       // List<HashMap<String, String>> result = findService.getStudentsWithTask(1L, 1L, 1L, loginUser);
-        List<StudentInfo> result = findService.getStudentsWithTask2(1L, 1L, 1L, loginUser);
-        CourseTaskListResponse res =  findService.getTasksAndStudentsByWeekAndDay(1L, 1L, 1L, loginUser);
+
+        redirectAttributes.addAttribute("courseId", course.getId());
+
+        return "redirect:{courseId}/students";
+    }
+
+    @GetMapping("/{courseId}/students")
+    public String list(@PathVariable long courseId, Authentication auth, Model model){
+        UserEntity loginUser = findService.findUserByUserName(auth.getName());
+        CourseEntity course = findService.findCourseByUserId(loginUser);
+        List<StudentInfo> result = findService.getStudentsWithTask2(courseId,  1L, 1L, loginUser);
+        CourseTaskListResponse res =  findService.getTasksAndStudentsByWeekAndDay(courseId, 1L, 1L, loginUser);
         List<String> taskNames = new ArrayList<>();
         for(int i = 0; i < res.getTaskInfoList().size(); i++){
             taskNames.add(res.getTaskInfoList().get(i).getTitle());
         }
-
-
         model.addAttribute("taskList", taskNames);
         model.addAttribute("studentTaskList", result);
-        model.addAttribute("courseId", course.getId());
+        model.addAttribute("courseId", courseId);
         model.addAttribute("courseName", course.getName());
 
         return "courses/students/show";
     }
+
+
 
 
 }

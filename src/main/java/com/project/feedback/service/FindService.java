@@ -19,6 +19,7 @@ import com.project.feedback.repository.UserRepository;
 import com.project.feedback.repository.UserTaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,6 +80,17 @@ public class FindService {
             .orElseThrow(() -> new CustomException(ErrorCode.TASK_NOT_FOUND));
     }
 
+    /**
+     * 로그인 한 user의 courseId 리턴
+     **/
+    @ModelAttribute("courseId")
+    public Long findUserByCourseId(UserEntity loginUser){
+        // 로그인한 user가 속한 course_id를 리턴한다.
+        CourseUserEntity courseUserEntity = courseUserRepository.findCourseEntityUserByUserId(loginUser.getId())
+            .orElseThrow(() -> new CustomException(ErrorCode.USER_COURSE_NOT_FOUND));
+
+        return courseUserEntity.getCourseEntity().getId();
+    }
     /**
      * 로그인한 User(student)가 속한 Course의 학생들 목록을 가져오는 api
      */
