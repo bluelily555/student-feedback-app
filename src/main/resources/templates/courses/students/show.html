@@ -3,14 +3,23 @@
 
 <head th:replace="~{fragments/header.html :: head}"/>
 <body>
-<div th:insert="~{fragments/navbar :: navbar}"></div>
-<label th:text="${courseName}" />
-<!--api로 작업 필요 TO DO-->
-<label>1주</label>
-<label>1일차</label>
-<!--<div th:each="status : ${studentTaskList.status}">-->
-<!--    <label th:text="${status[0].test}"></label>-->
-<!--</div>-->
+    <div th:insert="~{fragments/navbar :: navbar}"></div>
+    <label th:text="${courseName}" />
+
+    <form th:method="post" th:action="@{/courses/students}" th:object="${filterInfo}">
+        <select class="form-control col-sm-2" style="width:200px;height:40px;">
+            <th:block th:field="*{week}">
+                <option th:each="week : ${#numbers.sequence(1,53)}" th:value="${week}" th:text="${week}"/>
+            </th:block>
+        </select>
+        <select class="form-control col-sm-2"  style="width:200px;height:40px;">
+            <th:block th:field="*{day}">
+                <option  th:each="day : ${#numbers.sequence(1,7)}" th:value="${day}" th:text="${day}"/>
+            </th:block>
+        </select>
+        <button class="btn body-btn" type="submit">등록</button>
+    </form>
+
 <table class="table">
     <thead class="thead-dark">
     <tr>
