@@ -6,6 +6,14 @@
     margin-left: 5px;
     margin-right: 5px;
 }
+.text-btn{
+    background-color: #E1FFEE;
+    height: 40px;
+    width: 100px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
 .nav-btn{
     background-color: #E1FFEE;
     height: 40px;
@@ -42,6 +50,8 @@
     margin-right: 10px;
     margin-top: 15px
 }
+
+nav-btn
 
 .body-btn:hover {
     background-color: darkgray;
