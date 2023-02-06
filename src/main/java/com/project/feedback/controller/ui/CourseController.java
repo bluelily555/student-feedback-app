@@ -76,10 +76,9 @@ public class CourseController {
 
         model.addAttribute("filterInfo", new FilterInfo());
         redirectAttributes.addAttribute("courseId", course.getId());
-        redirectAttributes.addAttribute("week", 1);
-        redirectAttributes.addAttribute("day", 1);
 
-        return "redirect:{courseId}/students/weeks/{week}/days/{day}";
+
+        return "redirect:{courseId}/students";
     }
 
     @PostMapping("/students")
@@ -87,10 +86,9 @@ public class CourseController {
         UserEntity loginUser = findService.findUserByUserName(auth.getName());
         CourseEntity course = findService.findCourseByUserId(loginUser);
 
-        model.addAttribute("filterInfo", filterInfo);
         redirectAttribute.addAttribute("courseId", course.getId());
-        model.addAttribute("week", filterInfo.getWeek());
-        model.addAttribute("day", filterInfo.getDay());
+        redirectAttribute.addAttribute("week", filterInfo.getWeek());
+        redirectAttribute.addAttribute("day", filterInfo.getDay());
         return "redirect:{courseId}/students/weeks/{week}/days/{day}";
     }
 
@@ -104,6 +102,7 @@ public class CourseController {
         for(int i = 0; i < res.getTaskInfoList().size(); i++){
             taskNames.add(res.getTaskInfoList().get(i).getTitle());
         }
+        model.addAttribute("filterInfo", new FilterInfo());
         model.addAttribute("taskList", taskNames);
         model.addAttribute("studentTaskList", result);
         model.addAttribute("courseId", courseId);
@@ -122,12 +121,16 @@ public class CourseController {
         for(int i = 0; i < res.getTaskInfoList().size(); i++){
             taskNames.add(res.getTaskInfoList().get(i).getTitle());
         }
+        model.addAttribute("filterInfo", new FilterInfo());
         model.addAttribute("taskList", taskNames);
         model.addAttribute("studentTaskList", result);
         model.addAttribute("courseId", courseId);
         model.addAttribute("courseName", course.getName());
+        model.addAttribute("week", week);
+        model.addAttribute("day", day);
 
         return "courses/students/show";
     }
+
 
 }
