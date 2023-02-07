@@ -15,10 +15,12 @@ public class UserJoinRequest {
     private String userName;
     private String password;
     private String realName;
+    private String email;
 
     public UserEntity toEntity(String encodedPassword) {
         return UserEntity.builder()
                 .realName(this.realName)
+                .email(this.email)
                 .userName(this.userName)
                 .password(encodedPassword)
                 .role(Role.ROLE_STUDENT)
