@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/header.html :: head}"></head>
+<head th:replace="~{fragments/header.html :: head}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+</head>
 <body>
+
     <div th:insert="~{fragments/navbar :: navbar}"></div>
     <section class="vh-100 bg-image">
         <div class="mask d-flex align-items-center h-100 gradient-custom-3">
@@ -13,18 +16,34 @@
                                 <h2 class="text-uppercase text-center mb-5">Create an account</h2>
                                 <form th:method="post" th:action="@{/users/join}" th:object="${userJoinRequest}">
                                     <div class="form-outline mb-4">
-                                        <input type="text" th:field="*{realName}" class="form-control form-control-lg" />
+                                        <input type="text" th:field="*{realName}" id="realName" class="form-control form-control-lg" />
                                         <label class="form-label" th:for="realName">Your Name</label>
+                                        <p id="realNameFail" style="color: red">이름을 적어주세요.</p>
+                                        <p id="realNamePass" style="color: green;" hidden >V</p>
                                     </div>
-
+                                    <div class="form-outline mb-4">
+                                        <input type="text" class="form-control form-control-lg" id="email" th:id="email" th:field="*{email}" th:errorclass="error-class" />
+                                        <label class="form-label" th:for="eamil">Your email</label>
+                                        <!-- Button trigger modal -->
+                                        <button onclick="send_email()" id="email_btn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop" disabled>
+                                            인증하기
+                                        </button>
+                                        <p id="emailFail" style="color: red">이메일 인증을 해주세요.</p>
+                                        <p id="invalidFormat" style="color: red" hidden>형식이 맞지 않습니다</p>
+                                        <p id="emailPass" style="color: green;" hidden >이메일 인증 완료</p>
+                                    </div>
                                     <div class="form-outline mb-4">
                                         <input type="text" th:field="*{userName}" th:errorclass="error-class" class="form-control form-control-lg" th:autocomplete="off" autocomplete="off" />
                                         <label class="form-label" th:for="userName">Your Id</label>
+                                        <p id="userNameFail" style="color: red">이름을 적어주세요.</p>
+                                        <p id="userNamePass" style="color: green;" hidden >V</p>
                                     </div>
 
                                     <div class="form-outline mb-4">
                                         <input type="password" th:field="*{password}"  class="form-control form-control-lg" th:autocomplete="off" autocomplete="off" />
                                         <label class="form-label" th:for="password">Password</label>
+                                        <p id="passwordFail" style="color: red">비밀 번호를 적어주세요.</p>
+                                        <p id="passwordPass" style="color: green;" hidden >V</p>
                                     </div>
 
 <!--                                    <div class="form-outline mb-4">-->
@@ -40,13 +59,11 @@
 <!--                                    </div>-->
 
                                     <div class="d-flex justify-content-center">
-                                        <button type="submit"
-                                                class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Register</button>
+                                        <button type="submit" id="register-btn"
+                                                class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" disabled>Register</button>
                                     </div>
-
                                     <p class="text-center text-muted mt-5 mb-0">Have already an account? <a href="../users/login"
                                                                                                             class="fw-bold text-body"><u>Login here</u></a></p>
-
                                 </form>
 
                             </div>
@@ -56,6 +73,35 @@
             </div>
         </div>
     </section>
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" tabindex="-1"
+     data-mdb-backdrop="static"
+     data-mdb-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">이메일 인증</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="/users/emailConfirm">
+                    <div class="form-outline mb-4" >
+                        <input type="text" class="form-control form-control-lg" name="code" th:id="code"/>
+                        <label class="form-label">회신된 이메일에서 코드를 적어주세요</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="confirm_email()">인증하기</button>
+                <button type="button" class="btn btn-secondary" id="modal-close" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!--    <div class="row">-->
 <!--        <form class="offset-4 col-4 form-group" th:method="post" th:action="@{/users/join}" th:object="${userJoinRequest}" align="center">-->
 <!--            <br/><br/>-->
@@ -75,5 +121,135 @@
 <!--            </div>-->
 <!--        </form>-->
 <!--    </div>-->
+<script th:inline="javascript">
+    let emailConfirm =false;
+    let realNameConfirm = false;
+    let userNameConfirm = false;
+    let passwordConfirm = false;
+    let modalClose = document.getElementById("modal-close")
+    function send_email(){
+        let email = $('#email').val();
+        alert("해당 이메일로 인증코드를 보냈습니다. 인증코드를 확인해주세요!")
+        $.ajax({
+            type: 'POST',
+            url: '/users/emailSend',
+            data:{
+                email: email
+            }
+        });
+    }
+    function confirm_email(){
+        let code = $('#code').val();
+        console.log(code)
+        $.ajax({
+            type: 'POST',
+            url: '/users/emailConfirm',
+            data:{
+                code: code
+            },
+            success : function (){
+                modalClose.click()
+                hide('emailFail')
+                show('emailPass')
+                alert("인증 성공")
+                emailConfirm = true;
+                document.getElementById("email_btn").setAttribute("disabled", "true")
+                activate_join()
+            }
+        })
+    }
+    function activate_join(){
+        if(emailConfirm && passwordConfirm && realNameConfirm && userNameConfirm){
+            document.getElementById('register-btn').removeAttribute("disabled")
+        }
+    }
+    function show(id) {
+        if(document.getElementById(id) != null) {
+            document.getElementById(id).removeAttribute("hidden")
+        }
+    }
+    function hide(id) {
+        if(document.getElementById(id) != null) {
+            document.getElementById(id).setAttribute("hidden", "true")
+        }
+    }
+
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+            $("#email").on("propertychange change keyup paste input ", function() {
+                let check = $("#email").val();
+                if(check.length !== 0 && emailConfirm === true){
+                    // 인증 성공
+                    hide("emailFail")
+                    hide("invalidFormat")
+                    show("emailPass")
+                    document.getElementById("email_btn").setAttribute("disabled", "true")
+                }else if(check !== 0 && emailConfirm === false && !check.includes("@")){
+                    // 인증 안되고 형식이 맞지않음
+                    hide("emailFail")
+                    hide("emailPass")
+                    show("invalidFormat")
+                    document.getElementById("email_btn").setAttribute("disabled", "true")
+                } else if(check.length !== 0 && emailConfirm === false && check.includes("@")){
+                    // 인증 안되고 형식은 맞음
+                    hide("emailPass")
+                    hide("invalidFormat")
+                    show("emailFail")
+                    document.getElementById("email_btn").removeAttribute("disabled")
+                }
+            })
+
+            $("#realName").on("propertychange change keyup paste input ",function() {
+                let check = $("#realName").val();
+                if(check !== "" || check !== null){
+                    hide("realNameFail")
+                    show("realNamePass")
+                    realNameConfirm = true
+                    activate_join()
+                }
+                if(check.length === 0){
+                    hide("realNamePass")
+                    show("realNameFail")
+                    realNameConfirm = false
+                    activate_join()
+                }
+            })
+            $("#userName").on("propertychange change keyup paste input ",function() {
+                let check = $("#userName").val();
+                if(check !== "" || check !== null){
+                    hide("userNameFail")
+                    show("userNamePass")
+                    userNameConfirm = true
+                    activate_join()
+                }
+                if(check.length === 0){
+                    hide("userNamePass")
+                    show("userNameFail")
+                    userNameConfirm = false
+                    activate_join()
+                }
+            })
+            $("#password").on("propertychange change keyup paste input ",function() {
+                let check = $("#password").val();
+                if(check !== "" || check !== null){
+                    hide("passwordFail")
+                    show("passwordPass")
+                    passwordConfirm = true
+                    activate_join()
+                }
+                if(check.length === 0){
+                    hide("passwordPass")
+                    show("passwordFail")
+                    passwordConfirm = false
+                    activate_join()
+                }
+            })
+        })
+    </script>
 </body>
 </html>

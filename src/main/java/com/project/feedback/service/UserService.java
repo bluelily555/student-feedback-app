@@ -27,6 +27,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+
     private final CourseUserRepository courseUserRepository;
     private final CourseRepository courseRepository;
     private final BCryptPasswordEncoder encoder;
@@ -44,7 +45,10 @@ public class UserService {
         userRepository.findByUserName(req.getUserName()).ifPresent(user -> {
             throw new CustomException(ErrorCode.DUPLICATED_USER_NAME, "UserName(" + req.getUserName() + ")이 중복입니다.");
         });
-
+        // email 중복 체크
+        userRepository.findByEmail(req.getEmail()).ifPresent(user -> {
+            throw new CustomException(ErrorCode.DUPLICATED_EMAIL, "Email(" + req.getEmail() + ")이 중복입니다.");
+        });
         // 비밀번호 인코딩 후 저장
         String encodedPassword = encoder.encode( req.getPassword() );
         UserEntity savedUser = userRepository.save(req.toEntity(encodedPassword));
@@ -90,10 +94,10 @@ public class UserService {
     }
     public void setDefaultUsers(){
         UserJoinRequest[] userJoinRequests = new UserJoinRequest[4];
-        userJoinRequests[0] = new UserJoinRequest("admin", defaultPw, "관리자");
-        userJoinRequests[1] = new UserJoinRequest("student", defaultPw, "학생");
-        userJoinRequests[2] = new UserJoinRequest("manager", defaultPw, "관리자");
-        userJoinRequests[3] = new UserJoinRequest("teacher", defaultPw, "선생님");
+        userJoinRequests[0] = new UserJoinRequest("admin", defaultPw, "관리자", "aaaa@aaaaa.com");
+        userJoinRequests[1] = new UserJoinRequest("student", defaultPw, "학생", "aaaa@aaaaa.com");
+        userJoinRequests[2] = new UserJoinRequest("manager", defaultPw, "관리자", "aaaa@aaaaa.com");
+        userJoinRequests[3] = new UserJoinRequest("teacher", defaultPw, "선생님", "aaaa@aaaaa.com");
         for(int i = 0; i < userJoinRequests.length; i++){
             try{
                 findService.findUserByUserName(userJoinRequests[i].getUserName());

@@ -35,7 +35,8 @@ public class UserUiController {
     private final BoardService boardService;
     private final CommentService commentService;
     private final CodeService codeService;
-
+    private final EmailServiceImpl emailServiceImpl;
+    private final EmailService emailService;
     @GetMapping
     public String list(Model model, @PageableDefault(size = 20) Pageable pageable) {
         List<CourseDto> courses = courseService.courses();
@@ -108,6 +109,11 @@ public class UserUiController {
                 model.addAttribute("nextUrl", "/users/join");
                 model.addAttribute("userJoinRequest", new UserJoinRequest());
                 return "users/join";
+            } else if (e.getErrorCode() == ErrorCode.DUPLICATED_EMAIL) {
+                model.addAttribute("message", "Email이 중복됩니다");
+                model.addAttribute("nextUrl", "/users/join");
+                model.addAttribute("userJoinRequest", new UserJoinRequest());
+                return "users/join";
             }
         } catch (Exception e) {
             throw e;
@@ -131,5 +137,22 @@ public class UserUiController {
         model.addAttribute("boardList", boardWriteDtoList);
         model.addAttribute("userName", auth.getName());
         return "users/my";
+    }
+    @ResponseBody
+    @PostMapping("/emailSend")
+    public String emailSend(@RequestParam String email) throws  Exception{
+        return emailService.sendSimpleMessage(email);
+    }
+    @ResponseBody
+    @PostMapping("/emailConfirm")
+    public String emailConfirm(@RequestParam String code, Model model){
+        String ePw = EmailServiceImpl.ePw;
+        if(ePw.equals(code)){
+            model.addAttribute("emailConfirm", true);
+        }else{
+            model.addAttribute("emailConfirm", false);
+            model.addAttribute("message", "잘못된 입력입니다.");
+        }
+        return "users/join";
     }
 }
