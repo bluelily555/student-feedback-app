@@ -2,6 +2,7 @@ package com.project.feedback.controller.ui;
 
 import com.project.feedback.domain.dto.course.AddStudentRequest;
 import com.project.feedback.domain.dto.course.CourseCreateRequest;
+import com.project.feedback.domain.dto.course.CourseInfo;
 import com.project.feedback.domain.dto.mainInfo.CourseTaskListResponse;
 import com.project.feedback.domain.dto.mainInfo.FilterInfo;
 import com.project.feedback.domain.dto.mainInfo.StudentInfo;
@@ -73,19 +74,27 @@ public class CourseController {
 
         UserEntity loginUser = findService.findUserByUserName(auth.getName());
         CourseEntity course = findService.findCourseByUserId(loginUser);
+        CourseInfo courseInfo = CourseInfo.fromEntity(course); // 추가한 내용
+        FilterInfo filterInfo = FilterInfo.builder()
+            .day(Long.valueOf(courseInfo.getWeek()))
+            .week(Long.valueOf(courseInfo.getDayOfWeek()))
+            .build();
 
-        model.addAttribute("filterInfo", new FilterInfo());
+        System.out.println(courseInfo.getWeek()+"test1");
+        System.out.println(courseInfo.getDayOfWeek()+"test11");
+        redirectAttributes.addAttribute("week", courseInfo.getWeek());
+        redirectAttributes.addAttribute("day", courseInfo.getDayOfWeek());
+        model.addAttribute("filterInfo", filterInfo);
         redirectAttributes.addAttribute("courseId", course.getId());
 
 
-        return "redirect:{courseId}/students";
+        return "redirect:{courseId}/students/weeks/{week}/days/{day}";
     }
 
     @PostMapping("/students")
     public String weekAndDaySubmit(@ModelAttribute FilterInfo filterInfo, Model model, RedirectAttributes redirectAttribute, Authentication auth) {
         UserEntity loginUser = findService.findUserByUserName(auth.getName());
         CourseEntity course = findService.findCourseByUserId(loginUser);
-
         redirectAttribute.addAttribute("courseId", course.getId());
         redirectAttribute.addAttribute("week", filterInfo.getWeek());
         redirectAttribute.addAttribute("day", filterInfo.getDay());
@@ -96,12 +105,15 @@ public class CourseController {
     public String list(@PathVariable long courseId, Authentication auth, Model model){
         UserEntity loginUser = findService.findUserByUserName(auth.getName());
         CourseEntity course = findService.findCourseByUserId(loginUser);
+        CourseInfo courseInfo = CourseInfo.fromEntity(course); // 추가한 내용
         List<StudentInfo> result = findService.getStudentsWithTask2(courseId,  1L, 1L, loginUser);
         CourseTaskListResponse res =  findService.getTasksAndStudentsByWeekAndDay(courseId, 1L, 1L, loginUser);
         List<String> taskNames = new ArrayList<>();
         for(int i = 0; i < res.getTaskInfoList().size(); i++){
             taskNames.add(res.getTaskInfoList().get(i).getTitle());
         }
+        model.addAttribute("week1", courseInfo.getWeek());
+        model.addAttribute("day1", courseInfo.getDayOfWeek());
         model.addAttribute("filterInfo", new FilterInfo());
         model.addAttribute("taskList", taskNames);
         model.addAttribute("studentTaskList", result);

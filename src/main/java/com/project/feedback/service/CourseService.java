@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -68,8 +69,8 @@ public class CourseService {
             CourseCreateRequest courseCreateRequest = CourseCreateRequest.builder()
                     .name("기본 기수1")
                     .status("CREATED")
-                    .startDate(java.sql.Timestamp.valueOf(LocalDateTime.now()))
-                    .endDate(java.sql.Timestamp.valueOf(LocalDateTime.now().plusMinutes(1)))
+                    .startDate(LocalDate.now())
+                    .endDate(LocalDate.now().plusDays(1))
                     .description("")
                     .build();
 

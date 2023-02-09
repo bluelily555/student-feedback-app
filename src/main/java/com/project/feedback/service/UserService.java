@@ -94,10 +94,10 @@ public class UserService {
     }
     public void setDefaultUsers(){
         UserJoinRequest[] userJoinRequests = new UserJoinRequest[4];
-        userJoinRequests[0] = new UserJoinRequest("admin", defaultPw, "관리자", "aaaa@aaaaa.com");
-        userJoinRequests[1] = new UserJoinRequest("student", defaultPw, "학생", "aaaa@aaaaa.com");
-        userJoinRequests[2] = new UserJoinRequest("manager", defaultPw, "관리자", "aaaa@aaaaa.com");
-        userJoinRequests[3] = new UserJoinRequest("teacher", defaultPw, "선생님", "aaaa@aaaaa.com");
+        userJoinRequests[0] = new UserJoinRequest("admin", defaultPw, "관리자", "aaa1@aaaaa.com");
+        userJoinRequests[1] = new UserJoinRequest("student", defaultPw, "학생", "aaa2@aaaaa.com");
+        userJoinRequests[2] = new UserJoinRequest("manager", defaultPw, "관리자", "aaa3@aaaaa.com");
+        userJoinRequests[3] = new UserJoinRequest("teacher", defaultPw, "선생님", "aaa4@aaaaa.com");
         for(int i = 0; i < userJoinRequests.length; i++){
             try{
                 findService.findUserByUserName(userJoinRequests[i].getUserName());
