@@ -182,43 +182,7 @@ public class FindService {
     }
 
 
-    public List<HashMap<String, String>> getStudentsWithTask(Long courseId, Long week, Long day, UserEntity loginUser){
-        // course와 week에 해당하는 task목록
-        List<TaskEntity> taskEntities = taskRepository.findByCourseIdAndWeekAndDay(courseId, week, day);
-        // filter 정보에 해당하는 task id 정보만 저장
-        List<Long> ids = new ArrayList<>();
-        for(TaskEntity taskEntity : taskEntities){
-            ids.add(taskEntity.getId());
-        }
-
-        // course에 해당하는 USER 정보 가져오기
-        List<UserEntity> users = findUserByCourseId(courseId, loginUser);
-
-        ArrayList<HashMap<String, String>> list = new ArrayList<>();
-            for(UserEntity user : users){
-                List<UserTaskEntity> userTaskEntities = userTaskRepository.findByUserId(user.getId());
-                HashMap<String, String> map = new HashMap<>();
-                map.put("studentName", user.getRealName());
-                int index = 1;
-                for(UserTaskEntity userTaskEntity : userTaskEntities){
-                    // task id
-                    Long id = userTaskEntity.getTaskEntity().getId();
-                    if(ids.contains(id)){
-                        map.put("taskId"+index, id.toString());
-                        TaskEntity task =  taskRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.TASK_NOT_FOUND));
-                        map.put("taskName"+index, task.getTitle());
-                        map.put("taskStatus"+index, userTaskEntity.getStatus().toString());
-                        index++;
-                    }
-
-                }
-                list.add(map);
-            }
-
-        return list;
-    }
-
-    public List<StudentInfo> getStudentsWithTask2(Long courseId, Long week, Long day, UserEntity loginUser){
+    public List<StudentInfo> getStudentsWithTask(Long courseId, Long week, Long day, UserEntity loginUser){
         // course와 week에 해당하는 task목록
         List<TaskEntity> taskEntities = taskRepository.findByCourseIdAndWeekAndDay(courseId, week, day);
         // filter 정보에 해당하는 task id 정보만 저장

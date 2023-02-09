@@ -71,17 +71,15 @@ public class CourseController {
 
     @GetMapping("/students")
     public String addCourseId(Authentication auth, RedirectAttributes redirectAttributes, Model model) {
-
         UserEntity loginUser = findService.findUserByUserName(auth.getName());
         CourseEntity course = findService.findCourseByUserId(loginUser);
-        CourseInfo courseInfo = CourseInfo.fromEntity(course); // 추가한 내용
+        CourseInfo courseInfo = CourseInfo.fromEntity(course);
+
         FilterInfo filterInfo = FilterInfo.builder()
             .day(Long.valueOf(courseInfo.getWeek()))
             .week(Long.valueOf(courseInfo.getDayOfWeek()))
             .build();
-
-        System.out.println(courseInfo.getWeek()+"test1");
-        System.out.println(courseInfo.getDayOfWeek()+"test11");
+        
         redirectAttributes.addAttribute("week", courseInfo.getWeek());
         redirectAttributes.addAttribute("day", courseInfo.getDayOfWeek());
         model.addAttribute("filterInfo", filterInfo);
@@ -101,33 +99,11 @@ public class CourseController {
         return "redirect:{courseId}/students/weeks/{week}/days/{day}";
     }
 
-    @GetMapping("/{courseId}/students")
-    public String list(@PathVariable long courseId, Authentication auth, Model model){
-        UserEntity loginUser = findService.findUserByUserName(auth.getName());
-        CourseEntity course = findService.findCourseByUserId(loginUser);
-        CourseInfo courseInfo = CourseInfo.fromEntity(course); // 추가한 내용
-        List<StudentInfo> result = findService.getStudentsWithTask2(courseId,  1L, 1L, loginUser);
-        CourseTaskListResponse res =  findService.getTasksAndStudentsByWeekAndDay(courseId, 1L, 1L, loginUser);
-        List<String> taskNames = new ArrayList<>();
-        for(int i = 0; i < res.getTaskInfoList().size(); i++){
-            taskNames.add(res.getTaskInfoList().get(i).getTitle());
-        }
-        model.addAttribute("week1", courseInfo.getWeek());
-        model.addAttribute("day1", courseInfo.getDayOfWeek());
-        model.addAttribute("filterInfo", new FilterInfo());
-        model.addAttribute("taskList", taskNames);
-        model.addAttribute("studentTaskList", result);
-        model.addAttribute("courseId", courseId);
-        model.addAttribute("courseName", course.getName());
-
-        return "courses/students/show";
-    }
-
     @GetMapping("/{courseId}/students/weeks/{week}/days/{day}")
     public String listWeekAndDay(@PathVariable long courseId, @PathVariable long week, @PathVariable long day, Authentication auth, Model model){
         UserEntity loginUser = findService.findUserByUserName(auth.getName());
         CourseEntity course = findService.findCourseByUserId(loginUser);
-        List<StudentInfo> result = findService.getStudentsWithTask2(courseId,  week, day, loginUser);
+        List<StudentInfo> result = findService.getStudentsWithTask(courseId,  week, day, loginUser);
         CourseTaskListResponse res =  findService.getTasksAndStudentsByWeekAndDay(courseId, week, day, loginUser);
         List<String> taskNames = new ArrayList<>();
         for(int i = 0; i < res.getTaskInfoList().size(); i++){

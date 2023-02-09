@@ -84,7 +84,7 @@ public class CourseApiController {
                                               @PathVariable Long day,
                                               @ApiIgnore Authentication auth) {
         UserEntity loginUser = findService.findUserByUserName(auth.getName());
-        List<StudentInfo> result = findService.getStudentsWithTask2(courseId, week, day, loginUser);
+        List<StudentInfo> result = findService.getStudentsWithTask(courseId, week, day, loginUser);
         return result;
     }
 
