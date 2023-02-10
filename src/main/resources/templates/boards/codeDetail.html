@@ -29,8 +29,8 @@
                                     <p th:text="${#temporals.format(codeInfo.createdDate, 'yyyy-MM-dd HH:mm')}"></p>
                                     <div style="display: block">
                                         <h5>작성 내용</h5>
-                                        <pre class="prettyprint" th:text="${codeInfo.content}">
-                                        </pre>
+                                        <pre class="prettyprint" th:text="${codeInfo.content}"></pre>
+                                        <div id="codeContent" style="width:60vw; height: 50vh; display: inline-block;" th:text="${codeInfo.codeContent}" th:value="${codeInfo.codeContent}"></div>
                                     </div>
 <!--                                    <div style="display: block">-->
 <!--                                        <a th:href="@{'/boards/edit/' + ${boardList.id}}">-->
@@ -46,5 +46,12 @@
         </div>
     </div>
 </section>
+<script src="https://cdn.jsdelivr.net/npm/ace-builds@1.4.12/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    let editor = ace.edit("codeContent");
+    editor.setTheme("ace/theme/monokai");
+    editor.setShowPrintMargin(false);
+    editor.setReadOnly(true);
+</script>
 </body>
 </html>

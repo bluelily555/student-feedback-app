@@ -17,6 +17,7 @@ public class CodeWriteDto {
     private Long id;
     private String writer;
     private String content;
+    private String codeContent;
     private String title;
     private String userName;
     private LocalDateTime createdDate;
@@ -26,6 +27,7 @@ public class CodeWriteDto {
         CodeEntity codeEntity = CodeEntity.builder()
                 .writer(writer)
                 .content(content)
+                .codeContent(codeContent)
                 .title(title)
                 .userName(userName)
                 .build();

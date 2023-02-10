@@ -1,6 +1,7 @@
 package com.project.feedback.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,9 @@ public class CodeEntity extends TimeEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String codeContent;
+
     @Column(length = 32, nullable = false)
     private String writer;
 
@@ -27,11 +31,12 @@ public class CodeEntity extends TimeEntity {
     private String userName;
 
     @Builder
-    public CodeEntity(Long id, String content, String title, String writer, String userName){
+    public CodeEntity(Long id, String content, String title, String writer, String userName, String codeContent){
         this.id = id;
         this.writer = writer;
         this.content = content;
         this.title = title;
         this.userName = userName;
+        this.codeContent = codeContent;
     }
 }
