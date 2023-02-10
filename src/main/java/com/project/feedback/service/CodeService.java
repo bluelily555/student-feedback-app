@@ -23,6 +23,7 @@ public class CodeService {
             CodeWriteDto codeWriteDto = CodeWriteDto.builder()
                     .id(codeEntity.getId())
                     .content(codeEntity.getContent())
+                    .codeContent(codeEntity.getCodeContent())
                     .writer(codeEntity.getWriter())
                     .title(codeEntity.getTitle())
                     .userName(codeEntity.getUserName())
@@ -34,6 +35,7 @@ public class CodeService {
     }
     @Transactional
     public Long saveCode(CodeWriteDto codeWriteDto){
+
         CodeEntity codeEntity = codeWriteDto.toEntity();
         CodeEntity savedCodeEntity = codeRepository.save(codeEntity);
         return savedCodeEntity.getId();
@@ -61,6 +63,7 @@ public class CodeService {
                 .id(codeEntity.getId())
                 .title(codeEntity.getTitle())
                 .content(codeEntity.getContent())
+                .codeContent(codeEntity.getCodeContent())
                 .writer(codeEntity.getWriter())
                 .userName(codeEntity.getUserName())
                 .createdDate(codeEntity.getCreatedDate())
