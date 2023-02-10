@@ -218,7 +218,4 @@ public class FindService {
 
         return list;
     }
-
-
-
 }

@@ -148,4 +148,9 @@ public class UserService {
 
         return new UserListResponse(content, pageable, users);
     }
+//    public String updatePw(String userName){
+//        UserEntity user = userRepository.findByUserName(userName)
+//                .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
+//
+//    }
 }

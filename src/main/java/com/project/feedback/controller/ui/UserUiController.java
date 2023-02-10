@@ -132,6 +132,7 @@ public class UserUiController {
         List<CommentWriteDto> commentWriteDtoList = commentService.getCommentListByUserName(userName);
         List<CodeWriteDto> codeWriteDtoList = codeService.getCodeListByUserName(userName);
         int commentCount = commentWriteDtoList.size();
+        model.addAttribute("user", user);
         model.addAttribute("codeList", codeWriteDtoList);
         model.addAttribute("commentCount", commentCount);
         model.addAttribute("boardList", boardWriteDtoList);
@@ -155,4 +156,14 @@ public class UserUiController {
         }
         return "users/join";
     }
+    @GetMapping("/pw")
+    public String getPwUpdate(Model model, Authentication auth){
+        model.addAttribute("userName", auth.getName());
+
+     return "users/pw";
+    }
+//    @PutMapping("/pw/{userName}")
+//    public String pwUpdate(@PathVariable("userName")String userName){
+//
+//    }
 }
