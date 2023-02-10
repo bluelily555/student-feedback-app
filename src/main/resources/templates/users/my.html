@@ -6,6 +6,13 @@
     <title>mypage</title>
 </head>
 <body>
+  <div>
+    <p>회원 정보</p>
+    userName: <p th:text="${user.getRealName()}"></p>
+    userEmail: <p th:text="${user.getEmail()}"></p>
+    createdDate: <p th:text="${user.getCreatedAt()}"></p>
+    <button class="btn body-btn" th:href="${'users/pw/' + ${user.getUserName()}}">비밀번호 변경하기</button>
+  </div>
   <p>task 달성률</p>
   <p>내가 작성한 글 링크</p>
   <div class="container table-responsive">
@@ -75,6 +82,7 @@
   </div>
   <p>내가 작성한 코멘트 갯수</p>
   <h1 th:text="${commentCount}"></h1>
+
 
 
 </body>

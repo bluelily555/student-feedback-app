@@ -15,10 +15,10 @@
       <div>
         <input id="userId" type="hidden" name="userName" th:value="${userName}">
         <input class="mt-4" type="text" id="title" maxlength='30' name="title" placeholder="제목을 입력하세요">
-        최대 30자
+        제목 (최대 30자)
         <br/>
-        <input type="text" id="writer" name="writer"  maxlength='10' value="" placeholder="작성자">
-        최대 10자
+        <input type="text" id="writer" name="writer"  maxlength='10' th:value="${userName}">
+        작성자 (최대 10자)
         <br/>
         <div id="content_div">
           <textarea name="codeContent" id="codeContent" hidden></textarea>
