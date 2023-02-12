@@ -11,10 +11,12 @@ import lombok.Setter;
 @Builder
 @Setter
 public class StatusInfo {
+    private Long taskId;
     private String taskStatus;
 
-    public static StatusInfo of(String status) {
+    public static StatusInfo of(Long taskId, String status) {
         return StatusInfo.builder()
+            .taskId(taskId)
             .taskStatus(status)
             .build();
     }
