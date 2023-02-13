@@ -1,16 +1,19 @@
 package com.project.feedback.controller.ui;
 
 import com.project.feedback.domain.dto.course.CourseDto;
+import com.project.feedback.domain.dto.course.CourseInfo;
 import com.project.feedback.domain.dto.task.TaskCreateRequest;
 import com.project.feedback.domain.dto.task.TaskDetailResponse;
 import com.project.feedback.domain.dto.task.TaskListResponse;
 import com.project.feedback.domain.dto.task.TaskUpdateRequest;
+import com.project.feedback.domain.entity.CourseEntity;
 import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.service.CourseService;
 import com.project.feedback.service.FindService;
 import com.project.feedback.service.TaskService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +26,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -48,13 +53,24 @@ public class TaskController {
     public String writePage(Model model) {
         model.addAttribute("taskCreateRequest", new TaskCreateRequest());
         List<CourseDto> courses = courseService.courses();
-
+        CourseEntity courseEntity = findService.findCourseByName(courses.get(0).getName());
         model.addAttribute("courseList", courses);
-
-        // todo week, day는 Course의 시작일을 기준으로 주차를 구함
-        model.addAttribute("week", 2);
-        model.addAttribute("day", 1);
+        int day = CourseInfo.fromEntity(courseEntity).getDayOfWeek();
+        long week = CourseInfo.fromEntity(courseEntity).getWeek(courseEntity.getStartDate());
+        model.addAttribute("week", week);
+        model.addAttribute("day", day);
         return "tasks/write";
+    }
+
+    @ResponseBody
+    @PostMapping("/sendCourse")
+    public String emailSend(@RequestParam String email, Model model){
+        CourseEntity courseEntity = findService.findCourseByName(email);
+        int day = CourseInfo.fromEntity(courseEntity).getDayOfWeek();
+        long week = CourseInfo.fromEntity(courseEntity).getWeek(courseEntity.getStartDate());
+        model.addAttribute("week", week);
+        model.addAttribute("day", day);
+        return "tasks/show";
     }
 
     @PostMapping("/write")

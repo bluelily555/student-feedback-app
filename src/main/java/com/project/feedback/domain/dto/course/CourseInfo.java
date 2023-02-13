@@ -5,9 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -19,7 +19,7 @@ import java.time.format.DateTimeFormatter;
 public class CourseInfo {
     private Long id;
     private String name;
-    private int week;
+    private long week;
     private int dayOfWeek;
 
     public static CourseInfo fromEntity(CourseEntity entity) {
@@ -29,17 +29,15 @@ public class CourseInfo {
     public static int getDayOfWeek(){
         //월:1 ~ 일:7
         LocalDate date = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         date.format(formatter);
         int week = date.getDayOfWeek().getValue();
         return week;
     }
 
-    public static int getWeek(LocalDate startDate){
+    public static long getWeek(LocalDate startDate){
         //현재 날짜 setting
         LocalDate date = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        date.format(formatter);
 
         int dayOfWeek = getDayOfWeek();
         if(dayOfWeek != 1){
@@ -58,10 +56,8 @@ public class CourseInfo {
                     startDate.minusDays(6);
             }
         }
+        long day = Duration.between(startDate.atStartOfDay(),date.atStartOfDay()).toDays();
 
-        Period period = Period.between(startDate, date);
-        period.getDays(); //일수
-        int day =  period.getDays();
         return (day / 7) + 1;
     }
 
