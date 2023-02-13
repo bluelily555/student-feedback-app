@@ -29,7 +29,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/tasks")
@@ -64,13 +66,16 @@ public class TaskController {
 
     @ResponseBody
     @PostMapping("/sendCourse")
-    public String emailSend(@RequestParam String email, Model model){
-        CourseEntity courseEntity = findService.findCourseByName(email);
+    public Map<String, String> courseNameSend(@RequestParam String courseName, Model model){
+        CourseEntity courseEntity = findService.findCourseByName(courseName);
+
         int day = CourseInfo.fromEntity(courseEntity).getDayOfWeek();
         long week = CourseInfo.fromEntity(courseEntity).getWeek(courseEntity.getStartDate());
-        model.addAttribute("week", week);
-        model.addAttribute("day", day);
-        return "tasks/show";
+
+        Map<String, String> map = new HashMap<>();
+        map.put("week", String.valueOf(week));
+        map.put("day",String.valueOf(day));
+        return map;
     }
 
     @PostMapping("/write")
