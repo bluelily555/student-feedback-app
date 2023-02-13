@@ -41,4 +41,5 @@ public class UserEntity extends BaseEntity{
     public void setRole(Role role) {
         this.role = role;
     }
+    public void setPassword(String password){ this.password = password;}
 }

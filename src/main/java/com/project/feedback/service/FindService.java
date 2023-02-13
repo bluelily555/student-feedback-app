@@ -40,6 +40,10 @@ public class FindService {
      * userName에 해당하는 User가 없으면 USERNAME_NOT_FOUND 에러 발생
      * userName으로 찾은 User return
      */
+    public UserEntity findUserByEmail(String email){
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.EMAIL_NOT_FOUND));
+    }
     public UserEntity findUserByUserName(String userName) {
         return userRepository.findByUserName(userName)
                 .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
