@@ -206,10 +206,10 @@ public class FindService {
                 // taskid, userid로 조회한 status리스트가 있으면 넣어줌.
                 UserTaskEntity userTaskEntity = userTaskRepository.findByUserIdAndTaskEntityId(user.getId(), taskEntity.getId());
                 if(userTaskEntity != null){
-                    status2.add(StatusInfo.of(taskEntity.getId(),userTaskEntity.getStatus().toString()));
+                    status2.add(StatusInfo.of(taskEntity.getId(), taskEntity.getTitle(), userTaskEntity.getStatus().toString()));
                 }
                 else{
-                    status2.add(StatusInfo.of(0L,"상태 등록"));
+                    status2.add(StatusInfo.of(0L,"없음","상태 등록"));
                 }
 
             }

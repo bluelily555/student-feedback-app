@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragments/header.html :: head}"/>
+<head th:replace="~{fragments/header.html :: head}">
+
+</head>
 <body>
+
     <div th:insert="~{fragments/navbar :: navbar}"></div>
     <form th:method="post" th:action="@{/courses/students}" th:object="${filterInfo}">
         <label class = "btn" th:text="${courseName}" />
@@ -31,56 +34,94 @@
     <tr th:each="studentTask, stat : ${studentTaskList}">
         <td th:text="${studentTask.realName}"></td>
             <td th:each="status : ${studentTask.status}">
-                <label th:text="${status.taskId}"/>
-                <button type="button" th:text="${status.taskStatus}" th:attr="data-modal_taskid=${status.taskId},data-modal_user_id=${studentTask.id}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <button type="button" name ="test" id="test" th:text="${status.taskStatus}"  th:attr="data-task_name=${status.taskName},data-task_stat=${status.taskStatus}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                     상태 등록
                 </button>
             </td>
     </tr>
 </table>
-</body>
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">태스크 상태 등록</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <label class="col-form-label">태스크 명:</label>
-                    </div>
-                    <div class="mb-3">
-                        <label class="col-form-label">태스크 상태:</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                            <label class="form-check-label" for="flexRadioDefault1">
-                                진행중
-                            </label>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">태스크 상태 등록</h5>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="col-form-label" id="taskId2">태스크 명:</label>
+                            <h6 id="modal_body"></h6>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
-                            <label class="form-check-label" for="flexRadioDefault2">
-                                완료
-                            </label>
+                        <div class="mb-3">
+                            <label class="col-form-label">태스크 상태:</label>
+                            <div class="form-check">
+                                <input value="CREATED" class="form-check-input" type="radio" name="flexRadioDefault" id="create">
+                                <label class="form-check-label" for="create">
+                                    생성
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input value="IN_PROGRESS" class="form-check-input" type="radio" name="flexRadioDefault" id="progress">
+                                <label class="form-check-label" for="progress">
+                                    진행중
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input value="DONE" class="form-check-input" type="radio" name="flexRadioDefault" id="done">
+                                <label class="form-check-label" for="done">
+                                    완료
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input value="ERROR" class="form-check-input" type="radio" name="flexRadioDefault" id="error">
+                                <label class="form-check-label" for="error">
+                                    에러
+                                </label>
+                            </div>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
-                            <label class="form-check-label" for="flexRadioDefault2">
-                                에러
-                            </label>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                <button type="button" class="btn btn-primary">등록</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-primary">등록</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script>
+
+        $(document).ready(function() {
+            $('#exampleModal').on('show.bs.modal', function (event) {
+                var name = $("#test").data('task_name'); // Extract info from data-* attributes
+                var stat = $("#test").data('task_stat');
+
+                if(stat=="DONE"){
+                    $("#done").attr("checked", true);
+                }
+                else if(stat=="CREATED"){
+                    $("#created").attr("checked", true);
+                }
+                else if(stat=="ERROR"){
+                    $("#error").attr("checked", true);
+                }
+                else if(stat=="IN_PROGRESS"){
+                    $("#progress").attr("checked", true);
+                }
+                var modal = $(this);
+
+
+                $("#modal_body").text(name);
+            });
+        });
+
+    </script>
+</body>
+
+
+
 </html>
 
