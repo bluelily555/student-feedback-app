@@ -2,6 +2,7 @@ package com.project.feedback.domain.dto.task;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.feedback.domain.TaskStatus;
+import com.project.feedback.domain.dto.course.CourseInfo;
 import com.project.feedback.domain.entity.TaskEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +19,7 @@ public class TaskDetailResponse {
     private String title;
     private String description;
     private TaskStatus taskStatus;
+    private CourseInfo courseInfo;
     private Long week;
     private Long day;
     private String userName;
@@ -35,6 +37,7 @@ public class TaskDetailResponse {
                 .week(task.getWeek())
                 .day(task.getDayOfWeek())
                 .taskStatus(task.getTaskStatus())
+                .courseInfo(CourseInfo.fromEntity(task.getCourseEntity()))
                 .userName(task.getUser().getUserName())
                 .createdAt(task.getCreatedAt())
                 .lastModifiedAt(task.getLastModifiedAt())

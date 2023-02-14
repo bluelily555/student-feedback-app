@@ -7,13 +7,11 @@ import com.project.feedback.domain.dto.task.TaskDetailResponse;
 import com.project.feedback.domain.dto.task.TaskListResponse;
 import com.project.feedback.domain.dto.task.TaskUpdateRequest;
 import com.project.feedback.domain.entity.CourseEntity;
-import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.service.CourseService;
 import com.project.feedback.service.FindService;
 import com.project.feedback.service.TaskService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -88,17 +86,7 @@ public class TaskController {
     public String show(@PathVariable Long taskId, Model model, Authentication auth) {
         TaskDetailResponse res = taskService.getOneTask(taskId);
         model.addAttribute("taskDetail", res);
-
-        // 화면에 changeable을 true로 넘겨주면 수정, 삭제 가능
-        UserEntity taskUser = findService.findUserByUserName(res.getUserName());
-        UserEntity loginUser = findService.findUserByUserName(auth.getName());
-        if(auth != null && findService.checkAuth(taskUser, loginUser)) {
-            model.addAttribute("changeable", true);
-        } else {
-            model.addAttribute("changeable", false);
-        }
-
-        return "tasks/show";
+        return "tasks/detail";
     }
 
     @GetMapping("/{taskId}/delete")

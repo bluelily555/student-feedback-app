@@ -26,8 +26,8 @@
     <thead class="thead-dark">
     <tr>
         <th></th>
-        <div th:each="taskName : ${taskList}">
-            <th th:text="${taskName}"></th>
+        <div th:each="taskList : ${taskList}">
+            <th><a href="/tasks/write.html" th:href="@{/tasks/{taskId}(taskId=${taskList.id})}" th:text="${taskList.title}"/></th>
         </div>
     </tr>
     </thead>
