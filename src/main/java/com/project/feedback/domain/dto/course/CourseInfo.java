@@ -9,7 +9,6 @@ import lombok.Setter;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 
 @NoArgsConstructor
@@ -38,27 +37,21 @@ public class CourseInfo {
     public static long getWeek(LocalDate startDate){
         //현재 날짜 setting
         LocalDate date = LocalDate.now();
+        int cur_dayOfWeek = startDate.getDayOfWeek().getValue();
+        int dayOfWeek = date.getDayOfWeek().getValue();
 
-        int dayOfWeek = getDayOfWeek();
+        int minus = 0;
+        int cur_minus = 0;
         if(dayOfWeek != 1){
-            switch (dayOfWeek){
-                case 2:
-                    startDate.minusDays(1);
-                case 3:
-                    startDate.minusDays(2);
-                case 4:
-                    startDate.minusDays(3);
-                case 5:
-                    startDate.minusDays(4);
-                case 6:
-                    startDate.minusDays(5);
-                case 7:
-                    startDate.minusDays(6);
-            }
+            minus = dayOfWeek - 1;
+            date = date.minusDays(minus);
+        }
+        if(cur_dayOfWeek != 1){
+            cur_minus = cur_dayOfWeek - 1;
+            startDate = startDate.minusDays(cur_minus);
         }
         long day = Duration.between(startDate.atStartOfDay(),date.atStartOfDay()).toDays();
-
-        return (day / 7) + 1;
+        return (day/ 7) + 1;
     }
 
 }
