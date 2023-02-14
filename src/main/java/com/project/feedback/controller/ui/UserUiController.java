@@ -5,7 +5,9 @@ import com.project.feedback.domain.dto.board.CodeWriteDto;
 import com.project.feedback.domain.dto.board.CommentWriteDto;
 import com.project.feedback.domain.dto.course.AddStudentRequest;
 import com.project.feedback.domain.dto.course.CourseDto;
+import com.project.feedback.domain.dto.course.CourseInfo;
 import com.project.feedback.domain.dto.user.*;
+import com.project.feedback.domain.entity.CourseEntity;
 import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
@@ -21,7 +23,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/users")
@@ -98,6 +102,19 @@ public class UserUiController {
         model.addAttribute("userJoinRequest", new UserJoinRequest());
         return "users/join";
     }
+
+    @ResponseBody
+    @PostMapping("/changeRole")
+    public String changeRole(@RequestBody Map<String,List> map, Model model){
+        System.out.println(map);
+        String role =  map.get("userRole").get(0).toString(); System.out.println(role+"입니다.");
+        int size = map.get("userList").size();
+        for(int i =0; i < size; i++){
+            userService.changeRoles(Long.valueOf(String.valueOf(map.get("userList").get(i))), role);
+        }
+        return "/users";
+    }
+
 
     @PostMapping("/join")
     public String join(@ModelAttribute UserJoinRequest req, Model model) {
