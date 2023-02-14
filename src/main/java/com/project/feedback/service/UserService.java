@@ -92,6 +92,14 @@ public class UserService {
 
         return UserChangeRoleResponse.of(user.getId(), newRole);
     }
+
+    public void changeRoles(Long userId, String role) {
+        UserEntity user = userRepository.findById(userId)
+            .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
+        user.setRole(Role.valueOf(role));
+        userRepository.save(user);
+    }
+
     public void setDefaultUsers(){
         UserJoinRequest[] userJoinRequests = new UserJoinRequest[4];
         userJoinRequests[0] = new UserJoinRequest("admin", defaultPw, "관리자", "aaa1@aaaaa.com");
