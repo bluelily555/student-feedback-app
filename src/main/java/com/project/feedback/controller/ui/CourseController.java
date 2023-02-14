@@ -6,6 +6,7 @@ import com.project.feedback.domain.dto.course.CourseInfo;
 import com.project.feedback.domain.dto.mainInfo.CourseTaskListResponse;
 import com.project.feedback.domain.dto.mainInfo.FilterInfo;
 import com.project.feedback.domain.dto.mainInfo.StudentInfo;
+import com.project.feedback.domain.dto.mainInfo.TaskInfo;
 import com.project.feedback.domain.entity.CourseEntity;
 import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.service.CourseService;
@@ -105,12 +106,11 @@ public class CourseController {
         CourseEntity course = findService.findCourseByUserId(loginUser);
         List<StudentInfo> result = findService.getStudentsWithTask(courseId,  week, day, loginUser);
         CourseTaskListResponse res =  findService.getTasksAndStudentsByWeekAndDay(courseId, week, day, loginUser);
-        List<String> taskNames = new ArrayList<>();
-        for(int i = 0; i < res.getTaskInfoList().size(); i++){
-            taskNames.add(res.getTaskInfoList().get(i).getTitle());
-        }
+
+        List<TaskInfo> taskList = res.getTaskInfoList();
+
         model.addAttribute("filterInfo", new FilterInfo());
-        model.addAttribute("taskList", taskNames);
+        model.addAttribute("taskList", taskList);
         model.addAttribute("studentTaskList", result);
         model.addAttribute("courseId", courseId);
         model.addAttribute("courseName", course.getName());

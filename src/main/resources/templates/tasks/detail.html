@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header.html :: head}"/>
+<body>
+    <div th:insert="~{fragments/navbar :: navbar}"></div>
+    <main class="d-flex flex-nowrap">
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+        <div class="row" style="margin-top: 15px;">
+        <br/><br/>
+            <form style="width:500px;margin-left:30px;display: inline-block;">
+            <div class="mb-3 row">
+                <label for="taskName" class="col-sm-2 col-form-label" style="width:200px;height:40px;font-weight:bold;">태스크 명</label>
+                <div class="col-sm-10">
+                    <label class="form-control" id="taskName" type="text" th:text="${taskDetail.title}"/>
+                </div>
+            </div>
+            <div class="row">
+                <label for="courseName" class="col-form-label"  style="width:200px;height:40px;font-weight:bold;">기수</label>
+                <div class="col-sm-10">
+                    <label id="courseName" class="form-control" name="courseName" th:text="${taskDetail.courseInfo.name}"/>
+                </div>
+            </div>
+            </br>
+            <div class="row">
+                <div class="mb-3 row">
+                    <label for="week" class="col-form-label" style="font-weight:bold;">주차</label>
+                    <div class="col-sm-10">
+                        <label class ="form-control" id="week" type="text" name="week" th:text="${taskDetail.week}"/>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="day" class="col-form-label" style="font-weight:bold;">일차</label>
+                    <div class="col-sm-10">
+                        <label class ="form-control" id="day" type="text" name="day" th:text="${taskDetail.day}" />
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label style="font-weight:bold;">설명 : </label>
+                <textarea class="form-control" rows="10" th:text="${taskDetail.description}"/>
+            </div>
+
+            </form>
+    </div>
+    </main>
+
+</body>
+<footer th:replace="~{fragments/footer.html :: footer}"/>
+</html>
