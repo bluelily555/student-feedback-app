@@ -85,6 +85,7 @@ public class TaskController {
     @GetMapping("/{taskId}")
     public String show(@PathVariable Long taskId, Model model, Authentication auth) {
         TaskDetailResponse res = taskService.getOneTask(taskId);
+        model.addAttribute("taskUpdateRequest", new TaskUpdateRequest());
         model.addAttribute("taskDetail", res);
         return "tasks/detail";
     }
@@ -112,7 +113,6 @@ public class TaskController {
     @PostMapping("/{taskId}/edit")
     public String edit(@PathVariable Long taskId, @ModelAttribute TaskUpdateRequest req, Authentication auth, Model model) {
         model.addAttribute("taskDetail", taskService.getOneTask(taskId));
-
         try {
             taskService.updateTask(taskId, req, auth.getName());
         } catch (CustomException e) {

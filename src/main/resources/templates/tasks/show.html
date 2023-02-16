@@ -7,28 +7,35 @@
 <main class="d-flex flex-nowrap">
     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
     <br>
-    <div class="row" style="width: 100vh">
+    <div class="row" style="width: 100vw">
 <!--        class="offset-2 col-8"-->
         <div>
                 <table class="table list-table table-hover text-center">
                     <thead style="background-color: #A5F1E9">
                     <tr>
-                        <th style="width: 10%">id</th>
-                        <th style="width: 10%">기수 명</th>
-                        <th style="width: 25%">태스크 명</th>
-                        <th style="width: 10%">주차</th>
-                        <th style="width: 10%">일차</th>
-                        <th style="width: 25%">태스크 상태</th>
+                      <th style="width: 5%">id</th>
+                      <th style="width: 10%">기수 명</th>
+                      <th style="width: 25%">태스크 명</th>
+                      <th style="width: 10%">주차</th>
+                      <th style="width: 10%">일차</th>
+                      <th style="width: 20%">태스크 상태</th>
+                      <th style="width: 20%">수정</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="task: ${taskList}">
-                        <td style="width: 10%" th:text="${task.id}"/>
-                        <td style="width: 40%" th:text="${task.courseName}"/>
-                        <td style="width: 40%" th:text="${task.title}"/>
-                        <td style="width: 10%" th:text="${task.week}"/>
-                        <td style="width: 10%" th:text="${task.day}"/>
-                        <td style="width: 25%" th:text="${task.status}"/>
+                      <td style="width: 5%" th:text="${task.id}"/>
+                      <td style="width: 10%" th:text="${task.courseName}"/>
+                      <td style="width: 25%" th:text="${task.title}"/>
+                      <td style="width: 10%" th:text="${task.week}"/>
+                      <td style="width: 10%" th:text="${task.day}"/>
+                      <td style="width: 20%" th:text="${task.status}"/>
+                      <td style="width: 20%">
+                        <a th:href="@{'/tasks/' + ${task.id}}">
+                          <button class="btn body-btn">수정</button>
+                        </a>
+
+                      </td>
                     </tr>
                     </tbody>
                 </table>
