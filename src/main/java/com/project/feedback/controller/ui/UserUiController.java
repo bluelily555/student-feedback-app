@@ -163,7 +163,7 @@ public class UserUiController {
     }
     @ResponseBody
     @PostMapping("/emailConfirm")
-    public String emailConfirm(@RequestParam String code, Model model){
+    public String emailConfirm(@RequestParam String code,@RequestParam String check, Model model){
         String ePw = EmailServiceImpl.ePw;
         if(ePw.equals(code)){
             model.addAttribute("emailConfirm", true);
@@ -171,16 +171,48 @@ public class UserUiController {
             model.addAttribute("emailConfirm", false);
             model.addAttribute("message", "잘못된 입력입니다.");
         }
-        return "users/join";
+        if(check.equals("find")){
+            return "users/findId";
+        }else{
+            return "users/join";
+        }
     }
     @GetMapping("/pw")
     public String getPwUpdate(Model model, Authentication auth){
         model.addAttribute("userName", auth.getName());
-
+        model.addAttribute("userChangePwRequest", new UserChangePwRequest());
      return "users/pw";
     }
-//    @PutMapping("/pw/{userName}")
-//    public String pwUpdate(@PathVariable("userName")String userName){
-//
-//    }
+    @PutMapping("/pw")
+    public String pwUpdateByLogin(@ModelAttribute UserChangePwRequest req, HttpSession session){
+        userService.updatePwByLogin(req);
+        session.removeAttribute("jwt");
+        session.invalidate();
+        return "redirect:/";
+    }
+    @GetMapping("/findId")
+    public String idFind(){
+        return "users/findId";
+    }
+    @PostMapping("/findId")
+    public String pwFind(@RequestParam String email, Model model){
+        UserEntity user = findService.findUserByEmail(email);
+        String msg = "회원님의 아이디는" + user.getUserName() + "입니다.\n로그인 해주세요.";
+        model.addAttribute("userName", user.getUserName());
+        model.addAttribute("message", msg);
+        model.addAttribute("nextUrl", "/users/login");
+        return "users/findId";
+    }
+    @GetMapping("/findPw")
+    public String getPwFind(Model model){
+        model.addAttribute("userFindPwRequest", new UserFindPwRequest());
+        return "/users/findPw";
+    }
+    @PutMapping("/findPw")
+    public String pwUpdateByAnonymous(@ModelAttribute UserFindPwRequest req, Model model){
+        userService.updatePwByAnonymous(req);
+        model.addAttribute("message", "비밀번호가 변경되었습니다.\n새로 로그인해주세요.");
+        model.addAttribute("nextUrl", "/");
+        return "/users/findPw";
+    }
 }

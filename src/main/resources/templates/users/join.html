@@ -126,6 +126,7 @@
     let realNameConfirm = false;
     let userNameConfirm = false;
     let passwordConfirm = false;
+    let emailMode = "join";
     let modalClose = document.getElementById("modal-close")
     function send_email(){
         let email = $('#email').val();
@@ -145,7 +146,8 @@
             type: 'POST',
             url: '/users/emailConfirm',
             data:{
-                code: code
+              code: code,
+              check: emailMode
             },
             success : function (){
                 modalClose.click()
@@ -153,8 +155,6 @@
                 show('emailPass')
                 alert("인증 성공")
                 emailConfirm = true;
-                document.getElementById("email_btn").setAttribute("disabled", "true")
-                activate_join()
             }
         })
     }

@@ -156,9 +156,37 @@ public class UserService {
 
         return new UserListResponse(content, pageable, users);
     }
-//    public String updatePw(String userName){
-//        UserEntity user = userRepository.findByUserName(userName)
-//                .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
-//
-//    }
+    public UserChangePwResponse updatePwByLogin(UserChangePwRequest req){
+        UserEntity user = userRepository.findByUserName(req.getUserName())
+                .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
+        String userPassword = user.getPassword();
+//        기존 비밀번호 체크
+        if(!encoder.matches(req.getCurPassword(), userPassword)){
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
+        }else{
+            // 기존 비밀번호랑 변경 비밀번호랑 같으면 안됨
+            if(encoder.matches(req.getChPassword(), userPassword)){
+                throw new CustomException(ErrorCode.DUPLICATED_PREV_PASSWORD);
+            }else{
+                String encodedPassword = encoder.encode(req.getChPassword());
+                user.setPassword(encodedPassword);
+                user = userRepository.save(user);
+            }
+        }
+        return UserChangePwResponse.of(user.getUserName());
+    }
+    public UserFindPwResponse updatePwByAnonymous(UserFindPwRequest req){
+        UserEntity user = userRepository.findByUserName(req.getUserName())
+                .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
+        // 현재 비밀번호 알필요 없음 `
+        String userPassword = user.getPassword();
+        if(encoder.matches(req.getChPassword(), userPassword)){
+            throw new CustomException(ErrorCode.DUPLICATED_PREV_PASSWORD);
+        }else{
+            String encodedPassword = encoder.encode(req.getChPassword());
+            user.setPassword(encodedPassword);
+            user = userRepository.save(user);
+        }
+        return UserFindPwResponse.of(user.getUserName());
+    }
 }

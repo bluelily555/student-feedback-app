@@ -17,7 +17,9 @@ public enum ErrorCode {
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "잘못된 토큰입니다."),
     INVALID_PERMISSION(HttpStatus.UNAUTHORIZED, "사용자가 권한이 없습니다."),
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "DB에러"),
-    DUPLICATED_EMAIL(HttpStatus.CONFLICT, "Email이 중복됩니다.")
+    DUPLICATED_EMAIL(HttpStatus.CONFLICT, "Email이 중복됩니다."),
+    EMAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "가입된 Email이 아닙니다."),
+    DUPLICATED_PREV_PASSWORD(HttpStatus.CONFLICT, "이전 비밀번호와 같게 변경할 수 없습니다.")
     ;
 
     private HttpStatus status;
