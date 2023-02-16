@@ -173,13 +173,18 @@ public class UserUiController {
         session.invalidate();
         return "redirect:/";
     }
+    @GetMapping("/findId")
+    public String idFind(){
+        return "users/findId";
+    }
     @PostMapping("/findId")
     public String pwFind(@RequestParam String email, Model model){
         UserEntity user = findService.findUserByEmail(email);
-        String msg = "회원님의 아이디는" + user.getUserName() + "입니다.";
+        String msg = "회원님의 아이디는" + user.getUserName() + "입니다.\n로그인 해주세요.";
         model.addAttribute("userName", user.getUserName());
         model.addAttribute("message", msg);
-        return "users/login";
+        model.addAttribute("nextUrl", "/users/login");
+        return "users/findId";
     }
     @GetMapping("/findPw")
     public String getPwFind(Model model){
@@ -187,10 +192,10 @@ public class UserUiController {
         return "/users/findPw";
     }
     @PutMapping("/findPw")
-    public String pwUpdateByAnonymous(@ModelAttribute UserFindPwRequest req, HttpSession session){
+    public String pwUpdateByAnonymous(@ModelAttribute UserFindPwRequest req, Model model){
         userService.updatePwByAnonymous(req);
-        session.removeAttribute("jwt");
-        session.invalidate();
-        return "redirect:/";
+        model.addAttribute("message", "비밀번호가 변경되었습니다.\n새로 로그인해주세요.");
+        model.addAttribute("nextUrl", "/");
+        return "/users/findPw";
     }
 }
