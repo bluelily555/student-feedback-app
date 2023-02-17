@@ -3,7 +3,7 @@
 <head th:replace="~{fragments/header.html :: head}"/>
 <body>
     <div th:insert="~{fragments/navbar :: navbar}"></div>
-    <main class="d-flex flex-nowrap">
+    <main class="d-flex flex-nowrap" style="max-height:none; height: auto">
         <div th:replace="~{fragments/sidebar :: sidebar}"></div>
         <div class="row" style="margin-top: 15px;">
         <br/><br/>
@@ -54,9 +54,9 @@
             <br/>
             <div>
                 <label>설명 : </label>
-                <textarea class="form-control" rows="10" th:field="*{description}" placeholder="설명을 입력해 주세요"/>
+                <textarea class="form-control" rows="10" th:field="*{description}" placeholder="설명을 입력해 주세요"></textarea>
             </div>
-            <div align="center">
+            <div style="width: 400px">
                 <button class="btn body-btn" type="submit">등록</button>
                 <button class="btn body-btn" onclick="history.back()">취소</button>
             </div>

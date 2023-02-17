@@ -16,6 +16,7 @@ import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.repository.TaskRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import java.util.List;
 
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class TaskService {
 
@@ -53,15 +55,16 @@ public class TaskService {
         // UserName이 존재하는지 체크
         UserEntity postUser = findService.findUserByUserName(findTask.getUser().getUserName());
         UserEntity loginUser = findService.findUserByUserName(userName);
-
+        CourseEntity courseEntity = findService.findCourseByName(req.getCourseName());
         // 현재 로그인한 유저가 글 작성자가 아니고 ADMIN도 아니라면 에러 발생
         if(!findService.checkAuth(postUser, loginUser)) {
             throw new CustomException(ErrorCode.INVALID_PERMISSION);
         }
 
         // 수정
-        findTask.update(req.getTitle(), req.getDescription(), req.getTaskStatus(),req.getWeek(), req.getDay());
-        taskRepository.save(findTask);
+        findTask.update(req.getTitle(),courseEntity, req.getDescription(), req.getTaskStatus(),req.getWeek(), req.getDay());
+        log.info(findTask.getTitle());
+        findTask = taskRepository.save(findTask);
 
         return TaskUpdateResponse.of(findTask.getId());
     }
