@@ -15,6 +15,7 @@ import lombok.Setter;
 public class UserListDto {
     private Long id;
     private String userName;
+    private String realName;
     private Role role;
     private String courseName;
 
@@ -22,6 +23,7 @@ public class UserListDto {
         return UserListDto.builder()
             .id(user.getId())
             .userName(user.getUserName())
+            .realName(user.getRealName())
             .role(user.getRole())
             .courseName(courseName)
             .build();
