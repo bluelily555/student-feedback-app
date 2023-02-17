@@ -19,13 +19,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -84,12 +78,17 @@ public class TaskController {
 
     @GetMapping("/{taskId}")
     public String show(@PathVariable Long taskId, Model model, Authentication auth) {
+        List<CourseDto> courses = courseService.courses();
+        CourseEntity courseEntity = findService.findCourseByName(courses.get(0).getName());
+        model.addAttribute("courseList", courses);
+
         TaskDetailResponse res = taskService.getOneTask(taskId);
+        model.addAttribute("taskUpdateRequest", new TaskUpdateRequest());
         model.addAttribute("taskDetail", res);
         return "tasks/detail";
     }
 
-    @GetMapping("/{taskId}/delete")
+    @DeleteMapping("/{taskId}/delete")
     public String delete(@PathVariable Long taskId, Model model, Authentication auth) {
         try {
             taskService.deleteTask(taskId, auth.getName());
@@ -106,13 +105,12 @@ public class TaskController {
 
         model.addAttribute("message", "글이 삭제 되었습니다.");
         model.addAttribute("nextUrl", "/");
-        return "forward:/";
+        return "redirect:/tasks";
     }
 
-    @PostMapping("/{taskId}/edit")
+    @PutMapping("/{taskId}/edit")
     public String edit(@PathVariable Long taskId, @ModelAttribute TaskUpdateRequest req, Authentication auth, Model model) {
         model.addAttribute("taskDetail", taskService.getOneTask(taskId));
-
         try {
             taskService.updateTask(taskId, req, auth.getName());
         } catch (CustomException e) {
@@ -124,9 +122,9 @@ public class TaskController {
         } catch (Exception e) {
             throw e;
         }
-
+//        taskService.updateTask(taskId, req, auth.getName());
         model.addAttribute("message", "글이 수정 되었습니다.");
         model.addAttribute("nextUrl", "/tasks/" + taskId);
-        return "tasks/show";
+        return "redirect:/tasks";
     }
 }

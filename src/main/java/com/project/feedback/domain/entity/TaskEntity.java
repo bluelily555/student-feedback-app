@@ -47,10 +47,11 @@ public class TaskEntity extends BaseEntity{
     // 몇일
     private Long dayOfWeek;
 
-    public void update(String newTitle, String newDesc, TaskStatus taskStatus, Long week, Long day) {
+    public void update(String newTitle,CourseEntity courseEntity, String newDesc, String taskStatus, Long week, Long day) {
         this.title = newTitle;
         this.description = newDesc;
-        this.taskStatus = taskStatus;
+        this.taskStatus = TaskStatus.valueOf(taskStatus);
+        this.courseEntity = courseEntity;
         this.week = week;
         this.dayOfWeek = day;
     }
