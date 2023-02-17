@@ -57,11 +57,11 @@
             </form>
             <div align="center">
                 <br/>
-                <button class="btn page-btn" th:if="${nowPage != 1}" th:onclick="|location.href = '@{/(page=${1})}'|">&lt;&lt;</button>
-                <button class="btn page-btn" th:if="${nowPage != 1}" th:onclick="|location.href='@{/(page=${nowPage - 1})}'|">[[${nowPage - 1}]]</button>
+                <button class="btn page-btn" th:if="${nowPage != 1}" th:onclick="|location.href = '@{/users(page=${1})}'|">&lt;&lt;</button>
+                <button class="btn page-btn" th:if="${nowPage != 1}" th:onclick="|location.href='@{/users(page=${nowPage - 1})}'|">[[${nowPage - 1}]]</button>
                 <button class="btn page-btn-now">[[${nowPage}]]</button>
-                <button class="btn page-btn" th:if="${nowPage != lastPage}" th:onclick="|location.href='@{/(page=${nowPage + 1})}'|">[[${nowPage + 1}]]</button>
-                <button class="btn page-btn" th:if="${nowPage != lastPage}" th:onclick="|location.href='@{/(page=${lastPage})}'|">&gt;&gt;</button>
+                <button class="btn page-btn" th:if="${nowPage != lastPage}" th:onclick="|location.href='@{/users(page=${nowPage + 1})}'|">[[${nowPage + 1}]]</button>
+                <button class="btn page-btn" th:if="${nowPage != lastPage}" th:onclick="|location.href='@{/users(page=${lastPage})}'|">&gt;&gt;</button>
                 <br/><br/><br/>
             </div>
         </div>
