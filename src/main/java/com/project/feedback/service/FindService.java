@@ -18,6 +18,8 @@ import com.project.feedback.repository.TaskRepository;
 import com.project.feedback.repository.UserRepository;
 import com.project.feedback.repository.UserTaskRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -27,6 +29,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class FindService {
 
     private final UserRepository userRepository;
@@ -169,6 +172,7 @@ public class FindService {
         return courseTaskListResponse;
     }
 
+    @Cacheable(value = "tasksAndStudentsByWeekAndDay", key = "#courseId + '-' + #week + '-' + #day + '-' + #loginUser.id")
     public CourseTaskListResponse getTasksAndStudentsByWeekAndDay(Long courseId, Long week, Long day, UserEntity loginUser){
         //해당 course에 week, day로 필터 걸어서 task 목록을 가져옴
         List<TaskEntity> taskEntities = taskRepository.findByCourseIdAndWeekAndDay(courseId, week, day);
@@ -194,7 +198,9 @@ public class FindService {
     }
 
 
+    @Cacheable(value = "getStudentsWithTask", key = "#courseId + '_' + #week + '_' + #day + '_' + #loginUser.id")
     public List<StudentInfo> getStudentsWithTask(Long courseId, Long week, Long day, UserEntity loginUser){
+        log.info("eeeeee");
         // course와 week에 해당하는 task목록
         List<TaskEntity> taskEntities = taskRepository.findByCourseIdAndWeekAndDay(courseId, week, day);
         // filter 정보에 해당하는 task id 정보만 저장
