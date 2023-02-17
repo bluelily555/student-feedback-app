@@ -74,6 +74,14 @@ public class FindService {
         }
         return true;
     }
+
+    public boolean checkUserTask(Long userId, Long taskId){
+        UserTaskEntity task = userTaskRepository.findByUserIdAndTaskEntityId(userId, taskId);
+        if(task != null){
+            return true;
+        }
+        return false;
+    }
     /**
      * taskId로 Task를 찾아오는 기능
      * taskId에 해당하는 Task가 없으면 TASk_NOT_FOUND 에러 발생

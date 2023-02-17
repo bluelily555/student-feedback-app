@@ -35,6 +35,19 @@ public class UserTaskService {
     }
 
     @Transactional
+    public void updateUserTask(StatusInfo req, UserEntity user){
+        TaskEntity taskEntity = taskRepository.findById(req.getTaskId())
+            .orElseThrow(() -> new CustomException(ErrorCode.TASK_NOT_FOUND));
+
+        UserTaskEntity userTaskEntity = userTaskRepository.findByUserIdAndTaskEntityId(user.getId(), req.getTaskId());
+        userTaskEntity.setTaskEntity(taskEntity);
+        userTaskEntity.setUser(user);
+        userTaskEntity.setStatus(TaskStatus.valueOf(req.getTaskStatus()));
+
+        userTaskRepository.save(userTaskEntity);
+    }
+
+    @Transactional
     public void updateUserTask(Long taskId, Long userId, String status){
         UserTaskEntity userTaskEntity = userTaskRepository.findByUserIdAndTaskEntityId(userId, taskId);
 

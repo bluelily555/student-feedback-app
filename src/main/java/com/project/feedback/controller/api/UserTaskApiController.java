@@ -1,9 +1,6 @@
 package com.project.feedback.controller.api;
 
-import com.project.feedback.domain.Response;
 import com.project.feedback.domain.dto.mainInfo.StatusInfo;
-import com.project.feedback.domain.dto.task.TaskUpdateRequest;
-import com.project.feedback.domain.dto.task.TaskUpdateResponse;
 import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.service.FindService;
 import com.project.feedback.service.UserTaskService;

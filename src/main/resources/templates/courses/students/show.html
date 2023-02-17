@@ -37,9 +37,9 @@
     <tr th:each="studentTask, stat : ${studentTaskList}">
         <td th:text="${studentTask.realName}"></td>
         <div th:each="status : ${studentTask.status}">
-            <td id="test-td" class="test-td" th:attr="data-task_id=${status.taskId}, data-task_name=${status.taskName}" >
-                <select id="status" th:value="${status.taskId}" onchange="changeStatus()" class="form-select" style="width:200px;height:40px;float:left" th:attr="data-task_id=${status.taskId},data-user_id=${studentTask.id}">
-                    <option th:text="${status.taskStatus}"</option>
+            <td id="test-td"  class="test-td" th:attr="data-task_id=${status.taskId}, data-task_name=${status.taskName}, data-user_id=${studentTask.id}" >
+                <select id="status" th:value="${status.taskId}"  class="form-select" style="width:200px;height:40px;float:left" th:attr="data-task_id=${status.taskId},data-user_id=${studentTask.id}">
+                    <option th:text="${status.taskStatus}"></option>
                     <option value="CREATED">CREATED</option>
                     <option value="IN_PROGRESS">IN_PROGRESS</option>
                     <option value="DONE">DONE</option>
@@ -56,43 +56,40 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
     <script>
-        // cell 클릭 시 해당 taskid, taskName 반환
+        // cell 클릭 시 해당 taskId, status, userId /userTasks/sendUserTask로 전송
         $(document).ready(function() {
-            $('td').click(function(){
-                var name = $('td').data('task_name');
+            $('td').change(function(){
                 var tdindex = this.cellIndex;
                 var trindex = $('tr').index($(this).parent())+1;
                 var currentRow=$(this).closest("tr");
 
-                var status = currentRow.find("td:eq("+tdindex+") select").val();
+                let status = currentRow.find("td:eq("+tdindex+") select").val();
+                let taskId = currentRow.find("td:eq("+tdindex+")").data('task_id');
+                let taskName = currentRow.find("td:eq("+tdindex+")").data('task_name');
+                let userId = currentRow.find("td:eq("+tdindex+")").data('user_id');
 
-                var taskId = currentRow.find("td:eq("+tdindex+")").data('task_id');
-                var taskName = currentRow.find("td:eq("+tdindex+")").data('task_name');
+                $.ajax({
+                    type: 'POST',
+                    url: '/userTasks/sendUserTask',
+                    data: {
+                        status : status,
+                        taskId : taskId,
+                        taskName: taskName,
+                        userId : userId
+                    }
+                    , success: function (res) {
+                        if(res == "NOT_USER") {
+                            alert("해당 권한이 없습니다.");
+                            window.location.href = "/courses/students"
+                        }
+                        else{
+                            alert("등록 완료되었습니다.");
+                        }
+                    }
+                });
 
-
-                alert("Row: "+trindex+" Column: "+ tdindex + "이름 : "  + taskName + " / " + "태스크아이디 : " + taskId + " / " + "상태 :  "+ status);
             });
         });
-
-        function changeStatus() {
-            //  userid, task
-            let status = $('#status').val();
-            let taskId = $("#status").data("task_id");
-            let userId = $("#status").data("user_id");
-            let sendData;
-            $.ajax({
-                type: 'POST',
-                url: '/userTasks/sendUserTask',
-                data: JSON.stringify(sendData)
-                , contentType: 'application/json; charset=UTF-8'
-                , success: function (res) {
-                    // $("input:checkbox[id='check']").prop("checked", false); //체크박스 초기화
-                    // window.location.href = res; // redirect
-                }
-            });
-        }
-
-
     </script>
 </body>
 
