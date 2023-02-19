@@ -2,13 +2,17 @@ package com.project.feedback.domain.dto.task;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.feedback.domain.TaskStatus;
+import com.project.feedback.domain.dto.board.BoardWriteDto;
 import com.project.feedback.domain.dto.course.CourseInfo;
+import com.project.feedback.domain.entity.BoardEntity;
 import com.project.feedback.domain.entity.TaskEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Builder
@@ -20,6 +24,7 @@ public class TaskDetailResponse {
     private String description;
     private TaskStatus taskStatus;
     private CourseInfo courseInfo;
+    private List<BoardWriteDto> boards;
     private Long week;
     private Long day;
     private String userName;
@@ -30,6 +35,10 @@ public class TaskDetailResponse {
     private LocalDateTime lastModifiedAt;
 
     public static TaskDetailResponse of(TaskEntity task) {
+        List<BoardWriteDto> list = new ArrayList<>();
+        for(BoardEntity boardEntity : task.getBoardEntities()){
+            list.add(BoardWriteDto.of(boardEntity));
+        }
         return TaskDetailResponse.builder()
                 .id(task.getId())
                 .title(task.getTitle())
@@ -38,6 +47,7 @@ public class TaskDetailResponse {
                 .day(task.getDayOfWeek())
                 .taskStatus(task.getTaskStatus())
                 .courseInfo(CourseInfo.fromEntity(task.getCourseEntity()))
+                .boards(list)
                 .userName(task.getUser().getUserName())
                 .createdAt(task.getCreatedAt())
                 .lastModifiedAt(task.getLastModifiedAt())

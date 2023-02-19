@@ -1,13 +1,18 @@
 package com.project.feedback.domain.dto.board;
 
+import com.project.feedback.domain.dto.mainInfo.StatusInfo;
+import com.project.feedback.domain.dto.mainInfo.StudentInfo;
 import com.project.feedback.domain.entity.BoardEntity;
+import com.project.feedback.domain.entity.UserEntity;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
 @ToString
+@Builder
 @NoArgsConstructor
 public class BoardWriteDto {
     private Long id;
@@ -17,6 +22,7 @@ public class BoardWriteDto {
     private String userName;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
+
     public BoardEntity toEntity(){
         BoardEntity boardEntity = BoardEntity.builder()
                 .id(id)
@@ -26,6 +32,18 @@ public class BoardWriteDto {
                 .userName(userName)
                 .build();
         return boardEntity;
+    }
+
+    public static BoardWriteDto of(BoardEntity boardEntity) {
+        return BoardWriteDto.builder()
+            .id(boardEntity.getId())
+            .writer(boardEntity.getWriter())
+            .title(boardEntity.getTitle())
+            .content(boardEntity.getContent())
+            .userName(boardEntity.getUserName())
+            .createdDate(boardEntity.getCreatedDate())
+            .modifiedDate(boardEntity.getModifiedDate())
+            .build();
     }
 
     @Builder

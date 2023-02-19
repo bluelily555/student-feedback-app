@@ -26,16 +26,24 @@ public class BoardEntity extends TimeEntity {
 
     @Column(length = 32, nullable = false)
     private String writer;
+
     @Column(nullable = false)
     private String userName;
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_entity_id")
+    private TaskEntity taskEntity;
+
+
     @Builder
-    public BoardEntity(Long id, String title, String content, String writer, String userName){
+    public BoardEntity(Long id, String title, String content, String writer, String userName, TaskEntity taskEntity){
         this.id = id;
         this.writer = writer;
         this.title = title;
         this.content = content;
         this.userName = userName;
+        this.taskEntity = taskEntity;
     }
 
 }
