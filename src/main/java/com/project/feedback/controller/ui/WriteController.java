@@ -3,9 +3,14 @@ package com.project.feedback.controller.ui;
 import com.project.feedback.domain.dto.board.BoardWriteDto;
 import com.project.feedback.domain.dto.board.CodeWriteDto;
 import com.project.feedback.domain.dto.board.CommentWriteDto;
+import com.project.feedback.domain.dto.comment.CommentCreateRequest;
+import com.project.feedback.domain.dto.comment.CommentListResponse;
 import com.project.feedback.service.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -22,6 +27,7 @@ public class WriteController {
 
     private final BoardService boardService;
     private final CommentService commentService;
+    private final CommentsService commentsService;
     private final CodeService codeService;
     private final TaskService taskService;
 
@@ -98,9 +104,25 @@ public class WriteController {
 
     //codeId, boardId 혼용되어 사용
     @GetMapping("/code/detail/{boardId}")
-    public String codeDetail(@PathVariable("boardId")Long boardId, Model model){
+    public String codeDetail(@PathVariable("boardId")Long boardId, Model model,
+                             @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable)
+    {
         CodeWriteDto codeWriteDto = codeService.getCodeDetail(boardId);
         model.addAttribute("codeInfo", codeWriteDto);
+
+        // 해당 글에 달린 댓글 불러오기
+        CommentListResponse res2 = commentsService.getCommentList(boardId, pageable);
+        model.addAttribute("commentList", res2.getContent());
+        model.addAttribute("commentSize", res2.getTotalElements());
+
+        // 댓글 페이징 정보
+        model.addAttribute("nowPage", res2.getPageable().getPageNumber() + 1);
+        model.addAttribute("lastPage", res2.getTotalPages());
+
+        //comment 객체
+        CommentCreateRequest commentCreateRequest = new CommentCreateRequest();
+        model.addAttribute("commentCreateRequest", commentCreateRequest);
+
         return "boards/code/detail";
     }
 

@@ -30,6 +30,9 @@ public class UserEntity extends BaseEntity{
     private Role role;
 
     @OneToMany(mappedBy = "user")
+    private List<CommentsEntity> comments;
+
+    @OneToMany(mappedBy = "user")
     private List<TaskEntity> tasks;
 
     @OneToMany(mappedBy = "user")

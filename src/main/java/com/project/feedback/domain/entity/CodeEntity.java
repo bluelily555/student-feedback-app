@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @NoArgsConstructor
 @Getter
@@ -18,6 +20,10 @@ public class CodeEntity extends TimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_entity_id")
     private TaskEntity taskEntity;
+
+    @OneToMany(mappedBy = "codeEntity", orphanRemoval = true)
+    private List<CommentsEntity> comments;
+
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
