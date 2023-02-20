@@ -9,7 +9,7 @@
   <div th:insert="~{fragments/navbar :: navbar}"></div>
 <!--  <p>userName을 입력해서 찾고, 이걸 바탕으로 비밀번호를 변경하는 식</p>-->
   <div class="card-body p-3">
-    <form class="offset-4 col-4 form-group" th:action="@{'/users/findPw'}" method="post" th:object="${userFindPwRequest}">
+    <form class="offset-4 col-4 form-group" th:action="@{/users/find_pw}" method="post" th:object="${userFindPwRequest}">
       <input type="hidden" name="_method" value="put"/>
       ID : <input type="text" th:field="*{userName}" name="rawPassword" id="curPassword"/>
       <br>

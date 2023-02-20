@@ -77,44 +77,44 @@ public class WriteController {
 
         return "redirect:/boards/list";
     }
-    @GetMapping("/codeView")
+    @GetMapping("/code/view_all")
     public String entireCodeView(Model model){
         List<CodeWriteDto> codeWriteDtoList = codeService.searchAllCode();
         model.addAttribute("codeList", codeWriteDtoList);
-        return "boards/codeView";
+        return "boards/code/view_all";
     }
-    @GetMapping("/{taskId}/oneCodeView")
+    @GetMapping("/code/{taskId}/view_one")
     public String oneCodeView(@PathVariable("taskId")Long taskId, Model model){
         List<CodeWriteDto> codeWriteDtoList = codeService.getCodeListByTaskId(taskId);
         String taskTitle = taskService.getOneTask(taskId).getTitle();
         model.addAttribute("taskTitle", taskTitle);
         model.addAttribute("codeList", codeWriteDtoList);
-        return "boards/oneCodeView";
+        return "boards/code/view_one";
     }
-    @GetMapping("/codeDetail/{boardId}")
+    @GetMapping("/code/detail/{boardId}")
     public String codeDetail(@PathVariable("boardId")Long boardId, Model model){
         CodeWriteDto codeWriteDto = codeService.getCodeDetail(boardId);
         model.addAttribute("codeInfo", codeWriteDto);
-        return "/boards/codeDetail";
+        return "/boards/code/detail";
     }
-    @GetMapping("/{taskId}/code/write")
+    @GetMapping("/code/{taskId}/write")
     public String codeWrite(@PathVariable("taskId")Long taskId, Model model, Authentication auth) {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         String taskTitle = taskService.getOneTask(taskId).getTitle();
         model.addAttribute("taskTitle", taskTitle);
         model.addAttribute("userName", userName);
         model.addAttribute("taskId", taskId);
-        return "/boards/codeWrite";
+        return "/boards/code/write";
     }
     @PostMapping("/code/write")
     public String codeAddWrite(CodeWriteDto codeWriteDto){
         codeService.saveCode(codeWriteDto);
-        return "redirect:/boards/codeView";
+        return "redirect:/boards/code/view_all";
     }
-    @DeleteMapping("/codeView/{boardId}")
+    @DeleteMapping("/code/view/{boardId}")
     public String codeDelete(@PathVariable("boardId")Long boardId){
         codeService.deleteCode(boardId);
-        return "redirect:/boards/codeView";
+        return "redirect:/boards/code/view_all";
     }
     @PostMapping("/writeDetail/{no}")
     public String commentWrite(@PathVariable("no")Long no,CommentWriteDto commentWriteDto){
