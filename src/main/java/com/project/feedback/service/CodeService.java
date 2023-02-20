@@ -2,6 +2,7 @@ package com.project.feedback.service;
 
 import com.project.feedback.domain.dto.board.CodeWriteDto;
 import com.project.feedback.domain.entity.CodeEntity;
+import com.project.feedback.domain.entity.TaskEntity;
 import com.project.feedback.repository.CodeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.Optional;
 @Service
 public class CodeService {
     private CodeRepository codeRepository;
+    private TaskService taskService;
 
     private List<CodeWriteDto> getCodeWriteDtos(List<CodeEntity> codeEntities) {
         List<CodeWriteDto> codeWriteDtoList = new ArrayList<>();
@@ -22,6 +24,7 @@ public class CodeService {
         for(CodeEntity codeEntity : codeEntities){
             CodeWriteDto codeWriteDto = CodeWriteDto.builder()
                     .id(codeEntity.getId())
+                    .taskId(codeEntity.getTaskId())
                     .content(codeEntity.getContent())
                     .codeContent(codeEntity.getCodeContent())
                     .writer(codeEntity.getWriter())
@@ -35,7 +38,6 @@ public class CodeService {
     }
     @Transactional
     public Long saveCode(CodeWriteDto codeWriteDto){
-
         CodeEntity codeEntity = codeWriteDto.toEntity();
         CodeEntity savedCodeEntity = codeRepository.save(codeEntity);
         return savedCodeEntity.getId();
@@ -43,6 +45,11 @@ public class CodeService {
     @Transactional
     public List<CodeWriteDto> searchAllCode(){
         List<CodeEntity> codeEntities = codeRepository.findAll();
+        return getCodeWriteDtos(codeEntities);
+    }
+    @Transactional
+    public List<CodeWriteDto> getCodeListByTaskId(Long taskId){
+        List<CodeEntity> codeEntities = codeRepository.findAllByTaskId(taskId);
         return getCodeWriteDtos(codeEntities);
     }
     @Transactional
@@ -61,6 +68,7 @@ public class CodeService {
         CodeEntity codeEntity = codeEntityWrapper.get();
         CodeWriteDto codeWriteDto = CodeWriteDto.builder()
                 .id(codeEntity.getId())
+                .taskId(codeEntity.getTaskId())
                 .title(codeEntity.getTitle())
                 .content(codeEntity.getContent())
                 .codeContent(codeEntity.getCodeContent())

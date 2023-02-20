@@ -2,6 +2,7 @@ package com.project.feedback.domain.dto.board;
 
 
 import com.project.feedback.domain.entity.CodeEntity;
+import com.project.feedback.domain.entity.TaskEntity;
 import lombok.*;
 
 
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 public class CodeWriteDto {
 
     private Long id;
+    private TaskEntity taskId;
     private String writer;
     private String content;
     private String codeContent;
@@ -26,6 +28,7 @@ public class CodeWriteDto {
     public CodeEntity toEntity(){
         CodeEntity codeEntity = CodeEntity.builder()
                 .writer(writer)
+                .taskId(taskId)
                 .content(content)
                 .codeContent(codeContent)
                 .title(title)

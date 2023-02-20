@@ -16,6 +16,9 @@ public class CodeEntity extends TimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="task_id")
+    private TaskEntity taskId;
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
@@ -31,8 +34,9 @@ public class CodeEntity extends TimeEntity {
     private String userName;
 
     @Builder
-    public CodeEntity(Long id, String content, String title, String writer, String userName, String codeContent){
+    public CodeEntity(Long id, String content, String title, String writer, String userName, String codeContent,TaskEntity taskId){
         this.id = id;
+        this.taskId = taskId;
         this.writer = writer;
         this.content = content;
         this.title = title;

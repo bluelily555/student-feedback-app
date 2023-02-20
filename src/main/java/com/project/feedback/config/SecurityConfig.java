@@ -1,6 +1,7 @@
 package com.project.feedback.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.feedback.auth.ExceptionHandlerFilter;
 import com.project.feedback.auth.JwtTokenFilter;
 import com.project.feedback.controller.ui.CustomErrorController;
 import com.project.feedback.domain.Response;
@@ -59,6 +60,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/courses/write").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name())
                         .requestMatchers(HttpMethod.POST, "/api/v1/tasks").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name())
                         .requestMatchers(HttpMethod.POST, "/api/v1/users/**/role/change").hasAuthority(Role.ROLE_ADMIN.name())
+                        // task에서 글쓰기 권한 우선 학생, admin만 가능하도록 설정
+                        .requestMatchers(HttpMethod.GET, "/boards/{taskId}/codeWrite").hasAnyAuthority(Role.ROLE_STUDENT.name(), Role.ROLE_ADMIN.name())
                         .anyRequest().permitAll())
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -79,6 +82,7 @@ public class SecurityConfig {
                 })
                 .and()
                 .addFilterBefore(new JwtTokenFilter(findService, secretkey), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new ExceptionHandlerFilter(), JwtTokenFilter.class)
                 .getOrBuild();
     }
 
@@ -88,7 +92,7 @@ public class SecurityConfig {
         response.setStatus(errorCode.getStatus().value());
         response.setContentType("text/html; charset=utf-8");
         String msg = "잘못된 접근입니다.";
-        String url = "../resources/templates/users/login";
+        String url = "/users/login";
         PrintWriter w = response.getWriter();
         w.write("<script>alert('"+msg+"');location.href='"+url+"';</script>");
         w.flush();

@@ -37,15 +37,19 @@
     <tr th:each="studentTask, stat : ${studentTaskList}">
         <td th:text="${studentTask.realName}"></td>
         <div th:each="status : ${studentTask.status}">
-            <td id="test-td"  class="test-td" th:attr="data-task_id=${status.taskId}, data-task_name=${status.taskName}, data-user_id=${studentTask.id}" >
-                <select id="status" th:value="${status.taskId}"  class="form-select" style="width:200px;height:40px;float:left" th:attr="data-task_id=${status.taskId},data-user_id=${studentTask.id}">
-                    <option th:text="${status.taskStatus}"></option>
-                    <option value="CREATED">CREATED</option>
-                    <option value="IN_PROGRESS">IN_PROGRESS</option>
-                    <option value="DONE">DONE</option>
-                    <option value="ERROR">ERROR</option>
-                </select>
-            </td>
+          <td id="test-td"  class="test-td" th:attr="data-task_id=${status.taskId}, data-task_name=${status.taskName}, data-user_id=${studentTask.id}" >
+              <select id="status" th:value="${status.taskId}"  class="form-select" style="width:200px;height:40px;float:left" th:attr="data-task_id=${status.taskId},data-user_id=${studentTask.id}">
+                <option th:text="${status.taskStatus}"></option>
+                <option value="CREATED">CREATED</option>
+                <option value="IN_PROGRESS">IN_PROGRESS</option>
+                <option value="DONE">DONE</option>
+                <option value="ERROR">ERROR</option>
+              </select>
+            <a th:href="@{'/boards/' + ${status.taskId} + '/code/write'}">
+              <button class="btn">질문하러가기</button>
+            </a>
+          </td>
+
         </div>
     </tr>
     </tbody>

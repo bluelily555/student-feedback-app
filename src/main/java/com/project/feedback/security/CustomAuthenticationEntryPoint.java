@@ -28,5 +28,6 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setCharacterEncoding("UTF-8");
         objectMapper.writeValue(response.getWriter(),
                 Response.error(e));
+        response.sendRedirect("/users/login");
     }
 }
