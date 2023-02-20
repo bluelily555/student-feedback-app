@@ -95,7 +95,7 @@ public class WriteController {
     public String codeDetail(@PathVariable("boardId")Long boardId, Model model){
         CodeWriteDto codeWriteDto = codeService.getCodeDetail(boardId);
         model.addAttribute("codeInfo", codeWriteDto);
-        return "/boards/code/detail";
+        return "boards/code/detail";
     }
     @GetMapping("/code/{taskId}/write")
     public String codeWrite(@PathVariable("taskId")Long taskId, Model model, Authentication auth) {
@@ -104,32 +104,32 @@ public class WriteController {
         model.addAttribute("taskTitle", taskTitle);
         model.addAttribute("userName", userName);
         model.addAttribute("taskId", taskId);
-        return "/boards/code/write";
+        return "boards/code/write";
     }
     @PostMapping("/code/write")
     public String codeAddWrite(CodeWriteDto codeWriteDto){
         codeService.saveCode(codeWriteDto);
-        return "redirect:/boards/code/view_all";
+        return "redirect:boards/code/view_all";
     }
     @DeleteMapping("/code/view/{boardId}")
     public String codeDelete(@PathVariable("boardId")Long boardId){
         codeService.deleteCode(boardId);
-        return "redirect:/boards/code/view_all";
+        return "redirect:boards/code/view_all";
     }
     @PostMapping("/writeDetail/{no}")
     public String commentWrite(@PathVariable("no")Long no,CommentWriteDto commentWriteDto){
         commentService.saveComment(commentWriteDto, no);
-        return "redirect:/boards/writeDetail/" + no.toString();
+        return "redirect:boards/writeDetail/" + no.toString();
     }
     @DeleteMapping("/writeDetail/{commentId}/{boardId}")
     public String commentDelete(@PathVariable("commentId")Long commentId, @PathVariable("boardId")Long boardId){
         commentService.deletePost(commentId);
-        return "redirect:/boards/writeDetail/"+boardId.toString();
+        return "redirect:boards/writeDetail/"+boardId.toString();
     }
     @PutMapping("/writeDetail/{commentId}/{boardId}")
     public String commentUpdate(@PathVariable("commentId")Long commentId, CommentWriteDto commentWriteDto, @PathVariable("boardId")Long boardId){
         commentService.updateComment(commentWriteDto, commentId);
-        return "redirect:/boards/writeDetail/"+boardId.toString();
+        return "redirect:boards/writeDetail/"+boardId.toString();
     }
 
 //    @GetMapping("/codeView")
