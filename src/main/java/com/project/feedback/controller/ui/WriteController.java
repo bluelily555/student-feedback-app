@@ -77,12 +77,16 @@ public class WriteController {
 
         return "redirect:/boards/list";
     }
+
+    // 코드 목록 전체
     @GetMapping("/code/view_all")
     public String entireCodeView(Model model){
         List<CodeWriteDto> codeWriteDtoList = codeService.searchAllCode();
         model.addAttribute("codeList", codeWriteDtoList);
         return "boards/code/view_all";
     }
+
+    // taskId에 해당하는 code만 전체 조회 view_one 네이밍 수정
     @GetMapping("/code/{taskId}/view_one")
     public String oneCodeView(@PathVariable("taskId")Long taskId, Model model){
         List<CodeWriteDto> codeWriteDtoList = codeService.getCodeListByTaskId(taskId);
@@ -91,12 +95,16 @@ public class WriteController {
         model.addAttribute("codeList", codeWriteDtoList);
         return "boards/code/view_one";
     }
+
+    //codeId, boardId 혼용되어 사용
     @GetMapping("/code/detail/{boardId}")
     public String codeDetail(@PathVariable("boardId")Long boardId, Model model){
         CodeWriteDto codeWriteDto = codeService.getCodeDetail(boardId);
         model.addAttribute("codeInfo", codeWriteDto);
         return "boards/code/detail";
     }
+
+
     @GetMapping("/code/{taskId}/write")
     public String codeWrite(@PathVariable("taskId")Long taskId, Model model, Authentication auth) {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -106,26 +114,31 @@ public class WriteController {
         model.addAttribute("taskId", taskId);
         return "boards/code/write";
     }
+
     @PostMapping("/code/write")
     public String codeAddWrite(CodeWriteDto codeWriteDto, Model model){
         codeService.saveCode(codeWriteDto);
         return "redirect:/boards/code/view_all";
     }
+
     @DeleteMapping("/code/view/{boardId}")
     public String codeDelete(@PathVariable("boardId")Long boardId){
         codeService.deleteCode(boardId);
         return "redirect:/boards/code/view_all";
     }
+
     @PostMapping("/writeDetail/{no}")
     public String commentWrite(@PathVariable("no")Long no,CommentWriteDto commentWriteDto){
         commentService.saveComment(commentWriteDto, no);
         return "redirect:/boards/writeDetail/" + no.toString();
     }
+
     @DeleteMapping("/writeDetail/{commentId}/{boardId}")
     public String commentDelete(@PathVariable("commentId")Long commentId, @PathVariable("boardId")Long boardId){
         commentService.deletePost(commentId);
         return "redirect:boards/writeDetail/"+boardId.toString();
     }
+
     @PutMapping("/writeDetail/{commentId}/{boardId}")
     public String commentUpdate(@PathVariable("commentId")Long commentId, CommentWriteDto commentWriteDto, @PathVariable("boardId")Long boardId){
         commentService.updateComment(commentWriteDto, commentId);

@@ -1,6 +1,7 @@
 package com.project.feedback.domain.dto.board;
 
 
+import com.project.feedback.domain.entity.BoardEntity;
 import com.project.feedback.domain.entity.CodeEntity;
 import com.project.feedback.domain.entity.TaskEntity;
 import lombok.*;
@@ -28,7 +29,7 @@ public class CodeWriteDto {
     public CodeEntity toEntity(){
         CodeEntity codeEntity = CodeEntity.builder()
                 .writer(writer)
-                .taskId(taskId)
+                .taskEntity(taskId)
                 .content(content)
                 .codeContent(codeContent)
                 .title(title)
@@ -36,6 +37,19 @@ public class CodeWriteDto {
                 .build();
         return codeEntity;
     }
+
+    public static CodeWriteDto of(CodeEntity codeEntity) {
+        return CodeWriteDto.builder()
+            .id(codeEntity.getId())
+            .writer(codeEntity.getWriter())
+            .title(codeEntity.getTitle())
+            .content(codeEntity.getContent())
+            .userName(codeEntity.getUserName())
+            .createdDate(codeEntity.getCreatedDate())
+            .modifiedDate(codeEntity.getModifiedDate())
+            .build();
+    }
+
 
 //    @Builder
 //    public CodeWriteDto(Long id, String title, String content, String writer, LocalDateTime createdDate, LocalDateTime modifiedDate){

@@ -1,5 +1,7 @@
 package com.project.feedback.controller.ui;
 
+import com.project.feedback.domain.dto.board.BoardWriteDto;
+import com.project.feedback.domain.dto.board.CodeWriteDto;
 import com.project.feedback.domain.dto.course.CourseDto;
 import com.project.feedback.domain.dto.course.CourseInfo;
 import com.project.feedback.domain.dto.task.TaskCreateRequest;
@@ -76,6 +78,7 @@ public class TaskController {
         return "redirect:/";
     }
 
+    // task 상세 조회
     @GetMapping("/{taskId}")
     public String show(@PathVariable Long taskId, Model model, Authentication auth) {
         List<CourseDto> courses = courseService.courses();
@@ -83,8 +86,10 @@ public class TaskController {
         model.addAttribute("courseList", courses);
 
         TaskDetailResponse res = taskService.getOneTask(taskId);
+        List<CodeWriteDto> boardList = res.getBoards();
         model.addAttribute("taskUpdateRequest", new TaskUpdateRequest());
         model.addAttribute("taskDetail", res);
+        model.addAttribute("boardList", boardList);
         return "tasks/detail";
     }
 

@@ -1,7 +1,6 @@
 package com.project.feedback.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +16,9 @@ public class CodeEntity extends TimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="task_id")
-    private TaskEntity taskId;
+    @JoinColumn(name = "task_entity_id")
+    private TaskEntity taskEntity;
+
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
@@ -30,13 +30,14 @@ public class CodeEntity extends TimeEntity {
 
     @Column(length = 32, nullable = false)
     private String title;
+
     @Column(nullable = false)
     private String userName;
 
     @Builder
-    public CodeEntity(Long id, String content, String title, String writer, String userName, String codeContent,TaskEntity taskId){
+    public CodeEntity(Long id, String content, String title, String writer, String userName, String codeContent, TaskEntity taskEntity){
         this.id = id;
-        this.taskId = taskId;
+        this.taskEntity = taskEntity;
         this.writer = writer;
         this.content = content;
         this.title = title;
