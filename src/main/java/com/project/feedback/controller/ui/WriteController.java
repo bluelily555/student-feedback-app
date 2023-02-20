@@ -107,19 +107,19 @@ public class WriteController {
         return "boards/code/write";
     }
     @PostMapping("/code/write")
-    public String codeAddWrite(CodeWriteDto codeWriteDto){
+    public String codeAddWrite(CodeWriteDto codeWriteDto, Model model){
         codeService.saveCode(codeWriteDto);
-        return "redirect:boards/code/view_all";
+        return "redirect:/boards/code/view_all";
     }
     @DeleteMapping("/code/view/{boardId}")
     public String codeDelete(@PathVariable("boardId")Long boardId){
         codeService.deleteCode(boardId);
-        return "redirect:boards/code/view_all";
+        return "redirect:/boards/code/view_all";
     }
     @PostMapping("/writeDetail/{no}")
     public String commentWrite(@PathVariable("no")Long no,CommentWriteDto commentWriteDto){
         commentService.saveComment(commentWriteDto, no);
-        return "redirect:boards/writeDetail/" + no.toString();
+        return "redirect:/boards/writeDetail/" + no.toString();
     }
     @DeleteMapping("/writeDetail/{commentId}/{boardId}")
     public String commentDelete(@PathVariable("commentId")Long commentId, @PathVariable("boardId")Long boardId){
