@@ -5,9 +5,7 @@ import com.project.feedback.domain.dto.board.CodeWriteDto;
 import com.project.feedback.domain.dto.board.CommentWriteDto;
 import com.project.feedback.domain.dto.course.AddStudentRequest;
 import com.project.feedback.domain.dto.course.CourseDto;
-import com.project.feedback.domain.dto.course.CourseInfo;
 import com.project.feedback.domain.dto.user.*;
-import com.project.feedback.domain.entity.CourseEntity;
 import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
@@ -23,7 +21,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -190,29 +187,29 @@ public class UserUiController {
         session.invalidate();
         return "redirect:/";
     }
-    @GetMapping("/findId")
+    @GetMapping("/find_id")
     public String idFind(){
-        return "users/findId";
+        return "/users/find_id";
     }
-    @PostMapping("/findId")
+    @PostMapping("/find_id")
     public String pwFind(@RequestParam String email, Model model){
         UserEntity user = findService.findUserByEmail(email);
         String msg = "회원님의 아이디는" + user.getUserName() + "입니다.\n로그인 해주세요.";
         model.addAttribute("userName", user.getUserName());
         model.addAttribute("message", msg);
         model.addAttribute("nextUrl", "/users/login");
-        return "users/findId";
+        return "/users/find_id";
     }
-    @GetMapping("/findPw")
+    @GetMapping("/find_pw")
     public String getPwFind(Model model){
         model.addAttribute("userFindPwRequest", new UserFindPwRequest());
-        return "/users/findPw";
+        return "/users/find_pw";
     }
-    @PutMapping("/findPw")
+    @PutMapping("/find_pw")
     public String pwUpdateByAnonymous(@ModelAttribute UserFindPwRequest req, Model model){
         userService.updatePwByAnonymous(req);
         model.addAttribute("message", "비밀번호가 변경되었습니다.\n새로 로그인해주세요.");
         model.addAttribute("nextUrl", "/");
-        return "/users/findPw";
+        return "/users/find_pw";
     }
 }
