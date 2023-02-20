@@ -11,7 +11,6 @@
         <table class="table">
             <thead class="thead-dark">
             <tr>
-              <th scope="col">Task Id</th>
               <th scope="col">번호</th>
               <th scope="col">글제목</th>
               <th scope="col">작성자</th>
@@ -22,8 +21,7 @@
             <tbody>
             <!-- CONTENTS   !-->
             <tr th:each="code : ${codeList}">
-              <th scope="row" th:text="${code.taskId}"></th>
-              <td th:text="${code.id}"></td>
+              <th scope="row" th:text="${code.id}"></th>
               <td th:text="${code.title}"></td>
                 <!--                    <a th:href="@{'/board/write/' + ${board.id}}"></a>-->
               <td th:text="${code.writer}"></td>
