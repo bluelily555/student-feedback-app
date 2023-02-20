@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface CodeRepository extends JpaRepository<CodeEntity, Long> {
     List<CodeEntity> findAllByUserName(String userName);
+    List<CodeEntity> findAllByTaskId(Long taskId);
 }

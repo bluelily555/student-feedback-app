@@ -3,12 +3,11 @@ package com.project.feedback.controller.ui;
 import com.project.feedback.domain.dto.board.BoardWriteDto;
 import com.project.feedback.domain.dto.board.CodeWriteDto;
 import com.project.feedback.domain.dto.board.CommentWriteDto;
-import com.project.feedback.service.BoardService;
-import com.project.feedback.service.CodeService;
-import com.project.feedback.service.CommentService;
+import com.project.feedback.service.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +20,10 @@ import java.util.List;
 @RequestMapping("/boards")
 public class WriteController {
 
-    private BoardService boardService;
-    private CommentService commentService;
-    private CodeService codeService;
+    private final BoardService boardService;
+    private final CommentService commentService;
+    private final CodeService codeService;
+    private final TaskService taskService;
 
 
     @GetMapping("/write")
@@ -78,11 +78,18 @@ public class WriteController {
         return "redirect:/boards/list";
     }
     @GetMapping("/codeView")
-    public String codeView(Model model){
+    public String entireCodeView(Model model){
         List<CodeWriteDto> codeWriteDtoList = codeService.searchAllCode();
-
         model.addAttribute("codeList", codeWriteDtoList);
         return "boards/codeView";
+    }
+    @GetMapping("/{taskId}/oneCodeView")
+    public String oneCodeView(@PathVariable("taskId")Long taskId, Model model){
+        List<CodeWriteDto> codeWriteDtoList = codeService.getCodeListByTaskId(taskId);
+        String taskTitle = taskService.getOneTask(taskId).getTitle();
+        model.addAttribute("taskTitle", taskTitle);
+        model.addAttribute("codeList", codeWriteDtoList);
+        return "boards/oneCodeView";
     }
     @GetMapping("/codeDetail/{boardId}")
     public String codeDetail(@PathVariable("boardId")Long boardId, Model model){
@@ -90,11 +97,16 @@ public class WriteController {
         model.addAttribute("codeInfo", codeWriteDto);
         return "/boards/codeDetail";
     }
-    @GetMapping("/codeWrite")
-    public String codeWrite(Model model, Authentication auth) {
-        model.addAttribute("userName", auth.getName());
-        return "boards/codeWrite"; }
-    @PostMapping("/codeWrite")
+    @GetMapping("/{taskId}/code/write")
+    public String codeWrite(@PathVariable("taskId")Long taskId, Model model, Authentication auth) {
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        String taskTitle = taskService.getOneTask(taskId).getTitle();
+        model.addAttribute("taskTitle", taskTitle);
+        model.addAttribute("userName", userName);
+        model.addAttribute("taskId", taskId);
+        return "/boards/codeWrite";
+    }
+    @PostMapping("/code/write")
     public String codeAddWrite(CodeWriteDto codeWriteDto){
         codeService.saveCode(codeWriteDto);
         return "redirect:/boards/codeView";
