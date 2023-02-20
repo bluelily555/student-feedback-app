@@ -1,7 +1,7 @@
 package com.project.feedback.domain.dto.task;
 
-import com.project.feedback.domain.dto.board.BoardWriteDto;
-import com.project.feedback.domain.entity.BoardEntity;
+import com.project.feedback.domain.dto.board.CodeWriteDto;
+import com.project.feedback.domain.entity.CodeEntity;
 import com.project.feedback.domain.entity.TaskEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,14 +23,14 @@ public class TaskListDto {
     private Long day;
     private String status;
     private String courseName;
-    private List<BoardWriteDto> boardLists;
+    private List<CodeWriteDto> boardLists;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
 
     public static TaskListDto of(TaskEntity task) {
-        List<BoardWriteDto> list = new ArrayList<>();
-            for(BoardEntity boardEntity : task.getBoardEntities()){
-                list.add(BoardWriteDto.of(boardEntity));
+        List<CodeWriteDto> list = new ArrayList<>();
+            for(CodeEntity codeEntity : task.getBoardEntities()){
+                list.add(CodeWriteDto.of(codeEntity));
             }
 
         return TaskListDto.builder()

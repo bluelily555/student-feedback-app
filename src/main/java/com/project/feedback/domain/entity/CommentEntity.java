@@ -23,6 +23,7 @@ public class CommentEntity extends TimeEntity{
 
     @Column(length = 32, nullable = false)
     private Long boardId;
+
     @Column(nullable = false)
     private  String userName;
 
