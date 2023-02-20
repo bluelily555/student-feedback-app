@@ -23,7 +23,7 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 @RequestMapping("/boards")
-public class WriteController {
+public class BoardController {
 
     private final BoardService boardService;
     private final CommentService commentService;
@@ -37,6 +37,14 @@ public class WriteController {
         model.addAttribute("userName",auth.getName());
         return "boards/write";
     }
+
+    @PostMapping("/write")
+    public String boardAddWrite(BoardWriteDto boardWriteDto){
+        boardService.savePost(boardWriteDto);
+        return "redirect:/boards/list";
+    }
+
+    // list 제거해도됌
     @GetMapping("/list")
     public String boardWriteList(Model model, Authentication auth){
         List<BoardWriteDto> boardWriteDtoList = boardService.getBoardList();
@@ -44,17 +52,15 @@ public class WriteController {
         model.addAttribute("boardList", boardWriteDtoList);
         return "boards/list";
     }
-    @PostMapping("/write")
-    public String boardAddWrite(BoardWriteDto boardWriteDto){
-        boardService.savePost(boardWriteDto);
-        return "redirect:/boards/list";
-    }
+
+    //post 제거
     @GetMapping("/post/{no}")
     public String detail(@PathVariable("no")Long no, Model model){
         BoardWriteDto boardWriteDto = boardService.getPost(no);
         model.addAttribute("boardList", boardWriteDto);
         return "boards/list";
     }
+
     @GetMapping("/edit/{no}")
     public String edit(@PathVariable("no")Long no, Model model){
         BoardWriteDto boardWriteDto = boardService.getPost(no);
@@ -62,6 +68,7 @@ public class WriteController {
         model.addAttribute("boardList", boardWriteDto);
         return "boards/update";
     }
+
     @GetMapping("/writeDetail/{no}")
     public String writeDetail(@PathVariable("no")Long no, Model model, Authentication auth){
         BoardWriteDto boardWriteDto = boardService.getPost(no);
@@ -71,12 +78,14 @@ public class WriteController {
         model.addAttribute("userName", auth.getName());
         return "boards/writeDetail";
     }
+
     @PutMapping("/edit/{no}")
     public String update(BoardWriteDto boardWriteDto, @PathVariable("no")Long no){
         boardService.savePost(boardWriteDto);
 
         return "redirect:/boards/list";
     }
+
     @DeleteMapping("/{no}")
     public String delete(@PathVariable("no")Long no){
         boardService.deletePost(no);
@@ -84,7 +93,9 @@ public class WriteController {
         return "redirect:/boards/list";
     }
 
-    // 코드 목록 전체
+    /**
+     * CodeEntity 관련
+     * */
     @GetMapping("/code/view_all")
     public String entireCodeView(Model model){
         List<CodeWriteDto> codeWriteDtoList = codeService.searchAllCode();
@@ -102,7 +113,7 @@ public class WriteController {
         return "boards/code/view_one";
     }
 
-    //codeId, boardId 혼용되어 사용
+    //codeId, boardId 혼용되어 사용지 코드 상세 보기 -> boards/{boardId}로 수정 필요
     @GetMapping("/code/detail/{boardId}")
     public String codeDetail(@PathVariable("boardId")Long boardId, Model model,
                              @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable)
@@ -126,7 +137,7 @@ public class WriteController {
         return "boards/code/detail";
     }
 
-
+    // 특정 task에 대해 "질문하러 가기" 버튼 / task쪽으로 옮기는게 좋을 듯
     @GetMapping("/code/{taskId}/write")
     public String codeWrite(@PathVariable("taskId")Long taskId, Model model, Authentication auth) {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -143,6 +154,8 @@ public class WriteController {
         return "redirect:/boards/code/view_all";
     }
 
+
+    // 코드 삭제
     @DeleteMapping("/code/view/{boardId}")
     public String codeDelete(@PathVariable("boardId")Long boardId){
         codeService.deleteCode(boardId);

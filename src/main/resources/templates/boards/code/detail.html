@@ -58,7 +58,7 @@
                                 <h5>Add a comment</h5>
                                 <form class="form-group" th:object="${commentCreateRequest}"  th:method="post" th:action="|@{/comments/{postId} (postId=${codeInfo.id})}|">
                                     <div style="text-align: right">
-                                        <div sec:authorize="isAuthenticated()">
+                                        <div>
                                             <textarea rows="3" th:field="*{comment}" style="width: 100%"></textarea>
                                             <button class="btn btn-light" type="submit">댓글 추가</button>
                                         </div>
