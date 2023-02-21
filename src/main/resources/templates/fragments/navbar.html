@@ -21,7 +21,7 @@
         <img src="/img/bootstrap-logo.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
         Home
       </a>
-      <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/courses/students">CourseStudents</a>
@@ -29,47 +29,32 @@
           <li class="nav-item">
             <a class="nav-link" href="/boards/code/view_all">글 목록 보기</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">-예비1-</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled">-예비2-</a>
+          <li class="nav-item" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+            <a class="nav-link" href="/admin">Admin</a>
           </li>
         </ul>
-      </div>
-
-      <span sec:authorize="hasRole('ADMIN')">
-        ADMIN회원 입니다.
-      </span>
-      <span th:if="${#authorization.expression('hasRole(''MENTOR'')')}">
-        MENTOR회원 입니다.
-      </span>
-      <span th:if="${#authorization.expression('hasRole(''MANAGER'')')}">
-        MANAGER회원 입니다.
-      </span>
-      <span th:if="${#authorization.expression('hasRole(''STUDENT'')')}">
-        학생회원입니다.
-      </span>
-
-      <span sec:authorize="isAuthenticated()"><span th:text="${#authentication.name}" />님 안녕하세요.</span>
-      <!-- 로그인 안 했을때 -->
-      <ul class="navbar-nav" sec:authorize="isAnonymous()">
-        <li class="nav-item">
-          <button class="btn nav-btn" onclick="location.href = '/users/login'">로그인</button>
-        </li>
-        <li class="nav-item">
-          <button class="btn nav-btn" onclick="location.href = '/users/join'">회원가입</button>
-        </li>
-      </ul>
 
         <!-- 로그인 했을때 -->
         <ul class="navbar-nav" sec:authorize="isAuthenticated()">
-          <button class="btn nav-btn" onclick="location.href = '/users/logout'">로그아웃</button>
-          <button class="btn nav-btn" th:if="${#authorization.expression('hasRole(''STUDENT'')')}" onclick="location.href = '/users/my'">마이페이지</button>
-        </ul>
 
+          <li class="nav-item dropdown" >
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="badge bg-secondary" sec:authorize="hasRole('ADMIN')">ADMIN</span>
+              <span class="badge bg-secondary" th:if="${#authorization.expression('hasRole(''MENTOR'')')}">MENTOR</span>
+              <span class="badge bg-secondary" th:if="${#authorization.expression('hasRole(''MANAGER'')')}">MANAGER</span>
+              <span class="badge bg-secondary" th:if="${#authorization.expression('hasRole(''STUDENT'')')}">학생</span>
+              <span sec:authorize="isAuthenticated()"><span th:text="${#authentication.name}" />님 안녕하세요.</span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <li><a class="dropdown-item" th:if="${#authorization.expression('hasRole(''STUDENT'')')}" href="/users/my">마이페이지</a></li>
+              <li><a class="dropdown-item" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" href="/admin">Admin</a></li>
+              <li><a class="dropdown-item" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" href="/tasks/write">Task등록</a></li>
+              <li><a class="dropdown-item" href="/users/logout">로그아웃</a></li>
+            </ul>
+          </li>
+        </ul>
       </div>
-    <hr>
+    </div>
   </nav>
 </div>
 </body>
