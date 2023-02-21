@@ -149,7 +149,7 @@ public class FindService {
      *   students:[{"":"", ""}]
      * ]
      */
-
+    @Cacheable(value = "get_tasks_and_students", key = "#courseId + '_' + #loginUser.id")
     public CourseTaskListResponse getTasksAndStudents(Long courseId, UserEntity loginUser){
         // task setting
         List<TaskEntity> taskEntities = findTaskByCourseId(courseId);
@@ -172,7 +172,7 @@ public class FindService {
         return courseTaskListResponse;
     }
 
-    @Cacheable(value = "tasksAndStudentsByWeekAndDay", key = "#courseId + '-' + #week + '-' + #day + '-' + #loginUser.id")
+    @Cacheable(value = "course_student", key = "#courseId + '-' + #week + '-' + #day + '-' + #loginUser.userName")
     public CourseTaskListResponse getTasksAndStudentsByWeekAndDay(Long courseId, Long week, Long day, UserEntity loginUser){
         //해당 course에 week, day로 필터 걸어서 task 목록을 가져옴
         List<TaskEntity> taskEntities = taskRepository.findByCourseIdAndWeekAndDay(courseId, week, day);
@@ -198,7 +198,7 @@ public class FindService {
     }
 
 
-    @Cacheable(value = "getStudentsWithTask", key = "#courseId + '_' + #week + '_' + #day + '_' + #loginUser.id")
+    @Cacheable(value = "get_students_with_task", key = "#courseId + '_' + #week + '_' + #day + '_' + #loginUser.id")
     public List<StudentInfo> getStudentsWithTask(Long courseId, Long week, Long day, UserEntity loginUser){
         log.info("eeeeee");
         // course와 week에 해당하는 task목록
