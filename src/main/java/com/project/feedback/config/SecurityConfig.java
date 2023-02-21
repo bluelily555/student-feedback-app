@@ -8,7 +8,10 @@ import com.project.feedback.domain.Response;
 import com.project.feedback.domain.Role;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
+import com.project.feedback.security.AuthenticationManager;
+import com.project.feedback.security.CustomAccessDeniedHandler;
 import com.project.feedback.service.FindService;
+import com.project.feedback.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,71 +41,69 @@ import java.io.PrintWriter;
 public class SecurityConfig {
 
     private final FindService findService;
+    private final UserService userService;
+
+    private final AuthenticationManager authenticationManager;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
+
 
     @Value("${jwt.token.secret}")
     private String secretkey;
 
+    private static final String[] GET_ADMIN_MANAGER_USER = {
+            "/users",
+            "/tasks/write",
+            "/courses/write"
+    };
+    private static final String[] POST_ADMIN_MANAGER_USER = {
+            "/api/v1/tasks",
+            "/api/v1/users/**/role/change"
+    };
+    private static final String[] DELETE_ADMIN_MANAGER_USER = {
+            "/api/v1/tasks"
+    };
+    private static final String[] PUT_ADMIN_MANAGER_USER = {
+            "/api/v1/tasks"
+    };
+    private static final String[] GET_STUDENT_USER = {
+            "/boards/{taskId}/codeWrite",
+            "/course/students",
+            "/users/my"
+    };
+    private static final String[] PERMIT_ALL = {
+            "/",
+            "/css/**", "/img/**",
+            "/api/*/users/join",
+            "/api/*/users/login",
+            "/users/join",
+    };
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity
-                .httpBasic().disable()
+        httpSecurity.httpBasic().disable()
                 .csrf().disable()
-                .cors().and()
-                .authorizeHttpRequests(requests -> requests
-                        .requestMatchers(HttpMethod.GET, "/users").hasAuthority(Role.ROLE_ADMIN.name())
-                        //task 등록 admin만 가능
-                        .requestMatchers(HttpMethod.GET, "/tasks/write").hasAuthority(Role.ROLE_ADMIN.name())
-                        .requestMatchers(HttpMethod.POST, "/api/v1/tasks").hasAuthority(Role.ROLE_ADMIN.name())
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/tasks").hasAuthority(Role.ROLE_ADMIN.name())
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/tasks").hasAuthority(Role.ROLE_ADMIN.name())
-                        //코스 생성 관련 권한 ADMIN, MANAGER
-                        .requestMatchers(HttpMethod.GET, "/courses/write").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name())
-                        .requestMatchers(HttpMethod.POST, "/api/v1/tasks").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name())
-                        .requestMatchers(HttpMethod.POST, "/api/v1/users/**/role/change").hasAuthority(Role.ROLE_ADMIN.name())
-                        // task에서 글쓰기 권한 우선 학생, admin만 가능하도록 설정
-                        .requestMatchers(HttpMethod.GET, "/boards/{taskId}/codeWrite").hasAnyAuthority(Role.ROLE_STUDENT.name(), Role.ROLE_ADMIN.name())
-                        .anyRequest().permitAll())
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(new AuthenticationEntryPoint() {
-                    @Override
-                    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-                        makeErrorResponse(response, ErrorCode.INVALID_PERMISSION);
-                    }
-                })
-                .accessDeniedHandler(new AccessDeniedHandler() {
-                    @Override
-                    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+                .cors().and();
 
-                        makeErrorResponse(response, ErrorCode.INVALID_PERMISSION);
-                    }
-                })
-                .and()
-                .addFilterBefore(new JwtTokenFilter(findService, secretkey), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new ExceptionHandlerFilter(), JwtTokenFilter.class)
-                .getOrBuild();
+        httpSecurity.authorizeHttpRequests(requests -> requests
+                .requestMatchers(PERMIT_ALL).permitAll()
+                .requestMatchers(HttpMethod.GET, GET_ADMIN_MANAGER_USER).hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name())
+                .requestMatchers(HttpMethod.POST, POST_ADMIN_MANAGER_USER).hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name())
+                .requestMatchers(HttpMethod.GET, GET_STUDENT_USER).hasAnyAuthority(Role.ROLE_STUDENT.name(), Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name())
+                .requestMatchers(HttpMethod.DELETE, DELETE_ADMIN_MANAGER_USER).hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name())
+                .requestMatchers(HttpMethod.PUT, PUT_ADMIN_MANAGER_USER).hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name())
+                .anyRequest().permitAll()
+        );
+
+        httpSecurity.sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        httpSecurity.exceptionHandling()
+                .authenticationEntryPoint(authenticationManager)
+                .accessDeniedHandler(accessDeniedHandler);
+
+        httpSecurity.addFilterBefore(new JwtTokenFilter(findService, secretkey), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new ExceptionHandlerFilter(), JwtTokenFilter.class);
+        return httpSecurity.getOrBuild();
     }
-
-
-    // Security Filter Chain에서 발생하는 Exception은 ExceptionManager 까지 가지 않기 때문에 여기서 직접 처리
-    public void makeErrorResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
-        response.setStatus(errorCode.getStatus().value());
-        response.setContentType("text/html; charset=utf-8");
-        String msg = "잘못된 접근입니다.";
-        String url = "/users/login";
-        PrintWriter w = response.getWriter();
-        w.write("<script>alert('"+msg+"');location.href='"+url+"';</script>");
-        w.flush();
-        w.close();
-//        response.setCharacterEncoding("UTF-8");
-//        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-//        response.sendRedirect("../resources/templates/users/login");
-//        throw new CustomException(ErrorCode.INVALID_PERMISSION);
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        objectMapper.writeValue(response.getWriter(), Response.error(new CustomException(errorCode)));
-    }
-
 }
