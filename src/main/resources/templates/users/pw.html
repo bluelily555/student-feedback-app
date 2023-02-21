@@ -10,13 +10,14 @@
 <p th:text="${userName}"></p>
 <form th:action="@{'/users/pw'}" method="post" th:object="${userChangePwRequest}">
   <input type="hidden" name="_method" value="put"/>
-  <input type="text" id="userName" name="userName" th:field="*{userName}" th:value="${userName}" th:text="${userName}" hidden>
+  <input type="text" id="userName" name="userName" th:value="${userName}" hidden>
   현재 비밀번호 : <input type="password" th:field="*{curPassword}" name="rawPassword" id="curPassword"/>
   <br>
   변경된 비밀번호 : <input type="password"  name="chPassword1" id="chPassword1"/> <br>
   비밀번호 확인 : <input type="password" th:field="*{chPassword}" name="chPassword" id="chPassword"/> <br>
   <p id="nSame" style="color: red" hidden>비밀번호가 일치하지 않습니다.</p>
   <p id="same" style="color: green" hidden>비밀번호가 일치합니다.</p>
+
   <input id="submit_btn" type="submit" value="수정" disabled/>
 </form>
 
