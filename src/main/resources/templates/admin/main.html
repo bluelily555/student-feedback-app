@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/header.html :: head}">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sidebars/">
+    <link rel="stylesheet" href="../../static/css/custom.css">
+</head>
+<body>
+<div th:insert="~{fragments/navbar :: navbar}"></div>
+<main class="d-flex flex-nowrap">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div style="width: 100vw">
+        <div>
+            <h3 class="mt-4" style="margin-bottom: 20px">게시판 목록</h3>
+        </div>
+        <div class="card mb-4">
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">First</th>
+                        <th scope="col">Last</th>
+                        <th scope="col">Handle</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                        <td>@mdo</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>Jacob</td>
+                        <td>Thornton</td>
+                        <td>@fat</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3</th>
+                        <td>Larry</td>
+                        <td>the Bird</td>
+                        <td>@twitter</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <nav style="float: right">
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</main>
+<!--    <div class="col" style="margin: 30px 0px 10px 0px;" sec:authorize="hasRole('ROLE_ADMIN')">-->
+<!--        <div class="offset-10">-->
+<!--            &lt;!&ndash; ADMIN인 경우 &ndash;&gt;-->
+<!--            <div class="d-grid gap-2 col-6 mx-auto">-->
+<!--                <button class="btn btn-success" onclick="location.href = '/courses/write'">기수 등록</button>-->
+<!--                 <button class="btn btn-success" onclick="location.href = '/tasks/write'">Task 등록</button>-->
+<!--                <button class="btn btn-success" onclick="location.href='/users'">회원 목록</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+</body>
+</html>

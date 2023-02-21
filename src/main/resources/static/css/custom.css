@@ -241,6 +241,9 @@ main {
 }
 
 .dropdown-toggle { outline: 0; }
+.dropdown-toggle-no-caret::after {
+    display: none !important;
+}
 
 .btn-toggle {
     padding: .25rem .5rem;
