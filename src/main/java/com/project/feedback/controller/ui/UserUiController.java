@@ -141,15 +141,12 @@ public class UserUiController {
     public String myPage(Authentication auth, Model model){
         UserEntity user = findService.findUserByUserName(auth.getName());
         String userName = user.getUserName();
-        //  List<BoardWriteDto> boardWriteDtoList = boardService.getBoardListByUserName(userName);
-        // List<CommentWriteDto> commentWriteDtoList = commentService.getCommentListByUserName(userName);
+        CourseEntity course = findService.findCourseByUserId(user);
         List<BoardWriteDto> codeWriteDtoList = boardService.getCodeListByUserId(user.getId());
-        //    int commentCount = commentWriteDtoList.size();
         model.addAttribute("user", user);
         model.addAttribute("codeList", codeWriteDtoList);
-        //  model.addAttribute("commentCount", commentCount);
-        //   model.addAttribute("boardList", boardWriteDtoList);
         model.addAttribute("userName", auth.getName());
+        model.addAttribute("course", course);
         return "users/my";
     }
 
