@@ -42,7 +42,9 @@
             <tr th:classappend="${studentTask.userName == authName} ? 'table-primary' : ''" th:each="studentTask, stat : ${studentTaskList}">
                 <td th:text="${studentTask.realName}"></td>
                 <div th:each="status : ${studentTask.status}">
-                  <td id="test-td" th:attr="data-task_id=${status.taskId}, data-task_name=${status.taskName}, data-user_id=${studentTask.id}" >
+                  <td id="test-td" th:attr="data-task_id=${status.taskId}, data-task_name=${status.taskName}, data-user_id=${studentTask.id}"
+                      th:classappend="${status.taskStatus == 'Task등록'} ? 'table-warning' : ''"
+                  >
                       <div th:if="${studentTask.userName == authName}">
                           <select id="status" th:value="${status.taskId}"
                                   class="form-select form-select-sm" style="width:160px;float:left" th:attr="data-task_id=${status.taskId},data-user_id=${studentTask.id}">
@@ -56,7 +58,13 @@
                           </a>
                       </div>
                       <div th:if="${studentTask.userName != authName}">
-                          <span th:text="${status.taskStatus}"></span>
+                          <span class="badge bg-primary" th:if="${status.taskStatus == 'DONE'}">완료</span>
+                          <span class="badge bg-success" th:if="${status.taskStatus == 'IN_PROGRESS'}">진행중</span>
+                          <span class="badge bg-danger" th:if="${status.taskStatus == 'ERROR'}">에러</span>
+<!--                          <span class="badge bg-secondary" th:if="${status.taskStatus == 'Task등록'}">Task진행 예정</span>-->
+<!--                          <span th:text="${status.taskStatus}"></span>-->
+<!--                          <span th:text="${status.taskStatus == 'ERROR'}"></span>-->
+                          <span th:if="${status.taskStatus == 'Task등록'}">Task등록</span>
                       </div>
                   </td>
 

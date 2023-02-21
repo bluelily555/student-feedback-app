@@ -228,7 +228,7 @@ public class FindService {
                 }
                 else{
                     // userTask에 데이터가 없어도 해당 cell의 taskid, title을 넣어줌.
-                    status2.add(StatusInfo.of(taskEntity.getId(),taskEntity.getTitle(),"상태 등록"));
+                    status2.add(StatusInfo.of(taskEntity.getId(),taskEntity.getTitle(),"Task등록"));
                 }
 
             }
