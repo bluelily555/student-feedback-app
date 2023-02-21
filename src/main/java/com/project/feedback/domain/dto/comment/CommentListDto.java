@@ -1,5 +1,5 @@
 package com.project.feedback.domain.dto.comment;
-import com.project.feedback.domain.entity.CommentsEntity;
+import com.project.feedback.domain.entity.CommentEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,12 +17,12 @@ public class CommentListDto {
     private Long codeId;
     private LocalDateTime createdAt;
 
-    public static CommentListDto of(CommentsEntity comment) {
+    public static CommentListDto of(CommentEntity comment) {
         return CommentListDto.builder()
             .id(comment.getId())
             .comment(comment.getComment())
             .userName(comment.getUser().getUserName())
-            .codeId(comment.getCodeEntity().getId())
+            .codeId(comment.getBoardEntity().getId())
             .createdAt(comment.getCreatedDate())
             .build();
     }

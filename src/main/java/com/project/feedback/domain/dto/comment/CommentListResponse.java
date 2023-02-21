@@ -1,6 +1,6 @@
 package com.project.feedback.domain.dto.comment;
 
-import com.project.feedback.domain.entity.CommentsEntity;
+import com.project.feedback.domain.entity.CommentEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,7 +29,7 @@ public class CommentListResponse {
     private int numberOfElements;
     private boolean empty;
 
-    public CommentListResponse(List<CommentListDto> content, Pageable pageable, Page<CommentsEntity> comments) {
+    public CommentListResponse(List<CommentListDto> content, Pageable pageable, Page<CommentEntity> comments) {
         this.content = content;
         this.pageable = pageable;
         this.last = comments.isLast();

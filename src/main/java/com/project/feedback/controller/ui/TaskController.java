@@ -1,7 +1,6 @@
 package com.project.feedback.controller.ui;
 
 import com.project.feedback.domain.dto.board.BoardWriteDto;
-import com.project.feedback.domain.dto.board.CodeWriteDto;
 import com.project.feedback.domain.dto.course.CourseDto;
 import com.project.feedback.domain.dto.course.CourseInfo;
 import com.project.feedback.domain.dto.task.TaskCreateRequest;
@@ -86,7 +85,7 @@ public class TaskController {
         model.addAttribute("courseList", courses);
 
         TaskDetailResponse res = taskService.getOneTask(taskId);
-        List<CodeWriteDto> boardList = res.getBoards();
+        List<BoardWriteDto> boardList = res.getBoards();
         model.addAttribute("taskUpdateRequest", new TaskUpdateRequest());
         model.addAttribute("taskDetail", res);
         model.addAttribute("boardList", boardList);

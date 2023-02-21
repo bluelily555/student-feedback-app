@@ -24,7 +24,7 @@
                                     <h5 style="float: left; margin-right: 5px">제목 :</h5>
                                     <h5 th:text="${codeInfo.title}"></h5>
                                     <h5 style="float: left; margin-right: 5px">작성자 :</h5>
-                                    <p th:text="${codeInfo.writer}"></p>
+                                    <p th:text="${codeInfo.userName}"></p>
                                     <h5 style="float: left; margin-right: 5px">작성 시간 :</h5>
                                     <p th:text="${#temporals.format(codeInfo.createdDate, 'yyyy-MM-dd HH:mm')}"></p>
                                     <div style="display: block">

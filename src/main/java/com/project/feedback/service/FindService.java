@@ -5,7 +5,7 @@ import com.project.feedback.domain.dto.mainInfo.CourseTaskListResponse;
 import com.project.feedback.domain.dto.mainInfo.StatusInfo;
 import com.project.feedback.domain.dto.mainInfo.StudentInfo;
 import com.project.feedback.domain.dto.mainInfo.TaskInfo;
-import com.project.feedback.domain.entity.CodeEntity;
+import com.project.feedback.domain.entity.BoardEntity;
 import com.project.feedback.domain.entity.CourseEntity;
 import com.project.feedback.domain.entity.CourseUserEntity;
 import com.project.feedback.domain.entity.TaskEntity;
@@ -13,7 +13,7 @@ import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.domain.entity.UserTaskEntity;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
-import com.project.feedback.repository.CodeRepository;
+import com.project.feedback.repository.BoardRepository;
 import com.project.feedback.repository.CourseRepository;
 import com.project.feedback.repository.CourseUserRepository;
 import com.project.feedback.repository.TaskRepository;
@@ -38,7 +38,7 @@ public class FindService {
     private final TaskRepository taskRepository;
     private final CourseRepository courseRepository;
     private final CourseUserRepository courseUserRepository;
-    private final CodeRepository codeRepository;
+    private final BoardRepository boardRepository;
     private final UserTaskRepository userTaskRepository;
 
     /**
@@ -242,8 +242,8 @@ public class FindService {
     }
 
     // code 찾기
-    public CodeEntity findByCodeId(long codeId){
-       return codeRepository.findById(codeId).orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
+    public BoardEntity findByCodeId(long codeId){
+       return boardRepository.findById(codeId).orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
     }
 
 }

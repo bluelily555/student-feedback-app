@@ -1,99 +1,55 @@
 package com.project.feedback.service;
 
-import com.project.feedback.domain.dto.board.CommentWriteDto;
+import com.project.feedback.domain.dto.comment.CommentCreateRequest;
+import com.project.feedback.domain.dto.comment.CommentCreateResponse;
+import com.project.feedback.domain.dto.comment.CommentListDto;
+import com.project.feedback.domain.dto.comment.CommentListResponse;
+import com.project.feedback.domain.entity.BoardEntity;
 import com.project.feedback.domain.entity.CommentEntity;
+import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.repository.CommentRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-@AllArgsConstructor
+
 @Service
+@Transactional
+@RequiredArgsConstructor
+
 public class CommentService {
-    private CommentRepository commentRepository;
 
-    private CommentWriteDto convertEntityToDto(CommentEntity commentEntity){
-        return CommentWriteDto.builder()
-                .id(commentEntity.getId())
-                .content(commentEntity.getContent())
-                .writer(commentEntity.getWriter())
-                .boardId(commentEntity.getBoardId())
-                .userName(commentEntity.getUserName())
-                .createdDate(commentEntity.getCreatedDate())
-                .build();
+    private final CommentRepository commentRepository;
+    private final FindService findService;
+
+    public CommentCreateResponse saveComment(CommentCreateRequest req, String userName, Long codeId) {
+        UserEntity loginUser = findService.findUserByUserName(userName);
+        BoardEntity code = findService.findByCodeId(codeId);
+
+        CommentEntity comment = commentRepository.save(req.toEntity(loginUser, code));
+
+        return CommentCreateResponse.of(comment);
     }
-    @Transactional
-    public List<CommentWriteDto> searchPosts(Long post_id){
-        List<CommentEntity> commentEntities = commentRepository.findCommentEntityByBoardId(post_id);
-        List<CommentWriteDto> commentWriteDtoList = new ArrayList<>();
 
-        if(commentEntities.isEmpty()) return commentWriteDtoList;
-        for(CommentEntity commentEntity : commentEntities){
-            commentWriteDtoList.add(this.convertEntityToDto(commentEntity));
+    public CommentListResponse getCommentList(Long boardId, Pageable pageable){
+        Page<CommentEntity> comments = commentRepository.findByBoardEntityId(boardId, pageable);
+
+        List<CommentListDto> content = new ArrayList<>();
+        for(CommentEntity comment : comments) {
+            content.add(CommentListDto.of(comment));
         }
-        return commentWriteDtoList;
-    }
-    @Transactional
-    public List<CommentWriteDto> getCommentListByUserName(String userName){
-        List<CommentEntity> commentEntities = commentRepository.findAllByUserName(userName);
-        List<CommentWriteDto> commentWriteDtoList = new ArrayList<>();
 
-        if(commentEntities.isEmpty()) return commentWriteDtoList;
-        for(CommentEntity commentEntity : commentEntities){
-            commentWriteDtoList.add(this.convertEntityToDto(commentEntity));
-        }
-        return commentWriteDtoList;
+        return new CommentListResponse(content, pageable, comments);
     }
-    @Transactional
-    public List<CommentWriteDto> getCommentList(){
-        List<CommentEntity> commentEntities = commentRepository.findAll();
-        List<CommentWriteDto> commentWriteDtoList = new ArrayList<>();
 
-        for(CommentEntity commentEntity : commentEntities){
-            CommentWriteDto commentWriteDto = CommentWriteDto.builder()
-                    .id(commentEntity.getId())
-                    .content(commentEntity.getContent())
-                    .writer(commentEntity.getWriter())
-                    .boardId(commentEntity.getBoardId())
-                    .userName(commentEntity.getUserName())
-                    .createdDate(commentEntity.getCreatedDate())
-                    .build();
-            commentWriteDtoList.add(commentWriteDto);
-        }
-        return commentWriteDtoList;
-    }
-    public Long saveComment(CommentWriteDto commentWriteDto, Long boardId){
-        CommentEntity commentEntity = commentWriteDto.toEntity();
-        commentEntity.setBoardId(boardId);
-        CommentEntity savedCommentEntity = commentRepository.save(commentEntity);
-        return savedCommentEntity.getId();
-    }
-    public Long updateComment(CommentWriteDto commentWriteDto, Long commentId){
-        CommentEntity commentEntity = commentWriteDto.toEntity();
-        commentEntity.setId(commentId);
-        CommentEntity savedCommentEntity = commentRepository.save(commentEntity);
-        return savedCommentEntity.getId();
-    }
-    @Transactional
-    public CommentWriteDto getPost(Long id){
-        Optional<CommentEntity> commentEntityWrapper = commentRepository.findById(id);
-        CommentEntity commentEntity = commentEntityWrapper.get();
-        CommentWriteDto commentWriteDto = CommentWriteDto.builder()
-                .id(commentEntity.getId())
-                .boardId(commentEntity.getBoardId())
-                .content(commentEntity.getContent())
-                .writer(commentEntity.getWriter())
-                .userName(commentEntity.getUserName())
-                .createdDate(commentEntity.getCreatedDate())
-                .build();
-        return  commentWriteDto;
-    }
-    @Transactional
-    public void deletePost(Long id){
-        commentRepository.deleteById(id);
-    }
+
+
+
+
 }
+

@@ -1,16 +1,14 @@
 package com.project.feedback.fixture;
 
-import com.project.feedback.domain.dto.board.CommentWriteDto;
+import com.project.feedback.domain.dto.comment.CommentCreateRequest;
 
 public class CommentDtoFixture {
-    public static CommentWriteDto commentWriteDto(Long boardId, String content) {
+    public static CommentCreateRequest commentCreateRequest(String comment) {
 
-        CommentWriteDto commentWriteDto = CommentWriteDto.builder()
-                .writer("kyeongrok")
-                .content(content)
-                .boardId(boardId)
+        CommentCreateRequest commentCreateRequest = CommentCreateRequest.builder()
+                .comment(comment)
                 .build();
 
-        return commentWriteDto;
+        return commentCreateRequest;
     }
 }

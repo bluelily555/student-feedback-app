@@ -28,7 +28,7 @@
       <th scope="row" th:text="${code.id}"></th>
       <td th:text="${code.title}"></td>
       <!--                    <a th:href="@{'/board/write/' + ${board.id}}"></a>-->
-      <td th:text="${code.writer}"></td>
+      <td th:text="${code.userName}"></td>
       <td th:text="${#temporals.format(code.createdDate, 'yyyy-MM-dd HH:mm')}">
       </td>
       <td>

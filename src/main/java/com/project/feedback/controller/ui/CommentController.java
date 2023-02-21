@@ -1,7 +1,7 @@
 package com.project.feedback.controller.ui;
 
 import com.project.feedback.domain.dto.comment.CommentCreateRequest;
-import com.project.feedback.service.CommentsService;
+import com.project.feedback.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class CommentController {
 
-    private final CommentsService commentService;
+    private final CommentService commentService;
 
     @PostMapping("/{postId}")
     public String write(@PathVariable Long postId, @ModelAttribute CommentCreateRequest req,

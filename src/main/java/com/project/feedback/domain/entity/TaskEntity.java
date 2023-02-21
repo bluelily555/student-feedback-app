@@ -40,7 +40,7 @@ public class TaskEntity extends BaseEntity{
 
     //글 목록
     @OneToMany(mappedBy = "taskEntity")
-    private List<CodeEntity> boardEntities;
+    private List<BoardEntity> boardEntities;
 
     @Enumerated(EnumType.STRING)
     private TaskStatus taskStatus;
