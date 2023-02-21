@@ -29,8 +29,8 @@
           <li class="nav-item">
             <a class="nav-link" href="/boards/list">글 목록 보기</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">-예비1-</a>
+          <li class="nav-item" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+            <a class="nav-link" href="/admin">Admin</a>
           </li>
         </ul>
 
@@ -48,6 +48,7 @@
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
               <li><a class="dropdown-item" th:if="${#authorization.expression('hasRole(''STUDENT'')')}" href="/users/my">마이페이지</a></li>
               <li><a class="dropdown-item" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" href="/admin">Admin</a></li>
+              <li><a class="dropdown-item" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" href="/tasks/write">Task등록</a></li>
               <li><a class="dropdown-item" href="/users/logout">로그아웃</a></li>
             </ul>
           </li>

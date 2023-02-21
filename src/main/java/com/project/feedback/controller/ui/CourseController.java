@@ -114,6 +114,7 @@ public class CourseController {
         model.addAttribute("studentTaskList", result);
         model.addAttribute("courseId", courseId);
         model.addAttribute("courseName", course.getName());
+        model.addAttribute("authName", auth.getName());
         model.addAttribute("week", week);
         model.addAttribute("day", day);
 
