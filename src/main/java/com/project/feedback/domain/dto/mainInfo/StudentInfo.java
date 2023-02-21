@@ -13,12 +13,14 @@ import java.util.List;
 public class StudentInfo {
     private Long id;
     private String realName;
+    private String userName;
     private List<StatusInfo> status;
 
     public static StudentInfo of(UserEntity user, List<StatusInfo> status) {
         return StudentInfo.builder()
             .id(user.getId())
             .realName(user.getRealName())
+            .userName(user.getUserName())
             .status(status)
             .build();
     }
@@ -27,6 +29,7 @@ public class StudentInfo {
         return StudentInfo.builder()
             .id(user.getId())
             .realName(user.getRealName())
+            .userName(user.getUserName())
             .build();
     }
 }

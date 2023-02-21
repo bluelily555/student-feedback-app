@@ -8,52 +8,63 @@
 
 <div th:insert="~{fragments/navbar :: navbar}"></div>
     <form th:method="post" th:action="@{/courses/students}" th:object="${filterInfo}">
-        <label class = "btn" th:text="${courseName}" />
-        <select th:field="*{week}" id="week" style="width:40px;height:40px;margin-top:10px">
-            <option th:value="${week}" th:text="${week}"/>
-            <option th:each="week : ${#numbers.sequence(1,53)}" th:value="${week}" th:text="${week}"/>
-        </select>
-        <label class = "btn">주차</label>
-        <select th:field="*{day}" id="day" style="width:40px;height:40px;margin-top:10px">
-            <option th:value="${day}" th:text="${day}"/>
-            <option th:each="day : ${#numbers.sequence(1,7)}" th:value="${day}" th:text="${day}"/>
-        </select>
-        <label class = "btn">일차</label>
-        <button class="btn nav-btn" type="submit">조회</button>
+        <div class="row">
+            <div class="col-sm-auto">
+                <label for="week" class = "btn" th:text="${courseName}" />
+                <select th:field="*{week}" id="week" style="width:40px;">
+                    <option th:value="${week}" th:text="${week}"/>
+                    <option th:each="week : ${#numbers.sequence(1,53)}" th:value="${week}" th:text="${week}"/>
+                </select>
+                <label for="day" class = "btn">주차</label>
+                <select th:field="*{day}" id="day" style="width:40px;margin-top:10px">
+                    <option th:value="${day}" th:text="${day}"/>
+                    <option th:each="day : ${#numbers.sequence(1,7)}" th:value="${day}" th:text="${day}"/>
+                </select>
+                <label for="day" class="btn">일차</label>
+                <button class="btn btn-primary btn-sm" type="submit">조회</button>
+            </div>
+        </div>
     </form>
     <hr/>
 
-<table class="table table-bordered" id="myTable">
-    <thead class="thead-dark">
-    <tr>
-        <th></th>
-        <div th:each="taskList : ${taskList}">
-            <th><a href="/tasks/write.html" th:href="@{/tasks/{taskId}(taskId=${taskList.id})}" th:text="${taskList.title}"/></th>
-        </div>
-    </tr>
-    </thead>
-    <tbody>
-    <!--학생이름 상태1, 상태2 순으로 뿌려줌-->
-    <tr th:each="studentTask, stat : ${studentTaskList}">
-        <td th:text="${studentTask.realName}"></td>
-        <div th:each="status : ${studentTask.status}">
-          <td id="test-td"  class="test-td" th:attr="data-task_id=${status.taskId}, data-task_name=${status.taskName}, data-user_id=${studentTask.id}" >
-              <select id="status" th:value="${status.taskId}"  class="form-select" style="width:200px;height:40px;float:left" th:attr="data-task_id=${status.taskId},data-user_id=${studentTask.id}">
-                <option th:text="${status.taskStatus}"></option>
-                <option value="CREATED">CREATED</option>
-                <option value="IN_PROGRESS">IN_PROGRESS</option>
-                <option value="DONE">DONE</option>
-                <option value="ERROR">ERROR</option>
-              </select>
-            <a th:href="@{'/boards/code/' + ${status.taskId} + '/write'}">
-              <button class="btn">질문하러가기</button>
-            </a>
-          </td>
+    <div class="table-responsive overflow-x-auto">
+        <table class="table table-bordered" id="myTable">
+            <thead class="thead-dark">
+            <tr>
+                <th th:text="${authName}"></th>
+                <div th:each="taskList : ${taskList}">
+                    <th><a href="/tasks/write.html" th:href="@{/tasks/{taskId}(taskId=${taskList.id})}" th:text="${taskList.title}"/></th>
+                </div>
+            </tr>
+            </thead>
+            <tbody>
+            <!--학생이름 상태1, 상태2 순으로 뿌려줌-->
+            <tr th:classappend="${studentTask.userName == authName} ? 'table-primary' : ''" th:each="studentTask, stat : ${studentTaskList}">
+                <td th:text="${studentTask.realName}"></td>
+                <div th:each="status : ${studentTask.status}">
+                  <td id="test-td" th:attr="data-task_id=${status.taskId}, data-task_name=${status.taskName}, data-user_id=${studentTask.id}" >
+                      <div th:if="${studentTask.userName == authName}">
+                          <select id="status" th:value="${status.taskId}"
+                                  class="form-select form-select-sm" style="width:160px;float:left" th:attr="data-task_id=${status.taskId},data-user_id=${studentTask.id}">
+                              <option th:text="${status.taskStatus}"></option>
+                              <option value="IN_PROGRESS">진행중</option>
+                              <option value="DONE">완료</option>
+                              <option value="ERROR">에러</option>
+                          </select>
+                          <a th:href="@{'/boards/code/' + ${status.taskId} + '/write'}">
+                              <button type="button" class="btn btn-success btn-sm">질문</button>
+                          </a>
+                      </div>
+                      <div th:if="${studentTask.userName != authName}">
+                          <span th:text="${status.taskStatus}"></span>
+                      </div>
+                  </td>
 
-        </div>
-    </tr>
-    </tbody>
-</table>
+                </div>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
