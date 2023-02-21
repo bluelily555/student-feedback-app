@@ -6,6 +6,7 @@ import com.project.feedback.domain.dto.board.CommentWriteDto;
 import com.project.feedback.domain.dto.course.AddStudentRequest;
 import com.project.feedback.domain.dto.course.CourseDto;
 import com.project.feedback.domain.dto.user.*;
+import com.project.feedback.domain.entity.CourseEntity;
 import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
@@ -140,17 +141,19 @@ public class UserUiController {
     }
     @GetMapping("/my")
     public String myPage(Authentication auth, Model model){
-        UserEntity user = findService.findUserByUserName(auth.getName());
-        String userName = user.getUserName();
+        UserEntity loginUser = findService.findUserByUserName(auth.getName());
+        CourseEntity course = findService.findCourseByUserId(loginUser);
+        String userName = loginUser.getUserName();
         List<BoardWriteDto> boardWriteDtoList = boardService.getBoardListByUserName(userName);
         List<CommentWriteDto> commentWriteDtoList = commentService.getCommentListByUserName(userName);
         List<CodeWriteDto> codeWriteDtoList = codeService.getCodeListByUserName(userName);
         int commentCount = commentWriteDtoList.size();
-        model.addAttribute("user", user);
+        model.addAttribute("user", loginUser);
         model.addAttribute("codeList", codeWriteDtoList);
         model.addAttribute("commentCount", commentCount);
         model.addAttribute("boardList", boardWriteDtoList);
         model.addAttribute("userName", auth.getName());
+        model.addAttribute("course", course);
         return "users/my";
     }
     @ResponseBody
