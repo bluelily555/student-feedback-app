@@ -98,7 +98,7 @@
                 <tr th:each="board : ${boardList}">
                   <th scope="row" th:text="${board.id}"></th>
                   <td th:text="${board.title}"></td>
-                  <td th:text="${board.writer}"></td>
+                  <td th:text="${board.userName}"></td>
                   <td th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm')}">
                   </td>
                   <td>

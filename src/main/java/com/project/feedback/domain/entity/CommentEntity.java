@@ -1,43 +1,46 @@
 package com.project.feedback.domain.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
-@NoArgsConstructor
-@Getter
 @Entity
-@Table(name = "comment")
+@Builder
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "comments")
 public class CommentEntity extends TimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(columnDefinition = "TEXT", nullable = false)
-    private String content;
+    private String comment;
 
-    @Column(length = 32, nullable = false)
-    private String writer;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
-    @Column(length = 32, nullable = false)
-    private Long boardId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_entity_id")
+    private BoardEntity boardEntity;
 
-    @Column(nullable = false)
-    private  String userName;
-
-    @Builder
-    public CommentEntity(Long id, String content, String writer, Long boardId, String userName){
-        this.id = id;
-        this.writer = writer;
-        this.content = content;
-        this.boardId = boardId;
-        this.userName = userName;
+    public void update(String newComment) {
+        this.comment = newComment;
     }
 
-    public void setBoardId(Long boardId) {
-        this.boardId = boardId;
-    }
-    public void setId(Long id){this.id = id;}
+
 }

@@ -8,6 +8,7 @@
 <body>
 <div th:insert="~{fragments/navbar :: navbar}"></div>
 <div>
+  <!--어떤 task에 대한 질문인지-->
   <h3 th:text="${taskTitle}"></h3>
 </div>
 <div class="container table-responsive">
@@ -27,7 +28,7 @@
       <th scope="row" th:text="${code.id}"></th>
       <td th:text="${code.title}"></td>
       <!--                    <a th:href="@{'/board/write/' + ${board.id}}"></a>-->
-      <td th:text="${code.writer}"></td>
+      <td th:text="${code.userName}"></td>
       <td th:text="${#temporals.format(code.createdDate, 'yyyy-MM-dd HH:mm')}">
       </td>
       <td>

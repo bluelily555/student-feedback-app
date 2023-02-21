@@ -1,8 +1,6 @@
 package com.project.feedback.controller.ui;
 
 import com.project.feedback.domain.dto.board.BoardWriteDto;
-import com.project.feedback.domain.dto.board.CodeWriteDto;
-import com.project.feedback.domain.dto.board.CommentWriteDto;
 import com.project.feedback.domain.dto.course.AddStudentRequest;
 import com.project.feedback.domain.dto.course.CourseDto;
 import com.project.feedback.domain.dto.user.*;
@@ -35,8 +33,6 @@ public class UserUiController {
     private final CourseService courseService;
     private final FindService findService;
     private final BoardService boardService;
-    private final CommentService commentService;
-    private final CodeService codeService;
     private final EmailServiceImpl emailServiceImpl;
     private final EmailService emailService;
     @GetMapping
@@ -139,23 +135,25 @@ public class UserUiController {
         model.addAttribute("nextUrl", "/users/login");
         return "users/login";
     }
+
+
     @GetMapping("/my")
     public String myPage(Authentication auth, Model model){
-        UserEntity loginUser = findService.findUserByUserName(auth.getName());
-        CourseEntity course = findService.findCourseByUserId(loginUser);
-        String userName = loginUser.getUserName();
-        List<BoardWriteDto> boardWriteDtoList = boardService.getBoardListByUserName(userName);
-        List<CommentWriteDto> commentWriteDtoList = commentService.getCommentListByUserName(userName);
-        List<CodeWriteDto> codeWriteDtoList = codeService.getCodeListByUserName(userName);
-        int commentCount = commentWriteDtoList.size();
-        model.addAttribute("user", loginUser);
+        UserEntity user = findService.findUserByUserName(auth.getName());
+        String userName = user.getUserName();
+        //  List<BoardWriteDto> boardWriteDtoList = boardService.getBoardListByUserName(userName);
+        // List<CommentWriteDto> commentWriteDtoList = commentService.getCommentListByUserName(userName);
+        List<BoardWriteDto> codeWriteDtoList = boardService.getCodeListByUserId(user.getId());
+        //    int commentCount = commentWriteDtoList.size();
+        model.addAttribute("user", user);
         model.addAttribute("codeList", codeWriteDtoList);
-        model.addAttribute("commentCount", commentCount);
-        model.addAttribute("boardList", boardWriteDtoList);
+        //  model.addAttribute("commentCount", commentCount);
+        //   model.addAttribute("boardList", boardWriteDtoList);
         model.addAttribute("userName", auth.getName());
-        model.addAttribute("course", course);
         return "users/my";
     }
+
+
     @ResponseBody
     @PostMapping("/emailSend")
     public String emailSend(@RequestParam String email) throws  Exception{

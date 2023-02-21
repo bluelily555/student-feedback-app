@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
 <head th:replace="~{fragments/header.html :: head}">
     <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
@@ -24,13 +24,13 @@
                                     <h5 style="float: left; margin-right: 5px">제목 :</h5>
                                     <h5 th:text="${codeInfo.title}"></h5>
                                     <h5 style="float: left; margin-right: 5px">작성자 :</h5>
-                                    <p th:text="${codeInfo.writer}"></p>
+                                    <p th:text="${codeInfo.userName}"></p>
                                     <h5 style="float: left; margin-right: 5px">작성 시간 :</h5>
                                     <p th:text="${#temporals.format(codeInfo.createdDate, 'yyyy-MM-dd HH:mm')}"></p>
                                     <div style="display: block">
                                         <h5>작성 내용</h5>
                                         <pre class="prettyprint" th:text="${codeInfo.content}"></pre>
-                                        <div id="codeContent" style="width:60vw; height: 50vh; display: inline-block;" th:text="${codeInfo.codeContent}" th:value="${codeInfo.codeContent}"></div>
+                                        <div id="codeContent" style="width:40vw; height: 50vh; display: inline-block;" th:text="${codeInfo.codeContent}" th:value="${codeInfo.codeContent}"></div>
                                     </div>
 <!--                                    <div style="display: block">-->
 <!--                                        <a th:href="@{'/boards/edit/' + ${boardList.id}}">-->
@@ -46,6 +46,49 @@
         </div>
     </div>
 </section>
+
+<section>
+    <div class="my-5 py-5 text-dark">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-6">
+                <div class="card">
+                    <div class="card-body p-4">
+                        <div class="d-flex flex-start w-100">
+                            <div class="w-100">
+                                <h5>Add a comment</h5>
+                                <form class="form-group" th:object="${commentCreateRequest}"  th:method="post" th:action="|@{/comments/{postId} (postId=${codeInfo.id})}|">
+                                    <div style="text-align: right">
+                                        <div>
+                                            <textarea rows="3" th:field="*{comment}" style="width: 100%"></textarea>
+                                            <button class="btn btn-light" type="submit">댓글 추가</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--댓글 목록-->
+<div class="offset-3 col-6">
+<div th:each="comment : ${commentList}" th:align="center">
+       <div class="card-body" style="text-align: left;">
+            <h5 class="card-title" th:text="'작성자 : ' + ${comment.userName}"></h5>
+            <h6 class="card-subtitle mb-2 text-muted" th:text="'작성일 : ' + ${#temporals.format(comment.createdAt, 'yy/MM/dd HH:mm')}"></h6>
+           <textarea rows="3" class="card-text" th:text="${comment.comment}" id="comment" name="comment"
+                     style="margin-bottom: 10px; width: 100%"></textarea>
+
+        </div>
+
+    <br/>
+</div>
+</div>
+
+
 <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.4.12/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
     let editor = ace.edit("codeContent");

@@ -15,10 +15,8 @@ import java.util.TimeZone;
 @AllArgsConstructor
 public class FeedbackApplication {
 
-
     private final UserService userService;
     private final CourseService courseService;
-
 
     @PostConstruct
     void setTimeZone() {
@@ -27,7 +25,6 @@ public class FeedbackApplication {
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
 
     }
-
 
     @Bean
     public PageableHandlerMethodArgumentResolverCustomizer customize() {

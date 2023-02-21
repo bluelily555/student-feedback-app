@@ -7,36 +7,38 @@
 </head>
 <body>
   <div th:insert="~{fragments/navbar :: navbar}" id="codeForm"></div>
+
   <div>
-    <p>Task: </p>
-    <h1 th:text="${taskTitle}"></h1>
+      <p>Task: </p>
+      <h1 th:text="${taskTitle}"></h1>
   </div>
+
   <div>
-    <form id="writeForm" name="write-form" action="/boards/code/write" autocomplete="off" method="post">
-      <div>
-<!--        th:value="${userName}"-->
-        <input id="userName" type="hidden" name="userName" th:value="${userName}" />
-        <input type="hidden" name="taskId" id="taskId" th:value="${taskId}" />
-        <input class="mt-4" type="text" id="title" maxlength='30' name="title" placeholder="제목을 입력하세요"/>
-        제목 (최대 30자)
-        <br/>
-        <input type="text" id="writer" name="writer" maxlength='10' th:value="${userName}"/>
-        작성자 (최대 10자)
-        <br/>
-        <div id="content_div">
-          <textarea name="codeContent" id="codeContent" hidden></textarea>
-          <textarea class="form-control" style="height:500px; width:47vw;margin-right: 3vw; display: inline-block" maxlength='1000' id="content" name="content"></textarea>
-          <div id="editor" style="width:50vw; height: 500px; display: inline-block; float: right"></div>
-        </div>
-        <br/>
-<!--        <div id="editor" style="position: absolute; width: 500px; height: 400px">some text</div>-->
-<!--        <script src="../../js/editor/src/ace.js" type="text/javascript" charset="utf-8"></script>-->
-<!--        <script>-->
-<!--          const editor = ace.edit("editor");-->
-<!--        </script>-->
-        <input type="submit" id="submitBtn"  class="btn btn-outline-primary mr-2" value="작성">
-      </div>
-    </form>
+      <form id="writeForm" autocomplete="off" th:method="post" th:action="|@{/boards/code/{postId}/write (postId=${taskId})}|" th:object="${boardCreateRequest}">
+            <div>
+              <!--        th:value="${userName}"-->
+              <input id="userName" type="hidden" name="userName" th:value="${userName}" />
+              <input type="hidden" name="taskId" id="taskId" th:value="${taskId}" />
+              <input class="mt-4" type="text" maxlength='30' th:field="*{title}" id="title" placeholder="제목을 입력하세요"/>
+              제목 (최대 30자)
+              <br/>
+              <input type="text" id="writer" name="writer" maxlength='10' th:value="${userName}"/>
+              작성자 (최대 10자)
+              <br/>
+              <div id="content_div">
+                  <textarea name="codeContent" id="codeContent" th:field="*{codeContent}" hidden></textarea>
+                  <textarea class="form-control" style="height:500px; width:47vw;margin-right: 3vw; display: inline-block" maxlength='1000' id="content" th:field="*{content}" name="content"></textarea>
+                  <div id="editor" style="width:50vw; height: 500px; display: inline-block; float: right"></div>
+              </div>
+              <br/>
+              <!--        <div id="editor" style="position: absolute; width: 500px; height: 400px">some text</div>-->
+              <!--        <script src="../../js/editor/src/ace.js" type="text/javascript" charset="utf-8"></script>-->
+              <!--        <script>-->
+              <!--          const editor = ace.edit("editor");-->
+              <!--        </script>-->
+              <input type="submit" id="submitBtn"  class="btn btn-outline-primary mr-2" value="작성">
+          </div>
+      </form>
   </div>
 
 <!--  <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.4.12/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>-->
