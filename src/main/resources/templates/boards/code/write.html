@@ -22,20 +22,14 @@
               <input class="mt-4" type="text" maxlength='30' th:field="*{title}" id="title" placeholder="제목을 입력하세요"/>
               제목 (최대 30자)
               <br/>
-              <input type="text" id="writer" name="writer" maxlength='10' th:value="${userName}"/>
-              작성자 (최대 10자)
+              <input type="hidden" id="writer" name="writer" maxlength='10' th:value="${userName}"/>
               <br/>
               <div id="content_div">
                   <textarea name="codeContent" id="codeContent" th:field="*{codeContent}" hidden></textarea>
-                  <textarea class="form-control" style="height:500px; width:47vw;margin-right: 3vw; display: inline-block" maxlength='1000' id="content" th:field="*{content}" name="content"></textarea>
-                  <div id="editor" style="width:50vw; height: 500px; display: inline-block; float: right"></div>
+                  <textarea class="form-control" style="height:250px; width:50vw;" maxlength='1000' id="content" th:field="*{content}" name="content"></textarea>
+                  <div id="editor" style="width:50vw; height: 250px; overflow-y: scroll;"></div>
               </div>
               <br/>
-              <!--        <div id="editor" style="position: absolute; width: 500px; height: 400px">some text</div>-->
-              <!--        <script src="../../js/editor/src/ace.js" type="text/javascript" charset="utf-8"></script>-->
-              <!--        <script>-->
-              <!--          const editor = ace.edit("editor");-->
-              <!--        </script>-->
               <input type="submit" id="submitBtn"  class="btn btn-outline-primary mr-2" value="작성">
           </div>
       </form>
@@ -46,11 +40,17 @@
   <script src="http://ajaxorg.github.io/ace-builds/src/ace.js"></script>
   <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
   <script>
+    /*
+    1. 코드 편집하는 ace Editor의 Font를 20으로 설정 해주세요.
+    2. 현재 글쓰는 부분 왼쪽, 코드 올리는 부분 오른쪽으로 되어 있는데 위 아래로 해서 스크롤 되게 해주세요.
+    3. 작성자가 표시되고 있습니다. 작성자는 빼주세요.
+    4. 텍스트박스 세로 길이를 현재의 절반으로 줄이고 길어지면 스크롤되게 해주세요.
+     */
     let editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
     editor.session.setMode("ace/mode/javascript");
     let postContent = $("#codeContent").val()
-
+    document.getElementById('editor').style.fontSize='20px';
 
     $("#editor").on("propertychange change keyup paste input ", function() {
       postContent = editor.getValue();
