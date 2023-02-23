@@ -95,8 +95,9 @@ public class SecurityConfig {
                 .anyRequest().permitAll()
         );
 
-        httpSecurity.sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+// Session을 사용하는데 STATELESS를 쓴 것이 문제로 보여서 주석처리함
+//        httpSecurity.sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         httpSecurity.exceptionHandling()
                 .authenticationEntryPoint(authenticationManager)

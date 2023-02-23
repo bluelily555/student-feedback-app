@@ -10,6 +10,7 @@ import com.project.feedback.exception.CustomException;
 import com.project.feedback.auth.JwtTokenUtil;
 import com.project.feedback.repository.CourseRepository;
 import com.project.feedback.repository.CourseUserRepository;
+import com.project.feedback.repository.TokenRepository;
 import com.project.feedback.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +31,7 @@ public class UserService {
 
     private final CourseUserRepository courseUserRepository;
     private final CourseRepository courseRepository;
+    private final TokenRepository tokenRepository;
     private final BCryptPasswordEncoder encoder;
     private final FindService findService;
 
@@ -67,8 +69,15 @@ public class UserService {
 
         // JWT Token 발급
         String jwtToken = JwtTokenUtil.createToken(user.getUserName(), secretKey, expireTimeMs);
+        String refreshToken = JwtTokenUtil.createToken(user.getUserName(), secretKey, expireTimeMs);
 
-        return new UserLoginResponse(jwtToken);
+        // todo RefreshToken구현 할 때 사용할 예정
+//        tokenRepository.save(TokenEntity.builder()
+//                .accessToken(jwtToken)
+//                .refreshToken(refreshToken)
+//                .build());
+
+        return new UserLoginResponse(jwtToken, refreshToken);
     }
 
     public UserChangeRoleResponse changeRole(Long userId, UserChangeRoleRequest req) {
