@@ -79,7 +79,7 @@ public class UserUiController {
 
         // login 후 받은 jwt Token 값을 session에 넣어줌
         session.setAttribute("jwt", "Bearer " + jwtToken);
-        session.setMaxInactiveInterval(1800); // Session이 30분동안 유지
+        session.setMaxInactiveInterval(240 * 60); // Session이 240분동안 유지
        
         return "redirect:/courses/students";
     }
