@@ -1,8 +1,7 @@
 package com.project.feedback.auth;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.project.feedback.exception.ErrorCode;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 
 import java.nio.charset.StandardCharsets;
@@ -35,8 +34,18 @@ public class JwtTokenUtil {
     }
 
 
-    // 밝급된 Token이 만료 시간이 지났는지 체크
-    public static boolean isExpired(String token, String secretKey) {
+    // Token 검사
+    public static String isValid(String token, String secretKey) {
+        try{
+            extractClaims(token, secretKey);
+            return "OK";
+        }catch(ExpiredJwtException e){
+            return ErrorCode.EXPIRE_TOKEN.name();
+        }catch(JwtException | IllegalArgumentException e){
+            return ErrorCode.INVALID_TOKEN.name();
+        }
+    }
+    public static boolean isRefreshTokenExpired(String token, String secretKey) {
         Date expiredDate = extractClaims(token, secretKey).getExpiration();
         // Token의 만료 날짜가 지금보다 이전인지 check
         return expiredDate.before(new Date());

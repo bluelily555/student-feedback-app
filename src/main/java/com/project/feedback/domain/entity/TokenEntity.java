@@ -1,4 +1,4 @@
-package com.project.feedback.service;
+package com.project.feedback.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,4 +19,5 @@ public class TokenEntity {
     private String accessToken;
     private String refreshToken;
 
+    public void setAccessToken(String curToken){this.accessToken = curToken; }
 }
