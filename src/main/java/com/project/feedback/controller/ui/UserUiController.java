@@ -1,6 +1,6 @@
 package com.project.feedback.controller.ui;
 
-import com.project.feedback.domain.dto.board.BoardWriteDto;
+import com.project.feedback.domain.dto.board.BoardListDto;
 import com.project.feedback.domain.dto.course.AddStudentRequest;
 import com.project.feedback.domain.dto.course.CourseDto;
 import com.project.feedback.domain.dto.user.*;
@@ -35,6 +35,7 @@ public class UserUiController {
     private final BoardService boardService;
     private final EmailServiceImpl emailServiceImpl;
     private final EmailService emailService;
+
     @GetMapping
     public String list(Model model, @PageableDefault(size = 20) Pageable pageable) {
         List<CourseDto> courses = courseService.courses();
@@ -142,9 +143,9 @@ public class UserUiController {
         UserEntity user = findService.findUserByUserName(auth.getName());
         String userName = user.getUserName();
         CourseEntity course = findService.findCourseByUserId(user);
-        List<BoardWriteDto> codeWriteDtoList = boardService.getCodeListByUserId(user.getId());
+        List<BoardListDto> boardListDtoList = boardService.getCodeListByUserId(user.getId());
         model.addAttribute("user", user);
-        model.addAttribute("codeList", codeWriteDtoList);
+        model.addAttribute("codeList", boardListDtoList);
         model.addAttribute("userName", auth.getName());
         model.addAttribute("course", course);
         return "users/my";
@@ -156,6 +157,7 @@ public class UserUiController {
     public String emailSend(@RequestParam String email) throws  Exception{
         return emailService.sendSimpleMessage(email);
     }
+
     @ResponseBody
     @PostMapping("/emailConfirm")
     public String emailConfirm(@RequestParam String code,@RequestParam String check, Model model){
@@ -172,12 +174,14 @@ public class UserUiController {
             return "users/join";
         }
     }
+
     @GetMapping("/pw")
     public String getPwUpdate(Model model, Authentication auth){
         model.addAttribute("userName", auth.getName());
         model.addAttribute("userChangePwRequest", new UserChangePwRequest());
      return "users/pw";
     }
+
     @PutMapping("/pw")
     public String pwUpdateByLogin(@ModelAttribute UserChangePwRequest req, HttpSession session){
         userService.updatePwByLogin(req);
@@ -185,10 +189,12 @@ public class UserUiController {
         session.invalidate();
         return "redirect:/";
     }
+
     @GetMapping("/find_id")
     public String idFind(){
         return "users/find_id";
     }
+
     @PostMapping("/find_id")
     public String pwFind(@RequestParam String email, Model model){
         UserEntity user = findService.findUserByEmail(email);
@@ -198,11 +204,13 @@ public class UserUiController {
         model.addAttribute("nextUrl", "/users/login");
         return "users/find_id";
     }
+
     @GetMapping("/find_pw")
     public String getPwFind(Model model){
         model.addAttribute("userFindPwRequest", new UserFindPwRequest());
         return "users/find_pw";
     }
+
     @PutMapping("/find_pw")
     public String pwUpdateByAnonymous(@ModelAttribute UserFindPwRequest req, Model model){
         userService.updatePwByAnonymous(req);

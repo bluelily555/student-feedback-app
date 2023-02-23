@@ -58,7 +58,7 @@ class CommentServiceTest {
         // reference type Long, primitive type - long
         CommentCreateResponse result = commentService.saveComment(commentCreateRequest, "kyeongrok",1l);
 
-        Assertions.assertEquals(1l, result.getCodeId());
+        Assertions.assertEquals(1l, result.getBoardId());
 
     }
 }

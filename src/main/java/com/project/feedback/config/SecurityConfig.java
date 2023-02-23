@@ -66,7 +66,7 @@ public class SecurityConfig {
             "/api/v1/tasks"
     };
     private static final String[] GET_STUDENT_USER = {
-            "/boards/{taskId}/codeWrite",
+            "/boards",
             "/course/students",
             "/users/my"
     };

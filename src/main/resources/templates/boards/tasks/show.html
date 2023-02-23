@@ -24,19 +24,18 @@
     </thead>
     <tbody>
     <!-- CONTENTS   !-->
-    <tr th:each="code : ${codeList}">
-      <th scope="row" th:text="${code.id}"></th>
-      <td th:text="${code.title}"></td>
-      <!--                    <a th:href="@{'/board/write/' + ${board.id}}"></a>-->
-      <td th:text="${code.userName}"></td>
-      <td th:text="${#temporals.format(code.createdDate, 'yyyy-MM-dd HH:mm')}">
+    <tr th:each="board : ${boardList}">
+      <th scope="row" th:text="${board.id}"></th>
+      <td th:text="${board.title}"></td>
+      <td th:text="${board.userName}"></td>
+      <td th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm')}">
       </td>
       <td>
-        <form id="delete-form" th:action="@{'/boards/codeView/' + ${code.id}}" method="post">
+        <form id="delete-form" th:action="@{'/boards/' + ${board.id}}" method="post">
           <input type="hidden" name="_method" value="delete"/>
           <button id="delete-btn" class="btn body-btn">삭제</button>
         </form>
-        <a th:href="@{'/boards/codeDetail/' + ${code.id}}">
+        <a th:href="@{'/boards/' + ${board.id}}">
           <button class="btn body-btn">상세보기</button>
         </a>
       </td>
@@ -44,6 +43,5 @@
     </tbody>
   </table>
 </div>
-<a th:href="@{/boards/codeWrite}">코드 쓰러 가기</a>
 </body>
 </html>

@@ -14,7 +14,7 @@
   </div>
 
   <div>
-      <form id="writeForm" autocomplete="off" th:method="post" th:action="|@{/boards/code/{postId}/write (postId=${taskId})}|" th:object="${boardCreateRequest}">
+      <form id="writeForm" autocomplete="off" th:method="post" th:action="|@{/boards/tasks/{taskId} (taskId=${taskId})}|" th:object="${boardCreateRequest}">
             <div>
               <!--        th:value="${userName}"-->
               <input id="userName" type="hidden" name="userName" th:value="${userName}" />
