@@ -17,10 +17,10 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
         try{
             filterChain.doFilter(request, response);
-        } catch (ExpiredJwtException e){
-            log.error("토큰만료");
-        }catch(JwtException | IllegalArgumentException e){
-            log.error("유효하지 않은 토큰");
+//        } catch (ExpiredJwtException e){
+//            log.error("토큰만료");
+//        }catch(JwtException | IllegalArgumentException e){
+//            log.error("유효하지 않은 토큰");
         }catch(ArrayIndexOutOfBoundsException e){
             log.error("토큰을 추출할 수 없습니다.");
         }catch(NullPointerException e){

@@ -4,6 +4,7 @@ import com.project.feedback.domain.Role;
 import com.project.feedback.domain.dto.user.*;
 import com.project.feedback.domain.entity.CourseEntity;
 import com.project.feedback.domain.entity.CourseUserEntity;
+import com.project.feedback.domain.entity.TokenEntity;
 import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.exception.CustomException;
@@ -28,7 +29,6 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-
     private final CourseUserRepository courseUserRepository;
     private final CourseRepository courseRepository;
     private final TokenRepository tokenRepository;
@@ -39,7 +39,10 @@ public class UserService {
     private String secretKey;
     @Value("${dummy.default-password}")
     private String defaultPw;
-    private long expireTimeMs = 1000 * 60 * 60;
+    //  한시간
+    private long accessExpireTimeMs = 1000 * 60 * 60;
+    // 3시간
+    private long refreshExpireTimeMs = 1000 * 60 * 60 * 3;
 
     public UserJoinResponse saveUser(UserJoinRequest req) {
 
@@ -68,18 +71,17 @@ public class UserService {
         }
 
         // JWT Token 발급
-        String jwtToken = JwtTokenUtil.createToken(user.getUserName(), secretKey, expireTimeMs);
-        String refreshToken = JwtTokenUtil.createToken(user.getUserName(), secretKey, expireTimeMs);
+        String jwtToken = JwtTokenUtil.createToken(user.getUserName(), secretKey, accessExpireTimeMs);
+        String refreshToken = JwtTokenUtil.createToken(user.getUserName(), secretKey, refreshExpireTimeMs);
 
         // todo RefreshToken구현 할 때 사용할 예정
-//        tokenRepository.save(TokenEntity.builder()
-//                .accessToken(jwtToken)
-//                .refreshToken(refreshToken)
-//                .build());
+        tokenRepository.save(TokenEntity.builder()
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken)
+                .build());
 
         return new UserLoginResponse(jwtToken, refreshToken);
     }
-
     public UserChangeRoleResponse changeRole(Long userId, UserChangeRoleRequest req) {
 
         UserEntity user = userRepository.findById(userId)
@@ -197,5 +199,29 @@ public class UserService {
             user = userRepository.save(user);
         }
         return UserFindPwResponse.of(user.getUserName());
+    }
+    public void deleteToken(Long tokenId){
+        tokenRepository.deleteById(tokenId);
+    }
+    public boolean refreshToken(String token, String userName){
+        TokenEntity tokenEntity = findService.findTokenByCurrentToken(token);
+        String accessToken = tokenEntity.getAccessToken();
+        String refreshToken = tokenEntity.getRefreshToken();
+        // refresh token expire 되었는지 여부
+        if(JwtTokenUtil.isRefreshTokenExpired(refreshToken, secretKey)){
+            // refresh token 까지 만료되었으면 토큰 삭제
+            deleteToken(tokenEntity.getId());
+            return false;
+        }else{
+            // refresh token expire 안되어있으면 access token 수정
+            String newAccessToken = JwtTokenUtil.createToken(userName, secretKey, accessExpireTimeMs);
+            tokenRepository.save(TokenEntity.builder()
+                    .accessToken(newAccessToken)
+                    .refreshToken(refreshToken)
+                    .build());
+            return true;
+        }
+
+
     }
 }

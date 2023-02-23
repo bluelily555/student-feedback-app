@@ -5,20 +5,10 @@ import com.project.feedback.domain.dto.mainInfo.CourseTaskListResponse;
 import com.project.feedback.domain.dto.mainInfo.StatusInfo;
 import com.project.feedback.domain.dto.mainInfo.StudentInfo;
 import com.project.feedback.domain.dto.mainInfo.TaskInfo;
-import com.project.feedback.domain.entity.BoardEntity;
-import com.project.feedback.domain.entity.CourseEntity;
-import com.project.feedback.domain.entity.CourseUserEntity;
-import com.project.feedback.domain.entity.TaskEntity;
-import com.project.feedback.domain.entity.UserEntity;
-import com.project.feedback.domain.entity.UserTaskEntity;
+import com.project.feedback.domain.entity.*;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
-import com.project.feedback.repository.BoardRepository;
-import com.project.feedback.repository.CourseRepository;
-import com.project.feedback.repository.CourseUserRepository;
-import com.project.feedback.repository.TaskRepository;
-import com.project.feedback.repository.UserRepository;
-import com.project.feedback.repository.UserTaskRepository;
+import com.project.feedback.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -40,6 +30,7 @@ public class FindService {
     private final CourseUserRepository courseUserRepository;
     private final BoardRepository boardRepository;
     private final UserTaskRepository userTaskRepository;
+    private final TokenRepository tokenRepository;
 
     /**
      * userName으로 User을 찾아오는 기능
@@ -59,7 +50,6 @@ public class FindService {
         return courseRepository.findByName(courseName)
             .orElseThrow(() -> new CustomException(ErrorCode.COURSE_NOT_FOUND, String.format("코스명: %s(이)가 없습니다.", courseName)));
     }
-
 
     /**
      * 로그인한 유저가 글 작성자이거나 ADMIN인지 체크하는 기능
@@ -244,6 +234,11 @@ public class FindService {
     // code 찾기
     public BoardEntity findByCodeId(long codeId){
        return boardRepository.findById(codeId).orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
+    }
+    // access token 찾기
+    public TokenEntity findTokenByCurrentToken(String token){
+        return tokenRepository.findByAccessToken(token)
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_TOKEN));
     }
 
 }

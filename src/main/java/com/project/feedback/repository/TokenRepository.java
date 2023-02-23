@@ -1,6 +1,6 @@
 package com.project.feedback.repository;
 
-import com.project.feedback.service.TokenEntity;
+import com.project.feedback.domain.entity.TokenEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
