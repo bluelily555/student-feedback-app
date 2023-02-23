@@ -14,7 +14,7 @@ public class CommentListDto {
     private Long id;
     private String comment;
     private String userName;
-    private Long codeId;
+    private Long boardId;
     private LocalDateTime createdAt;
 
     public static CommentListDto of(CommentEntity comment) {
@@ -22,7 +22,7 @@ public class CommentListDto {
             .id(comment.getId())
             .comment(comment.getComment())
             .userName(comment.getUser().getUserName())
-            .codeId(comment.getBoardEntity().getId())
+            .boardId(comment.getBoardEntity().getId())
             .createdAt(comment.getCreatedDate())
             .build();
     }

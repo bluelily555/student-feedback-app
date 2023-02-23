@@ -27,9 +27,9 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final FindService findService;
 
-    public CommentCreateResponse saveComment(CommentCreateRequest req, String userName, Long codeId) {
+    public CommentCreateResponse saveComment(CommentCreateRequest req, String userName, Long boardId) {
         UserEntity loginUser = findService.findUserByUserName(userName);
-        BoardEntity code = findService.findByCodeId(codeId);
+        BoardEntity code = findService.findByBoardId(boardId);
 
         CommentEntity comment = commentRepository.save(req.toEntity(loginUser, code));
 

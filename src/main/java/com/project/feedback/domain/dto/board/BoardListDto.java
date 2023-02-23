@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoardWriteDto {
+public class BoardListDto {
 
     private Long id;
     private TaskEntity taskEntity;
@@ -36,8 +36,8 @@ public class BoardWriteDto {
         return boardEntity;
     }
 
-    public static BoardWriteDto of(BoardEntity boardEntity) {
-        return BoardWriteDto.builder()
+    public static BoardListDto of(BoardEntity boardEntity) {
+        return BoardListDto.builder()
             .id(boardEntity.getId())
             .title(boardEntity.getTitle())
             .content(boardEntity.getContent())

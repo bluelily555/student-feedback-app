@@ -39,12 +39,4 @@ public class BoardEntity extends TimeEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-//    @Builder
-//    public BoardEntity(Long id, String content, String title, String codeContent, TaskEntity taskEntity){
-//        this.id = id;
-//        this.taskEntity = taskEntity;
-//        this.content = content;
-//        this.title = title;
-//        this.codeContent = codeContent;
-//    }
 }

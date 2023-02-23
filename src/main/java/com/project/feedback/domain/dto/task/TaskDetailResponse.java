@@ -2,7 +2,7 @@ package com.project.feedback.domain.dto.task;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.feedback.domain.TaskStatus;
-import com.project.feedback.domain.dto.board.BoardWriteDto;
+import com.project.feedback.domain.dto.board.BoardListDto;
 import com.project.feedback.domain.dto.course.CourseInfo;
 import com.project.feedback.domain.entity.BoardEntity;
 import com.project.feedback.domain.entity.TaskEntity;
@@ -24,7 +24,7 @@ public class TaskDetailResponse {
     private String description;
     private TaskStatus taskStatus;
     private CourseInfo courseInfo;
-    private List<BoardWriteDto> boards;
+    private List<BoardListDto> boards;
     private Long week;
     private Long day;
     private String userName;
@@ -35,9 +35,9 @@ public class TaskDetailResponse {
     private LocalDateTime lastModifiedAt;
 
     public static TaskDetailResponse of(TaskEntity task) {
-        List<BoardWriteDto> list = new ArrayList<>();
+        List<BoardListDto> list = new ArrayList<>();
         for(BoardEntity boardEntity : task.getBoardEntities()){
-            list.add(BoardWriteDto.of(boardEntity));
+            list.add(BoardListDto.of(boardEntity));
         }
         return TaskDetailResponse.builder()
                 .id(task.getId())

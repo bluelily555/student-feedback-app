@@ -21,14 +21,11 @@
     <div th:insert="~{fragments/navbar :: navbar}" sec:authorize="isAuthenticated()" ></div>
     <div class="col" style="margin: 30px 0px 10px 0px;" sec:authorize="isAuthenticated()">
         <div class="offset-10">
-            <button class="btn body-btn" onclick="location.href='boards/list'">
-                글 보러 가는 곳
-            </button>
             <button class="btn body-btn" onclick="location.href='boards/write'">
                 글 쓰러 가는 곳
             </button>
-            <button class="btn body-btn" onclick="location.href='boards/code/view_all'">
-                코드 보러 가는 곳
+            <button class="btn body-btn" onclick="location.href='boards/show'">
+                글 보러 가는 곳
             </button>
         </div>
     </div>
