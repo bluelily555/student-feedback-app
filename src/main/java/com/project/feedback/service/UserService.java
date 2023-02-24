@@ -203,25 +203,28 @@ public class UserService {
     public void deleteToken(Long tokenId){
         tokenRepository.deleteById(tokenId);
     }
-    public boolean refreshToken(String token, String userName){
-        TokenEntity tokenEntity = findService.findTokenByCurrentToken(token);
-        String accessToken = tokenEntity.getAccessToken();
-        String refreshToken = tokenEntity.getRefreshToken();
-        // refresh token expire 되었는지 여부
-        if(JwtTokenUtil.isRefreshTokenExpired(refreshToken, secretKey)){
-            // refresh token 까지 만료되었으면 토큰 삭제
-            deleteToken(tokenEntity.getId());
+    public boolean refreshToken(String token){
+        try {
+            TokenEntity tokenEntity = findService.findTokenByCurrentToken(token);
+            String refreshToken = tokenEntity.getRefreshToken();
+            // refresh token expire 되었는지 여부
+            if (JwtTokenUtil.isRefreshTokenExpired(refreshToken, secretKey)) {
+                // refresh token 까지 만료되었으면 토큰 삭제
+                deleteToken(tokenEntity.getId());
+                return false;
+            } else {
+                // refresh token expire 안되어있으면 access token 수정
+                String userName = JwtTokenUtil.getUserName(refreshToken, secretKey);
+                String newAccessToken = JwtTokenUtil.createToken(userName, secretKey, accessExpireTimeMs);
+                tokenRepository.save(TokenEntity.builder()
+                        .accessToken(newAccessToken)
+                        .refreshToken(refreshToken)
+                        .build());
+                return true;
+            }
+        }catch (CustomException e){
             return false;
-        }else{
-            // refresh token expire 안되어있으면 access token 수정
-            String newAccessToken = JwtTokenUtil.createToken(userName, secretKey, accessExpireTimeMs);
-            tokenRepository.save(TokenEntity.builder()
-                    .accessToken(newAccessToken)
-                    .refreshToken(refreshToken)
-                    .build());
-            return true;
         }
-
-
     }
-}
+ }
+

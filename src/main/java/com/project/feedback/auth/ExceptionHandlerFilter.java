@@ -3,6 +3,7 @@ package com.project.feedback.auth;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,6 +26,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
             log.error("토큰을 추출할 수 없습니다.");
         }catch(NullPointerException e){
             log.error("NULL 에러");
+            RequestDispatcher rd = request.getRequestDispatcher("/users/login");
             filterChain.doFilter(request, response);
         }
     }
