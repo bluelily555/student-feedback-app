@@ -231,9 +231,8 @@ public class FindService {
         return list;
     }
 
-    // code 찾기
-    public BoardEntity findByCodeId(long codeId){
-       return boardRepository.findById(codeId).orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
+    public BoardEntity findByBoardId(long boardId){
+       return boardRepository.findById(boardId).orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
     }
     // access token 찾기
     public TokenEntity findTokenByCurrentToken(String token){

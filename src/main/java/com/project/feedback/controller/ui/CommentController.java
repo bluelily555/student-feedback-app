@@ -18,11 +18,11 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/{postId}")
-    public String write(@PathVariable Long postId, @ModelAttribute CommentCreateRequest req,
+    @PostMapping("/{boardId}")
+    public String write(@PathVariable Long boardId, @ModelAttribute CommentCreateRequest req,
                         Authentication auth, Model model) {
-            commentService.saveComment(req, auth.getName(), postId);
-        return "redirect:/boards/code/view_all";
+            commentService.saveComment(req, auth.getName(), boardId);
+        return "redirect:/boards";
     }
 
 

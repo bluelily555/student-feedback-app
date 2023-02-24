@@ -16,7 +16,7 @@ public class CommentCreateResponse {
     private Long id;
     private String comment;
     private String userName;
-    private Long codeId;
+    private Long boardId;
     private LocalDateTime createdAt;
 
     public static CommentCreateResponse of(CommentEntity comment) {
@@ -24,7 +24,7 @@ public class CommentCreateResponse {
             .id(comment.getId())
             .comment(comment.getComment())
             .userName(comment.getUser().getUserName())
-            .codeId(comment.getBoardEntity().getId())
+            .boardId(comment.getBoardEntity().getId())
             .createdAt(comment.getCreatedDate())
             .build();
     }

@@ -33,7 +33,7 @@
             <tr>
                 <th th:text="${authName}"></th>
                 <div th:each="taskList : ${taskList}">
-                    <th><a href="/tasks/write.html" th:href="@{/tasks/{taskId}(taskId=${taskList.id})}" th:text="${taskList.title}"/></th>
+                    <th><a href="/tasks/write.html" th:href="@{/tasks/{taskId}(taskId=${taskList.id})}" th:value="${taskList.title}" th:text="${taskList.title}"/></th>
                 </div>
             </tr>
             </thead>
@@ -53,7 +53,7 @@
                               <option value="DONE">완료</option>
                               <option value="ERROR">에러</option>
                           </select>
-                          <a th:href="@{'/boards/code/' + ${status.taskId} + '/write'}">
+                          <a th:href="@{'/boards/tasks/' + ${status.taskId}}">
                               <button type="button" class="btn btn-success btn-sm">질문</button>
                           </a>
                       </div>
