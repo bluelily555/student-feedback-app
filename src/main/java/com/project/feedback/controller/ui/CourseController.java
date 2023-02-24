@@ -14,6 +14,7 @@ import com.project.feedback.service.FindService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,6 +73,7 @@ public class CourseController {
 
     @GetMapping("/students")
     public String addCourseId(Authentication auth, RedirectAttributes redirectAttributes, Model model) {
+        log.info(SecurityContextHolder.getContext().getAuthentication().getName());
         UserEntity loginUser = findService.findUserByUserName(auth.getName());
         CourseEntity course = findService.findCourseByUserId(loginUser);
         CourseInfo courseInfo = CourseInfo.fromEntity(course);

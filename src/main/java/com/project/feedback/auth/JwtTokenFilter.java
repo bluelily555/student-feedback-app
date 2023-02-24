@@ -65,23 +65,25 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         String token = authroizationHeader.split(" ")[1];
 
-        // Token에서 userName 꺼내기
-        String userName = JwtTokenUtil.getUserName(token, secretKey);
 
         // 토큰이 만료되었는지 check
         String tokenValidCheck = JwtTokenUtil.isValid(token, secretKey);
-        // token expired
         if(tokenValidCheck.equals(ErrorCode.EXPIRE_TOKEN.name())){
             log.info(ErrorCode.EXPIRE_TOKEN.name());
-//         refreshing token 할지 말지결정
-            boolean isRefresh = userService.refreshToken(token, userName);
+//         refreshing 할지 말지결정
+            boolean isRefresh = userService.refreshToken(token);
+            log.info(isRefresh + "refresh");
             if(isRefresh){
                 log.info("토큰 재발급");
                 response.sendRedirect(request.getRequestURL().toString());
             }else{
                 log.error("refresh token 만료");
-                RequestDispatcher rd = request.getRequestDispatcher("/users/login");
+//                RequestDispatcher rd = request.getRequestDispatcher("/users/login");
+//                filterChain.doFilter(request, response);
+                request.setAttribute("exception", ErrorCode.EXPIRE_TOKEN);
+                filterChain.doFilter(request, response);
             }
+            return;
         }else if(tokenValidCheck.equals(ErrorCode.INVALID_TOKEN.name())){
             // invalid token
             log.error("invalid token");
@@ -89,6 +91,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             return;
         }
 
+        // Token에서 userName 꺼내기
+        String userName = JwtTokenUtil.getUserName(token, secretKey);
         // userName으로 User 찾아오기
         UserEntity loginUser = findService.findUserByUserName(userName);
 
