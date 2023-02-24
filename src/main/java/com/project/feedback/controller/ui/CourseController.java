@@ -57,12 +57,6 @@ public class CourseController {
         return "redirect:/";
     }
 
-    @GetMapping("/register")
-    public String register(Model model) {
-        List<Long> users = new ArrayList<>();
-        model.addAttribute("addStudentRequest", new AddStudentRequest());
-        return  "users/show";
-    }
 
     @PostMapping("/register")
     public String register(@ModelAttribute("addStudentRequest") AddStudentRequest req, Authentication auth) {
