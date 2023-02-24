@@ -7,6 +7,8 @@ import com.project.feedback.domain.dto.course.CourseDto;
 import com.project.feedback.domain.entity.CourseEntity;
 import com.project.feedback.domain.entity.CourseUserEntity;
 import com.project.feedback.domain.entity.UserEntity;
+import com.project.feedback.exception.CustomException;
+import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.repository.CourseRepository;
 import com.project.feedback.repository.CourseUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,21 +47,26 @@ public class CourseService {
     }
 
 
+
     public void registerStudent(AddStudentRequest req) {
         CourseEntity course = findService.findCourseByName(req.getCourseName());
 
         //기수 등록해야하는 학생 list
         List<UserEntity> users = req.getUserList();
 
-        for(UserEntity user : users){
-            if(!courseUserRepository.findCourseEntityUserByUserId(user.getId()).isPresent()){
-                CourseUserEntity courseUserEntity = new CourseUserEntity();
-                courseUserEntity.setUser(user);
+        users.forEach( user -> {
+            CourseUserEntity courseUserEntity = courseUserRepository.findCourseEntityUserByUserId(user.getId())
+                .orElseThrow(() -> {
+                    CourseUserEntity addCourseUser = new CourseUserEntity();
+                    addCourseUser.setUser(user);
+                    addCourseUser.setCourseEntity(course);
+                    courseUserRepository.save(addCourseUser);
+                    return null;
+                });
                 courseUserEntity.setCourseEntity(course);
                 courseUserRepository.save(courseUserEntity);
             }
-        }
-        courseRepository.save(course);
+        );
     }
 
     public void setDefaultCourse() {
