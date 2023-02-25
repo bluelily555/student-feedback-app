@@ -25,9 +25,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,11 +47,12 @@ public class TaskController {
 
         TaskFilterInfo taskFilterInfo = new TaskFilterInfo();
         model.addAttribute("taskFilterInfo", taskFilterInfo);
-
-        int week = getDayOfWeek();
-        model.addAttribute("week", week);
-
+        
         List<CourseDto> courses = courseService.courses();
+        CourseEntity courseEntity = findService.findCourseByName(courses.get(0).getName());
+        long week = CourseInfo.fromEntity(courseEntity).getWeek(courseEntity.getStartDate());
+
+        model.addAttribute("week", week);
         model.addAttribute("courseList", courses);
 
         return "tasks/show";
@@ -181,12 +179,4 @@ public class TaskController {
         return "redirect:/tasks";
     }
 
-    public int getDayOfWeek(){
-        //월:1 ~ 일:7
-        LocalDate date = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        date.format(formatter);
-        int week = date.getDayOfWeek().getValue();
-        return week;
-    }
 }
