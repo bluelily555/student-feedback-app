@@ -80,8 +80,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 log.error("refresh token 만료");
 //                RequestDispatcher rd = request.getRequestDispatcher("/users/login");
 //                filterChain.doFilter(request, response);
-                request.setAttribute("exception", ErrorCode.EXPIRE_TOKEN);
-                filterChain.doFilter(request, response);
+//                request.setAttribute("exception", ErrorCode.EXPIRE_TOKEN);
+                response.sendRedirect("/user/login");
+//                filterChain.doFilter(request, response);
             }
             return;
         }else if(tokenValidCheck.equals(ErrorCode.INVALID_TOKEN.name())){
