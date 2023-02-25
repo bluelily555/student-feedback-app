@@ -47,12 +47,13 @@ public class TaskController {
 
         TaskFilterInfo taskFilterInfo = new TaskFilterInfo();
         model.addAttribute("taskFilterInfo", taskFilterInfo);
-        
+
         List<CourseDto> courses = courseService.courses();
         CourseEntity courseEntity = findService.findCourseByName(courses.get(0).getName());
         long week = CourseInfo.fromEntity(courseEntity).getWeek(courseEntity.getStartDate());
 
         model.addAttribute("week", week);
+        model.addAttribute("courseName", courseEntity.getName());
         model.addAttribute("courseList", courses);
 
         return "tasks/show";
