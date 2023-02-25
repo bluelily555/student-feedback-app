@@ -5,9 +5,11 @@ import com.project.feedback.domain.dto.course.CourseDto;
 import com.project.feedback.domain.dto.course.CourseInfo;
 import com.project.feedback.domain.dto.task.TaskCreateRequest;
 import com.project.feedback.domain.dto.task.TaskDetailResponse;
+import com.project.feedback.domain.dto.task.TaskFilterInfo;
 import com.project.feedback.domain.dto.task.TaskListResponse;
 import com.project.feedback.domain.dto.task.TaskUpdateRequest;
 import com.project.feedback.domain.entity.CourseEntity;
+import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.service.CourseService;
@@ -16,12 +18,16 @@ import com.project.feedback.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,13 +42,56 @@ public class TaskController {
     private final CourseService courseService;
 
     @GetMapping
-    public String list(Model model, @PageableDefault(size = 20) Pageable pageable) {
+    public String list(Model model, @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, RedirectAttributes redirectAttributes) {
         TaskListResponse res = taskService.getTaskList(pageable);
         model.addAttribute("taskList", res.getContent());
         model.addAttribute("nowPage", res.getPageable().getPageNumber() + 1);
         model.addAttribute("lastPage", res.getTotalPages());
+
+        TaskFilterInfo taskFilterInfo = new TaskFilterInfo();
+        model.addAttribute("taskFilterInfo", taskFilterInfo);
+
+        int week = getDayOfWeek();
+        model.addAttribute("week", week);
+
+        List<CourseDto> courses = courseService.courses();
+        model.addAttribute("courseList", courses);
+
         return "tasks/show";
     }
+
+    //기수, 주차 필터링해서 task 목록 출력
+    @PostMapping("/filter")
+    public String weekAndDaySubmit(@ModelAttribute TaskFilterInfo taskFilterInfo, RedirectAttributes redirectAttribute, Authentication auth) {
+        UserEntity loginUser = findService.findUserByUserName(auth.getName());
+       // CourseEntity course = findService.findCourseByUserId(loginUser);
+        String courseName = taskFilterInfo.getCourseName();
+
+        redirectAttribute.addAttribute("week", taskFilterInfo.getWeek());
+        redirectAttribute.addAttribute("courseId", courseService.findByCourseName(courseName).getId());
+        return "redirect:{courseId}/weeks/{week}";
+    }
+
+    @GetMapping("/{courseId}/weeks/{week}")
+    public String listWeekAndDay(@PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, @PathVariable long courseId, @PathVariable long week, Authentication auth, Model model){
+        UserEntity loginUser = findService.findUserByUserName(auth.getName());
+        CourseEntity course = findService.findCourseByUserId(loginUser);
+        TaskListResponse res =  findService.getTasksByCourseIdAndWeek(pageable, courseId, week);
+        System.out.print(res + "test");
+        model.addAttribute("taskList", res.getContent());
+        model.addAttribute("nowPage", res.getPageable().getPageNumber() + 1);
+        model.addAttribute("lastPage", res.getTotalPages());
+
+        List<CourseDto> courses = courseService.courses();
+        model.addAttribute("courseList", courses);
+
+        CourseEntity result = courseService.findByCourseId(courseId);
+        TaskFilterInfo taskFilterInfo = TaskFilterInfo.builder().week(week).courseName(result.getName()).build();
+        model.addAttribute("taskFilterInfo", taskFilterInfo);
+
+        return "tasks/show";
+    }
+
 
     @GetMapping("/write")
     public String writePage(Model model) {
@@ -130,5 +179,14 @@ public class TaskController {
         model.addAttribute("message", "글이 수정 되었습니다.");
         model.addAttribute("nextUrl", "/tasks/" + taskId);
         return "redirect:/tasks";
+    }
+
+    public int getDayOfWeek(){
+        //월:1 ~ 일:7
+        LocalDate date = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        date.format(formatter);
+        int week = date.getDayOfWeek().getValue();
+        return week;
     }
 }

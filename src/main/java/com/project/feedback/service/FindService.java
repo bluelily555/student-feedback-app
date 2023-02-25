@@ -5,6 +5,8 @@ import com.project.feedback.domain.dto.mainInfo.CourseTaskListResponse;
 import com.project.feedback.domain.dto.mainInfo.StatusInfo;
 import com.project.feedback.domain.dto.mainInfo.StudentInfo;
 import com.project.feedback.domain.dto.mainInfo.TaskInfo;
+import com.project.feedback.domain.dto.task.TaskListDto;
+import com.project.feedback.domain.dto.task.TaskListResponse;
 import com.project.feedback.domain.entity.*;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
@@ -12,6 +14,8 @@ import com.project.feedback.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -163,6 +167,17 @@ public class FindService {
                                                             .studentInfoList(studentInfoList)
                                                             .build();
         return courseTaskListResponse;
+    }
+
+
+    public TaskListResponse getTasksByCourseIdAndWeek(Pageable pageable, Long courseId, Long week){
+        //courseId, week로 task 목록 호출
+        Page<TaskEntity> taskEntities = taskRepository.findByWeekAndCourseEntityId(pageable, week, courseId);
+        List<TaskListDto> content = new ArrayList<>();
+          for(TaskEntity task : taskEntities) {
+              content.add(TaskListDto.of(task));
+          }
+       return new TaskListResponse(content, pageable, taskEntities);
     }
 
     @Cacheable(value = "course_student", key = "#courseId + '-' + #week + '-' + #day + '-' + #loginUser.userName")

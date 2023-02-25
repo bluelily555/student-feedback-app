@@ -14,6 +14,8 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
 
     Page<TaskEntity> findAll(Pageable pageable);
 
+    Page<TaskEntity> findByWeekAndCourseEntityId(Pageable pageable, Long week, Long courseId);
+
     List<TaskEntity> findByWeekAndDayOfWeek(Long week, Long day);
 
     @Query(value = "select task from TaskEntity task where task.week = :week and task.dayOfWeek = :day and task.courseEntity.id = :courseId")
