@@ -31,9 +31,11 @@ public class CourseService {
     private final CourseUserRepository courseUserRepository;
     private final FindService findService;
 
+
     public int getCourseLength(){
         return courseRepository.findAll().size();
     }
+
     public List<CourseDto> courses() {
         return courseRepository.findAll().stream()
             .map(courseEntity -> CourseDto.fromEntity(courseEntity)).collect(Collectors.toList());
@@ -46,6 +48,19 @@ public class CourseService {
         return CourseCreateResponse.of(savedCourse.getId(), savedCourse.getName());
     }
 
+    public CourseEntity findByCourseName(String courseName){
+        CourseEntity courseEntity = courseRepository.findByName(courseName)
+            .orElseThrow(()-> new CustomException(ErrorCode.COURSE_NOT_FOUND));
+        return courseEntity;
+
+    }
+
+    public CourseEntity findByCourseId(Long courseId){
+        CourseEntity courseEntity = courseRepository.findById(courseId)
+            .orElseThrow(()-> new CustomException(ErrorCode.COURSE_NOT_FOUND));
+        return courseEntity;
+
+    }
 
 
     public void registerStudent(AddStudentRequest req) {

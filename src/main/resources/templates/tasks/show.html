@@ -6,9 +6,29 @@
 <div th:insert="~{fragments/navbar :: navbar}"></div>
 <main class="d-flex flex-nowrap" style="max-height:none; height: auto">
     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
-    <br>
+    <br/>
     <div class="row" style="width: 100vw">
-<!--        class="offset-2 col-8"-->
+        <br/>
+        <form th:method="post" th:action="@{/tasks/filter}"  th:object="${taskFilterInfo}">
+            <div class="row">
+                <div class="col-sm-auto">
+                    <label for="courseName" class="btn">기수명</label>
+                    <label>
+                        <select id="courseName" class="form-select" th:field="*{courseName}" style="width:200px;height:40px;">
+                            <option th:value="${courseName}" th:text="${courseName}"/>
+                            <option th:each="course:${courseList}" th:value="${course.name}" th:text="${course.name}" />
+                        </select>
+                    </label>
+                    <label for="week" class = "btn">주차</label>
+                    <select th:field="*{week}" id="week" style="width:50px;height:35px">
+                        <option th:value="${week}" th:text="${week}"/>
+                        <option th:each="week : ${#numbers.sequence(1,53)}" th:value="${week}" th:text="${week}"/>
+                    </select>
+                    <button class="btn btn-primary" style="margin-left: 10px" type="submit">조회</button>
+                </div>
+            </div>
+        </form>
+        <hr/>
         <div>
                 <table class="table list-table table-hover text-center">
                     <thead style="background-color: #A5F1E9">

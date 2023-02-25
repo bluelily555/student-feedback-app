@@ -1,4 +1,4 @@
-package com.project.feedback.domain.dto.mainInfo;
+package com.project.feedback.domain.dto.task;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class FilterInfo {
+public class TaskFilterInfo {
     private Long week;
-    private Long day;
+    private String courseName;
 }
