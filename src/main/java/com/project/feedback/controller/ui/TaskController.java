@@ -65,7 +65,9 @@ public class TaskController {
         UserEntity loginUser = findService.findUserByUserName(auth.getName());
        // CourseEntity course = findService.findCourseByUserId(loginUser);
         String courseName = taskFilterInfo.getCourseName();
-
+        if(taskFilterInfo.getWeek() == null && taskFilterInfo.getCourseName() == ""){
+            return "redirect:/tasks";
+        }
         redirectAttribute.addAttribute("week", taskFilterInfo.getWeek());
         redirectAttribute.addAttribute("courseId", courseService.findByCourseName(courseName).getId());
         return "redirect:{courseId}/weeks/{week}";
@@ -76,7 +78,7 @@ public class TaskController {
         UserEntity loginUser = findService.findUserByUserName(auth.getName());
         CourseEntity course = findService.findCourseByUserId(loginUser);
         TaskListResponse res =  findService.getTasksByCourseIdAndWeek(pageable, courseId, week);
-        System.out.print(res + "test");
+
         model.addAttribute("taskList", res.getContent());
         model.addAttribute("nowPage", res.getPageable().getPageNumber() + 1);
         model.addAttribute("lastPage", res.getTotalPages());

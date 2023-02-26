@@ -14,14 +14,14 @@
                 <div class="col-sm-auto">
                     <label for="courseName" class="btn">기수명</label>
                     <label>
-                        <select id="courseName" class="form-select" th:field="*{courseName}" style="width:200px;height:40px;">
-                            <option th:value="${courseName}" th:text="${courseName}"/>
-                            <option th:each="course:${courseList}" th:value="${course.name}" th:text="${course.name}" />
+                        <select id="courseName" onchange="setWeek()" class="form-select" th:field="*{courseName}" style="width:200px;height:40px;">
+                            <option th:value="${all}"/>
+                            <option th:each="course:${courseList}"  th:value="${course.name}" th:text="${course.name}" />
                         </select>
                     </label>
                     <label for="week" class = "btn">주차</label>
                     <select th:field="*{week}" id="week" style="width:50px;height:35px">
-                        <option th:value="${week}" th:text="${week}"/>
+                        <option th:value="${all}"/>
                         <option th:each="week : ${#numbers.sequence(1,53)}" th:value="${week}" th:text="${week}"/>
                     </select>
                     <button class="btn btn-primary" style="margin-left: 10px" type="submit">조회</button>
@@ -73,18 +73,32 @@
             <br/><br/><br/>
         </div>
     </div>
-    <!--    <div class="col" style="margin: 30px 0px 10px 0px;">-->
-    <!--        <div class="offset-10">-->
-    <!--            <button class="btn body-btn" onclick="location.href='/tasks/write'">-->
-    <!--                TASK 등록-->
-    <!--            </button>-->
-    <!--        </div>-->
-    <!--    </div>-->
 
 </main>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+<script>
+    function setWeek() {
+        let courseName = $('#courseName').val();
+        if(courseName==""){
+            $("#week option:eq(0)").prop("selected", true);
+        }
+        $.ajax({
+            type: 'POST',
+            url: '/courses/setWeek',
+            data:{
+                courseName: courseName
+            },
+            dataType : 'text',
+            success: function (res) {
+                $('#week').val(res); // 기수 선택에 따라 주차 선택 값 셋팅
+            }
+        });
+    }
+</script>
+
+
 </body>
 </html>
 
