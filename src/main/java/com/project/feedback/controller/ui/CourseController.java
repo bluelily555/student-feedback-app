@@ -21,12 +21,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -114,6 +118,14 @@ public class CourseController {
         model.addAttribute("day", day);
 
         return "courses/students/show";
+    }
+
+    @ResponseBody
+    @PostMapping("/setWeek")
+    public Long calculateWeek(@RequestParam String courseName){
+        CourseEntity courseEntity = findService.findCourseByName(courseName);
+        Long week = CourseInfo.fromEntity(courseEntity).getWeek();
+        return week;
     }
 
 
