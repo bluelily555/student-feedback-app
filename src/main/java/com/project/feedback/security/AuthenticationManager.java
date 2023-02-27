@@ -26,7 +26,7 @@ public class AuthenticationManager implements AuthenticationEntryPoint {
         response.setStatus(errorCode.getStatus().value());
         response.setContentType("text/html; charset=utf-8");
         String msg = "잘못된 접근입니다.";
-        String url = "/login";
+        String url = "/users/login";
         PrintWriter w = response.getWriter();
         w.write("<script>alert('"+msg+"');location.href='"+url+"';</script>");
         w.flush();
