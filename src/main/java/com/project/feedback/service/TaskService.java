@@ -98,10 +98,19 @@ public class TaskService {
         return new TaskListResponse(content, pageable, tasks);
     }
 
+    public TaskListResponse getTaskListByCourseId(Pageable pageable, Long courseId) {
+        Page<TaskEntity> tasks = taskRepository.findByCourseEntityId(pageable, courseId);
 
-    /**
-     * TO DO
-     * */
+        List<TaskListDto> content = new ArrayList<>();
+        for(TaskEntity task : tasks) {
+            content.add(TaskListDto.of(task));
+        }
+
+        return new TaskListResponse(content, pageable, tasks);
+    }
+
+
+
     public List<TaskListDto> getTaskListByWeekAndDay(Long week, Long day){
         List<TaskEntity> tasks = taskRepository.findByWeekAndDayOfWeek(week, day);
 

@@ -39,7 +39,7 @@ public class TaskController {
     private final CourseService courseService;
 
     @GetMapping
-    public String list(Model model, @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, RedirectAttributes redirectAttributes) {
+    public String list(Model model, @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         TaskListResponse res = taskService.getTaskList(pageable);
         model.addAttribute("taskList", res.getContent());
         model.addAttribute("nowPage", res.getPageable().getPageNumber() + 1);
@@ -59,14 +59,38 @@ public class TaskController {
         return "tasks/show";
     }
 
+    @GetMapping("/courses/{courseId}")
+    public String listByCourseId(Model model, @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, @PathVariable Long courseId) {
+        TaskListResponse res = taskService.getTaskListByCourseId(pageable, courseId);
+        model.addAttribute("taskList", res.getContent());
+        model.addAttribute("nowPage", res.getPageable().getPageNumber() + 1);
+        model.addAttribute("lastPage", res.getTotalPages());
+
+        List<CourseDto> courses = courseService.courses();
+        model.addAttribute("courseList", courses);
+        CourseEntity courseEntity = courseService.findByCourseId(courseId);
+
+        model.addAttribute("courseName", courseEntity.getName());
+
+        TaskFilterInfo taskFilterInfo = TaskFilterInfo.builder().courseName(courseEntity.getName()).build();
+        model.addAttribute("taskFilterInfo", taskFilterInfo);
+
+        return "tasks/show";
+    }
+
+
     //기수, 주차 필터링해서 task 목록 출력
     @PostMapping("/filter")
     public String weekAndDaySubmit(@ModelAttribute TaskFilterInfo taskFilterInfo, RedirectAttributes redirectAttribute, Authentication auth) {
-        UserEntity loginUser = findService.findUserByUserName(auth.getName());
-       // CourseEntity course = findService.findCourseByUserId(loginUser);
         String courseName = taskFilterInfo.getCourseName();
         if(taskFilterInfo.getWeek() == null && taskFilterInfo.getCourseName() == ""){
             return "redirect:/tasks";
+        }
+        // 해당 기수에 해당하는 TASK만 조회
+        if(taskFilterInfo.getCourseName() != "" && taskFilterInfo.getWeek() == null){
+            System.out.print("test test");
+            redirectAttribute.addAttribute("courseId", courseService.findByCourseName(courseName).getId());
+            return "redirect:courses/{courseId}";
         }
         redirectAttribute.addAttribute("week", taskFilterInfo.getWeek());
         redirectAttribute.addAttribute("courseId", courseService.findByCourseName(courseName).getId());
