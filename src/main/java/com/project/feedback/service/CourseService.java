@@ -68,20 +68,19 @@ public class CourseService {
 
         //기수 등록해야하는 학생 list
         List<UserEntity> users = req.getUserList();
-
-        users.forEach( user -> {
-            CourseUserEntity courseUserEntity = courseUserRepository.findCourseEntityUserByUserId(user.getId())
-                .orElseThrow(() -> {
-                    CourseUserEntity addCourseUser = new CourseUserEntity();
-                    addCourseUser.setUser(user);
-                    addCourseUser.setCourseEntity(course);
-                    courseUserRepository.save(addCourseUser);
-                    return null;
-                });
+        CourseUserEntity courseUserEntity;
+        for(UserEntity user : users){
+            if(!courseUserRepository.findCourseEntityUserByUserId(user.getId()).isPresent()){
+                courseUserEntity = new CourseUserEntity();
+                courseUserEntity.setUser(user);
                 courseUserEntity.setCourseEntity(course);
-                courseUserRepository.save(courseUserEntity);
             }
-        );
+            else{ // 존재 한다면
+                courseUserEntity = courseUserRepository.findCourseEntityUserByUserId(user.getId()).orElseThrow(() -> new CustomException(ErrorCode.USER_COURSE_NOT_FOUND));
+                courseUserEntity.setCourseEntity(course);
+            }
+            courseUserRepository.save(courseUserEntity);
+        }
     }
 
     public void setDefaultCourse() {
