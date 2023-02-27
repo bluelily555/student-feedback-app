@@ -147,9 +147,10 @@ public class UserUiController {
         UserEntity user = findService.findUserByUserName(auth.getName());
         String userName = user.getUserName();
         CourseEntity course = findService.findCourseByUserId(user);
-        List<BoardListDto> boardListDtoList = boardService.getCodeListByUserId(user.getId());
+
+        List<BoardListDto> boardListDtoList = boardService.getBoardListByUserId(user.getId());
         model.addAttribute("user", user);
-        model.addAttribute("codeList", boardListDtoList);
+        model.addAttribute("boardList", boardListDtoList);
         model.addAttribute("userName", auth.getName());
         model.addAttribute("course", course);
         return "users/my";

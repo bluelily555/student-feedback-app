@@ -21,7 +21,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final TaskService taskService;
 
-    private List<BoardListDto> getCodeWriteDtos(List<BoardEntity> boardEntities) {
+    private List<BoardListDto> getBoardWriteDtos(List<BoardEntity> boardEntities) {
         List<BoardListDto> codeWriteDtoList = new ArrayList<>();
 
         for(BoardEntity boardEntity : boardEntities){
@@ -49,19 +49,19 @@ public class BoardService {
     @Transactional
     public List<BoardListDto> searchAllCode(){
         List<BoardEntity> codeEntities = boardRepository.findAll();
-        return getCodeWriteDtos(codeEntities);
+        return getBoardWriteDtos(codeEntities);
     }
 
     @Transactional
-    public List<BoardListDto> getCodeListByTaskId(Long taskId){
+    public List<BoardListDto> getBoardListByTaskId(Long taskId){
         List<BoardListDto> codeEntities = taskService.getOneTask(taskId).getBoards();
         return codeEntities;
     }
 
     @Transactional
-    public List<BoardListDto> getCodeListByUserId(Long userId){
+    public List<BoardListDto> getBoardListByUserId(Long userId){
         List<BoardEntity> codeEntities = boardRepository.findAllByUserId(userId);
-        return getCodeWriteDtos(codeEntities);
+        return getBoardWriteDtos(codeEntities);
     }
 
     @Transactional
@@ -70,9 +70,9 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardListDto getCodeDetail(Long boardId){
-        Optional<BoardEntity> codeEntityWrapper = boardRepository.findById(boardId);
-        BoardEntity boardEntity = codeEntityWrapper.get();
+    public BoardListDto getBoardDetail(Long boardId){
+        Optional<BoardEntity> boardEntityWrapper = boardRepository.findById(boardId);
+        BoardEntity boardEntity = boardEntityWrapper.get();
         BoardListDto boardList = BoardListDto.builder()
                 .id(boardEntity.getId())
                 .title(boardEntity.getTitle())

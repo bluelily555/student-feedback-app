@@ -40,7 +40,7 @@ public class BoardController {
 
     @GetMapping("/tasks/{taskId}/all")
     public String listByTaskId(@PathVariable("taskId")Long taskId, Model model){
-        List<BoardListDto> boardList = boardService.getCodeListByTaskId(taskId);
+        List<BoardListDto> boardList = boardService.getBoardListByTaskId(taskId);
         String taskTitle = taskService.getOneTask(taskId).getTitle();
         model.addAttribute("taskTitle", taskTitle);
         model.addAttribute("boardList", boardList);
@@ -51,7 +51,7 @@ public class BoardController {
     public String getBoard(@PathVariable("boardId")Long boardId, Model model,
                              @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable)
     {
-        BoardListDto boardListDto = boardService.getCodeDetail(boardId);
+        BoardListDto boardListDto = boardService.getBoardDetail(boardId);
         model.addAttribute("boardInfo", boardListDto);
 
         // 해당 글에 달린 댓글 불러오기

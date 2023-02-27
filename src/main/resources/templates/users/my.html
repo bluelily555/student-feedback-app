@@ -120,7 +120,7 @@
                     <div class="col-sm-12 mb-3">
                         <div class="card h-100">
                             <div class="card-body">
-                                <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">assignment</i>작성한 글</h6>
+                                <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2"></i>작성한 글</h6>
                             </div>
                         </div>
                     </div>
@@ -131,7 +131,7 @@
                     <div class="col-sm-12 mb-3">
                         <div class="card h-100">
                             <div class="card-body">
-                                <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">assignment</i>작성한 코드</h6>
+                                <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2"></i>작성한 코드</h6>
                                 <table class="table">
                                     <thead class="thead-dark">
                                     <tr>
@@ -143,15 +143,15 @@
                                     </thead>
                                     <tbody>
                                     <!-- CONTENTS   !-->
-                                    <tr th:each="code : ${codeList}">
+                                    <tr th:each="board : ${boardList}">
                                         <td class="w-50">
-                                            <a th:text="${code.title}" th:if="${code.userName==userName}" th:href="@{'/boards/codeDetail/' + ${code.id}}"></a>
+                                            <a th:text="${board.title}" th:if="${board.userName==userName}" th:href="@{'/boards/' + ${board.id}}"></a>
                                         </td>
-                                        <td th:text="${code.writer}"></td>
-                                        <td th:text="${#temporals.format(code.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
+                                        <td th:text="${board.userName}"></td>
+                                        <td th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
                                         <td>
                                             <div class="btn-group" role="group" aria-label="Button Group">
-                                                <form th:if="${code.userName==userName}" id="delete-form2" th:action="@{'/boards/codeView' + ${code.id}}" method="post">
+                                                <form th:if="${board.userName==userName}" id="delete-form2" th:action="@{'/boards/' + ${board.id}}" method="post">
                                                     <input type="hidden" name="_method" value="delete"/>
                                                     <button class="btn btn-primary btn-sm">삭제</button>
                                                 </form>
