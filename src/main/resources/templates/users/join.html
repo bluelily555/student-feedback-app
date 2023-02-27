@@ -35,29 +35,22 @@
                                     <div class="form-outline mb-4">
                                         <input type="text" th:field="*{userName}" th:errorclass="error-class" class="form-control form-control-lg" th:autocomplete="off" autocomplete="off" />
                                         <label class="form-label" th:for="userName">Your Id</label>
+                                        <button onclick="id_check()" id="idCheck" type="button" class="btn btn-primary" disabled>중복확인</button>
                                         <p id="userNameFail" style="color: red">이름을 적어주세요.</p>
+                                        <p id="userNameCheck" style="color: red" hidden>중복 확인을 해주세요.</p>
                                         <p id="userNamePass" style="color: green;" hidden >V</p>
                                     </div>
-
                                     <div class="form-outline mb-4">
                                         <input type="password" th:field="*{password}"  class="form-control form-control-lg" th:autocomplete="off" autocomplete="off" />
                                         <label class="form-label" th:for="password">Password</label>
-                                        <p id="passwordFail" style="color: red">비밀 번호를 적어주세요.</p>
+                                        <p id="passwordEmpty" style="color: red">비밀 번호를 적어주세요.</p>
+                                    </div>
+                                    <div class="form-outline mb-4">
+                                        <input type="password" id="second_password" class="form-control form-control-lg" th:autocomplete="off" autocomplete="off" />
+                                        <p id="passwordCheck"  style="color: red" hidden>비밀 번호를 확인해주세요.</p>
+                                        <p id="passwordFail"  style="color: red" hidden>비밀번호가 맞지 않습니다.</p>
                                         <p id="passwordPass" style="color: green;" hidden >V</p>
                                     </div>
-
-<!--                                    <div class="form-outline mb-4">-->
-<!--                                        <input type="password"  id="form3Example4cdg" class="form-control form-control-lg" />-->
-<!--                                        <label class="form-label" th:for="password">Repeat your password</label>-->
-<!--                                    </div>-->
-
-<!--                                    <div class="form-check d-flex justify-content-center mb-5">-->
-<!--                                        <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3cg" />-->
-<!--                                        <label class="form-check-label" for="form2Example3g">-->
-<!--                                            I agree all statements in <a href="#!" class="text-body"><u>Terms of service</u></a>-->
-<!--                                        </label>-->
-<!--                                    </div>-->
-
                                     <div class="d-flex justify-content-center">
                                         <button type="submit" id="register-btn"
                                                 class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" disabled>Register</button>
@@ -128,6 +121,38 @@
     let passwordConfirm = false;
     let emailMode = "join";
     let modalClose = document.getElementById("modal-close")
+    function id_check(){
+        let userName = $('#userName').val();
+        $.ajax({
+            type: 'GET',
+            url: '/users/check',
+            data:{
+                userName: userName
+            },
+            success: function (data){
+                console.log(data)
+                if(data){
+                    if(confirm("사용할 수 있는 ID 입니다. 사용하시겠습니까?") === true){
+                        userNameConfirm = true;
+                        document.getElementById("userName").setAttribute("readonly", "true")
+                        document.getElementById("idCheck").setAttribute("disabled", "true")
+                        hide("userNameCheck")
+                        activate_join()
+                    }else{
+                        userNameConfirm = false;
+                        document.getElementById("idCheck").removeAttribute("disabled")
+                        show("userNameCheck");
+                        activate_join()
+                    }
+                }else{
+                    alert("이미 존재하는 ID 입니다.")
+                    userNameConfirm = false;
+                    show("userNameCheck")
+                    activate_join()
+                }
+            }
+        });
+    }
     function send_email(){
         let email = $('#email').val();
         alert("해당 이메일로 인증코드를 보냈습니다. 인증코드를 확인해주세요!")
@@ -155,16 +180,19 @@
                 show('emailPass')
                 alert("인증 성공")
                 emailConfirm = true;
+                activate_join()
             }
         })
     }
     function activate_join(){
         if(emailConfirm && passwordConfirm && realNameConfirm && userNameConfirm){
             document.getElementById('register-btn').removeAttribute("disabled")
+        }else{
+            document.getElementById('register-btn').setAttribute("disabled", "true")
         }
     }
     function show(id) {
-        if(document.getElementById(id) != null) {
+        if (document.getElementById(id) != null) {
             document.getElementById(id).removeAttribute("hidden")
         }
     }
@@ -173,6 +201,50 @@
             document.getElementById(id).setAttribute("hidden", "true")
         }
     }
+    function dup_check(first, second){
+        if(first.length !== 0 && second.length !== 0 && first === second){
+            // 비번 둘다 적었는데 맞을때 pass
+            hide("passwordEmpty")
+            hide("passwordCheck")
+            hide("passwordFail")
+            show("passwordPass")
+            passwordConfirm = true
+            activate_join()
+        }else if(first.length !== 0 && second.length !== 0 && first !== second){
+            // 비번 둘다 적었는데 안맞을때 fail
+            hide("passwordEmpty")
+            hide("passwordFail")
+            hide("passwordPass")
+            show("passwordCheck")
+            passwordConfirm = false
+            activate_join()
+        }else if(first.length === 0 && second.length !== 0 && first !== second){
+            // 첫번째 비번 비어 있을때 empty
+            hide("passwordFail")
+            hide("passwordCheck")
+            hide("passwordPass")
+            show("passwordEmpty")
+            passwordConfirm = false
+            activate_join()
+        }else if(first.length !== 0 && second.length === 0 && first !== second){
+            // 두번째 비번 비어 있을때 check
+            hide("passwordFail")
+            hide("passwordEmpty")
+            hide("passwordPass")
+            show("passwordCheck")
+            passwordConfirm = false
+            activate_join()
+        }else if(first.length === 0 && second.length === 0){
+            // 첫번째 두번째 비어있을때
+            hide("passwordFail")
+            hide("passwordCheck")
+            hide("passwordPass")
+            show("passwordEmpty")
+            passwordConfirm = false
+            activate_join()
+        }
+
+    }
 
 </script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
@@ -180,8 +252,9 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
     <script>
+
         $(document).ready(function() {
-            $("#email").on("propertychange change keyup paste input ", function() {
+            $("#email").on("property change", function() {
                 let check = $("#email").val();
                 if(check.length !== 0 && emailConfirm === true){
                     // 인증 성공
@@ -203,8 +276,7 @@
                     document.getElementById("email_btn").removeAttribute("disabled")
                 }
             })
-
-            $("#realName").on("propertychange change keyup paste input ",function() {
+            $("#realName").on("property change",function() {
                 let check = $("#realName").val();
                 if(check !== "" || check !== null){
                     hide("realNameFail")
@@ -219,35 +291,40 @@
                     activate_join()
                 }
             })
-            $("#userName").on("propertychange change keyup paste input ",function() {
+            $("#userName").on("property change",function() {
                 let check = $("#userName").val();
-                if(check !== "" || check !== null){
+                if(check.length !== 0 && userNameConfirm === true){
+                    // id 작성했고, 중복확인까지 했을때
                     hide("userNameFail")
+                    hide("userNameCheck")
                     show("userNamePass")
-                    userNameConfirm = true
+                    document.getElementById("idCheck").setAttribute("disabled", "true")
                     activate_join()
-                }
-                if(check.length === 0){
+                }else if(check.length !== 0 && userNameConfirm === false){
+                    // id 작성했을때 중복확인은 안했을때
+                    hide("userNameFail")
                     hide("userNamePass")
+                    show("userNameCheck")
+                    document.getElementById("idCheck").removeAttribute("disabled")
+                    activate_join()
+                } else if(check.length === 0){
+                    // id 작성 안했을 때
+                    hide("userNamePass")
+                    hide("userNameCheck")
                     show("userNameFail")
-                    userNameConfirm = false
+                    document.getElementById("idCheck").removeAttribute("disabled")
                     activate_join()
                 }
             })
-            $("#password").on("propertychange change keyup paste input ",function() {
+            $("#password").on("property change",function() {
                 let check = $("#password").val();
-                if(check !== "" || check !== null){
-                    hide("passwordFail")
-                    show("passwordPass")
-                    passwordConfirm = true
-                    activate_join()
-                }
-                if(check.length === 0){
-                    hide("passwordPass")
-                    show("passwordFail")
-                    passwordConfirm = false
-                    activate_join()
-                }
+                let second_pw = $("#second_password").val();
+                dup_check(check, second_pw);
+            })
+            $("#second_password").on("property change", function (){
+                let origin_pw = $("#password").val();
+                let second_pw = $("#second_password").val();
+                dup_check(origin_pw, second_pw);
             })
         })
     </script>

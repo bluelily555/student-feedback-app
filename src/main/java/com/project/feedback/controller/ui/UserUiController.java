@@ -150,7 +150,20 @@ public class UserUiController {
         model.addAttribute("course", course);
         return "users/my";
     }
-
+    @ResponseBody
+    @GetMapping("/check")
+    public boolean idCheck(@RequestParam String userName, Model model){
+        // userName 중복 체크
+        boolean check = true;
+        try{
+            userService.idCheck(userName);
+        }catch (CustomException e){
+            if(e.getErrorCode() == ErrorCode.DUPLICATED_USER_NAME){
+                check = false;
+            }
+        }
+        return check;
+    }
 
     @ResponseBody
     @PostMapping("/emailSend")
