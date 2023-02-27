@@ -60,7 +60,13 @@ public class UserService {
 
         return UserJoinResponse.of(savedUser);
     }
-
+    public boolean idCheck(String userName){
+        // userName 중복 체크
+        userRepository.findByUserName(userName).ifPresent(user -> {
+            throw new CustomException(ErrorCode.DUPLICATED_USER_NAME, "UserName(" + userName + ")이 중복입니다.");
+        });
+        return true;
+    }
     public UserLoginResponse login(UserLoginRequest req) {
 
         UserEntity user = findService.findUserByUserName(req.getUserName());
