@@ -49,7 +49,6 @@ public class SecurityConfig {
 
     @Value("${jwt.token.secret}")
     private String secretkey;
-
     private static final String[] GET_ADMIN_MANAGER_USER = {
             "/users",
             "/tasks/write",
@@ -76,6 +75,8 @@ public class SecurityConfig {
             "/api/*/users/join",
             "/api/*/users/login",
             "/users/join",
+            "/courses/**/students/weeks/**/days/**",
+            "/courses/students"
     };
 
 

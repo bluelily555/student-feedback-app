@@ -13,10 +13,13 @@ import com.project.feedback.repository.CourseRepository;
 import com.project.feedback.repository.CourseUserRepository;
 import com.project.feedback.repository.TokenRepository;
 import com.project.feedback.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +45,7 @@ public class UserService {
     //  한시간
     private long accessExpireTimeMs = 1000 * 60 * 60;
     // 3시간
-    private long refreshExpireTimeMs = 1000 * 60 * 60 * 3;
+    private long refreshExpireTimeMs = 1000 * 60 * 60 * 6;
 
     public UserJoinResponse saveUser(UserJoinRequest req) {
 
@@ -222,6 +225,9 @@ public class UserService {
                 // refresh token expire 안되어있으면 access token 수정
                 String userName = JwtTokenUtil.getUserName(refreshToken, secretKey);
                 String newAccessToken = JwtTokenUtil.createToken(userName, secretKey, accessExpireTimeMs);
+
+                // delete 후 새로운 token 생성
+                deleteToken(tokenEntity.getId());
                 tokenRepository.save(TokenEntity.builder()
                         .accessToken(newAccessToken)
                         .refreshToken(refreshToken)
@@ -231,6 +237,12 @@ public class UserService {
         }catch (CustomException e){
             return false;
         }
+    }
+    public void logout(HttpServletRequest request){
+            String authorizationHeader = request.getSession().getAttribute("jwt").toString();
+            String token = authorizationHeader.split(" ")[1];
+            Long curTokenId = findService.findTokenByCurrentToken(token).getId();
+            deleteToken(curTokenId);
     }
  }
 
