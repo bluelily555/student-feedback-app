@@ -23,9 +23,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -91,6 +98,7 @@ public class UserService {
 
         return new UserLoginResponse(jwtToken, refreshToken);
     }
+
     public UserChangeRoleResponse changeRole(Long userId, UserChangeRoleRequest req) {
 
         UserEntity user = userRepository.findById(userId)
@@ -139,6 +147,33 @@ public class UserService {
         }
 
     }
+
+    public void addDummyUsers(){
+        String names[] ={"김","이" ,"박" ,"최" ,"정" ,"강","조","윤","장","임"};
+        for(int i= 0 ; i < 10; i++) {
+            String userName = names[i];
+            naming(userName);
+        }
+    }
+
+    public void naming(String userName){
+        for (int j = 0; j < 10; j++) {
+            UUID one = UUID.randomUUID();
+            String[] random = one.toString().split("-");
+            String randomName = userName + random[0];
+            String email =
+                userName + random[0] + "@gmail.com";
+            UserJoinRequest userJoinRequest = UserJoinRequest.builder()
+                .userName(randomName) // 중복 불가
+                .password(defaultPw)
+                .realName(userName + random[0])
+                .email(email)
+                .build();
+            saveUser(userJoinRequest);
+        }
+    }
+
+
     public void changeDefaultRole(String userRole){
         UserEntity user = userRepository.findByUserName(userRole)
                 .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));

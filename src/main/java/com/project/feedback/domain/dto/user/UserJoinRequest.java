@@ -3,12 +3,14 @@ package com.project.feedback.domain.dto.user;
 import com.project.feedback.domain.Role;
 import com.project.feedback.domain.entity.UserEntity;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserJoinRequest {
