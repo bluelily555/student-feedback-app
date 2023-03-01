@@ -90,7 +90,7 @@ public class SecurityConfig {
                 .requestMatchers(PERMIT_ALL).permitAll()
                 .requestMatchers(HttpMethod.GET, GET_ADMIN_MANAGER_USER).hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name())
                 .requestMatchers(HttpMethod.POST, POST_ADMIN_MANAGER_USER).hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name())
-                .requestMatchers(HttpMethod.GET, GET_STUDENT_USER).hasAnyAuthority(Role.ROLE_STUDENT.name(), Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name())
+                .requestMatchers(HttpMethod.GET, GET_STUDENT_USER).hasAnyAuthority(Role.ROLE_STUDENT.name(), Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name(), Role.ROLE_MENTOR.name())
                 .requestMatchers(HttpMethod.DELETE, DELETE_ADMIN_MANAGER_USER).hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name())
                 .requestMatchers(HttpMethod.PUT, PUT_ADMIN_MANAGER_USER).hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name())
                 .anyRequest().permitAll()
