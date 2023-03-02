@@ -40,55 +40,59 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         log.info("RequestURL:{}", request.getRequestURL());
             // Token 꺼내기
-        String authroizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         // authorizationHeader에 "Bearer + JwtToken"이 제대로 들어왔는지 체크
-        if (authroizationHeader == null) {
+        if (authorizationHeader == null) {
 
             // 화면 로그인을 위해 Session에서 Token을 꺼내보는 작업 => 여기에도 없으면 인증 실패
             // 여기에 있으면 이 Token으로 인증 진행
             HttpSession session = request.getSession(false);
             if (session == null || session.getAttribute("jwt") == null) {
+                // session null 이면 -> 인증이 안됨 -> 로그인 화면으로
                 RequestDispatcher rd = request.getRequestDispatcher("/users/login");
                 filterChain.doFilter(request, response);
                 return;
             } else {
-                authroizationHeader = request.getSession().getAttribute("jwt").toString();
+                authorizationHeader = request.getSession().getAttribute("jwt").toString();
             }
         }
 
-        if (!authroizationHeader.startsWith("Bearer ")) {
+        if (!authorizationHeader.startsWith("Bearer ")) {
             log.info("security:{}", "토큰이 없습니다.");
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = authroizationHeader.split(" ")[1];
+        String token = authorizationHeader.split(" ")[1];
 
 
         // 토큰이 만료되었는지 check
+        // 토큰이 만료되면, access token이 만료된거니까, refresh token이 만료되었는지 확인해서 refresh token 만료안되면 access token 새로 발급해서
+        // 다시 접속
         String tokenValidCheck = JwtTokenUtil.isValid(token, secretKey);
+        HttpSession session = request.getSession(false);
         if(tokenValidCheck.equals(ErrorCode.EXPIRE_TOKEN.name())){
-            log.info(ErrorCode.EXPIRE_TOKEN.name());
-//         refreshing 할지 말지결정
-            boolean isRefresh = userService.refreshToken(token);
-            log.info(isRefresh + "refresh");
+            // token expired 됐을때
+            log.info(tokenValidCheck);
+            log.info("이번 요청으로 사용될 token"+token);
+            boolean isRefresh = userService.refreshToken(token, response, request);
+            // token 재발급할지 말지 결정
+            log.info("refresh: " + isRefresh);
             if(isRefresh){
-                log.info("토큰 재발급");
-                response.sendRedirect(request.getRequestURL().toString());
+                log.info("token 재발급 했음");
+                filterChain.doFilter(request, response);
             }else{
-                log.error("refresh token 만료");
-//                RequestDispatcher rd = request.getRequestDispatcher("/users/login");
-//                filterChain.doFilter(request, response);
-//                request.setAttribute("exception", ErrorCode.EXPIRE_TOKEN);
-                response.sendRedirect("/user/login");
-//                filterChain.doFilter(request, response);
+                log.error("refresh token 만료됨");
+                session.setAttribute("jwt", null);
+                response.sendRedirect("/users/login");
             }
-            return;
+                return;
         }else if(tokenValidCheck.equals(ErrorCode.INVALID_TOKEN.name())){
             // invalid token
             log.error("invalid token");
-            filterChain.doFilter(request, response);
+            request.setAttribute("exception", ErrorCode.INVALID_TOKEN);
+//            filterChain.doFilter(request, response);
             return;
         }
 

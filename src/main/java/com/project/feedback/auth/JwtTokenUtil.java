@@ -41,14 +41,24 @@ public class JwtTokenUtil {
             return "OK";
         }catch(ExpiredJwtException e){
             return ErrorCode.EXPIRE_TOKEN.name();
-        }catch(JwtException | IllegalArgumentException e){
+        }catch(Exception e){
             return ErrorCode.INVALID_TOKEN.name();
         }
     }
-    public static boolean isRefreshTokenExpired(String token, String secretKey) {
-        Date expiredDate = extractClaims(token, secretKey).getExpiration();
+    public static String isRefreshTokenExpired(String token, String secretKey) {
+        try {
+            Date expiredDate = extractClaims(token, secretKey).getExpiration();
+            if(expiredDate.before(new Date())){
+                return "true";
+            }else return "false";
+        }catch(ExpiredJwtException e){
+            return ErrorCode.EXPIRE_TOKEN.name();
+        }catch(Exception e){
+            return ErrorCode.INVALID_TOKEN.name();
+        }
         // Token의 만료 날짜가 지금보다 이전인지 check
-        return expiredDate.before(new Date());
+        // expired 이전이면 true, 만료됐으면 false
+
     }
 
     // SecretKey를 사용해 Token Parsing

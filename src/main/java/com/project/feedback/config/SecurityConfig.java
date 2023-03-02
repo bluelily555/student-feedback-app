@@ -104,8 +104,8 @@ public class SecurityConfig {
                 .authenticationEntryPoint(authenticationManager)
                 .accessDeniedHandler(accessDeniedHandler);
 
-        httpSecurity.addFilterBefore(new JwtTokenFilter(findService, secretkey, userService), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new ExceptionHandlerFilter(), JwtTokenFilter.class);
+        httpSecurity.addFilterBefore(new JwtTokenFilter(findService, secretkey, userService), UsernamePasswordAuthenticationFilter.class);
+//                .addFilterBefore(new ExceptionHandlerFilter(), JwtTokenFilter.class);
         return httpSecurity.getOrBuild();
     }
 }

@@ -93,8 +93,11 @@
 <script>
     let editor = ace.edit("codeContent");
     editor.setTheme("ace/theme/monokai");
+    // editor.session.setMode("ace/mode/java");
     editor.setShowPrintMargin(false);
     editor.setReadOnly(true);
+    var mode = editor.session.getMode().$id;
+    console.log(mode);
 </script>
 </body>
 </html>

@@ -19,7 +19,18 @@ public class AuthenticationManager implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         log.info("인증오류");
         String exception = String.valueOf(request.getAttribute("exception"));
-        makeErrorResponse(response, ErrorCode.INVALID_PERMISSION);
+        if (exception.equals(ErrorCode.EXPIRE_TOKEN.name())) {
+            if (request.getRequestURL().toString().contains("api")) {
+                log.error(ErrorCode.EXPIRE_TOKEN.getMessage());
+                makeErrorResponse(response, ErrorCode.EXPIRE_TOKEN);
+            } else response.sendRedirect("/users/login");
+        } else {
+            if (request.getRequestURL().toString().contains("api")) {
+                log.error(ErrorCode.INVALID_TOKEN.getMessage());
+                makeErrorResponse(response, ErrorCode.INVALID_TOKEN);
+            } else response.sendRedirect("/users/login");
+        }
+//        makeErrorResponse(response, ErrorCode.INVALID_PERMISSION);
     }
 
     public void makeErrorResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
