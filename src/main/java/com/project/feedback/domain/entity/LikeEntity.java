@@ -1,0 +1,49 @@
+package com.project.feedback.domain.entity;
+
+import com.project.feedback.domain.enums.LikeType;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Getter
+@Entity
+@Table(name ="likes")
+public class LikeEntity extends TimeEntity{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private LikeType type;
+
+    private boolean status;
+
+    @Column(nullable = false)
+    private Long contentId;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "from_user_id")
+    private UserEntity fromUser;
+
+    public static LikeEntity of(LikeType type, UserEntity fromUser, Long boardId) {
+        return LikeEntity.builder()
+                .type(type)
+                .fromUser(fromUser)
+                .contentId(boardId)
+                .build();
+    }
+
+    public void like() {
+        this.status = true;
+    }
+
+    public void unlike() {
+        this.status = false;
+    }
+}
