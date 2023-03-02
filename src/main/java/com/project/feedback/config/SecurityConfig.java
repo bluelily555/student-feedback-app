@@ -49,19 +49,19 @@ public class SecurityConfig {
 
     @Value("${jwt.token.secret}")
     private String secretkey;
-    private static final String[] GET_ADMIN_MANAGER_USER = {
+    private static final String[] GET_ADMIN_MENTOR_MANAGE_USER = {
             "/users",
             "/tasks/write",
             "/courses/write"
     };
-    private static final String[] POST_ADMIN_MANAGER_USER = {
+    private static final String[] POST_ADMIN_MENTOR_MANAGE_USER = {
             "/api/v1/tasks",
             "/api/v1/users/**/role/change"
     };
-    private static final String[] DELETE_ADMIN_MANAGER_USER = {
+    private static final String[] DELETE_ADMIN_MENTOR_MANAGE_USER = {
             "/api/v1/tasks"
     };
-    private static final String[] PUT_ADMIN_MANAGER_USER = {
+    private static final String[] PUT_ADMIN_MENTOR_MANAGE_USER = {
             "/api/v1/tasks"
     };
     private static final String[] GET_STUDENT_USER = {
@@ -88,11 +88,11 @@ public class SecurityConfig {
 
         httpSecurity.authorizeHttpRequests(requests -> requests
                 .requestMatchers(PERMIT_ALL).permitAll()
-                .requestMatchers(HttpMethod.GET, GET_ADMIN_MANAGER_USER).hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name())
-                .requestMatchers(HttpMethod.POST, POST_ADMIN_MANAGER_USER).hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name())
+                .requestMatchers(HttpMethod.GET, GET_ADMIN_MENTOR_MANAGE_USER).hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name(), Role.ROLE_MENTOR.name())
+                .requestMatchers(HttpMethod.POST, POST_ADMIN_MENTOR_MANAGE_USER).hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name(), Role.ROLE_MENTOR.name())
                 .requestMatchers(HttpMethod.GET, GET_STUDENT_USER).hasAnyAuthority(Role.ROLE_STUDENT.name(), Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name(), Role.ROLE_MENTOR.name())
-                .requestMatchers(HttpMethod.DELETE, DELETE_ADMIN_MANAGER_USER).hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name())
-                .requestMatchers(HttpMethod.PUT, PUT_ADMIN_MANAGER_USER).hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name())
+                .requestMatchers(HttpMethod.DELETE, DELETE_ADMIN_MENTOR_MANAGE_USER).hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name(), Role.ROLE_MENTOR.name())
+                .requestMatchers(HttpMethod.PUT, PUT_ADMIN_MENTOR_MANAGE_USER).hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name(), Role.ROLE_MENTOR.name())
                 .anyRequest().permitAll()
         );
 
