@@ -31,11 +31,11 @@ public class LikeEntity extends TimeEntity{
     @JoinColumn(name = "from_user_id")
     private UserEntity fromUser;
 
-    public static LikeEntity of(LikeContentType type, UserEntity fromUser, Long boardId) {
+    public static LikeEntity of(LikeContentType type, Long contentId, UserEntity fromUser) {
         return LikeEntity.builder()
                 .type(type)
                 .fromUser(fromUser)
-                .contentId(boardId)
+                .contentId(contentId)
                 .build();
     }
 

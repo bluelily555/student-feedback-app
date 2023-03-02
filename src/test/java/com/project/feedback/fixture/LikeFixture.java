@@ -6,11 +6,11 @@ import com.project.feedback.domain.enums.LikeContentType;
 
 public class LikeFixture {
 
-    public static LikeEntity boardLikeEntity(UserEntity from, Long boardId) {
-        return LikeEntity.of(LikeContentType.BOARD, from, boardId);
+    public static LikeEntity boardLikeEntity(Long boardId, UserEntity from) {
+        return LikeEntity.of(LikeContentType.BOARD, boardId, from);
     }
 
-    public static LikeEntity commentLikeEntity(UserEntity from, Long boardId) {
-        return LikeEntity.of(LikeContentType.COMMENT, from, boardId);
+    public static LikeEntity commentLikeEntity(Long commentId, UserEntity from) {
+        return LikeEntity.of(LikeContentType.COMMENT, commentId, from);
     }
 }

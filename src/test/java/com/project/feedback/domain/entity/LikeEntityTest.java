@@ -10,8 +10,8 @@ class LikeEntityTest {
     @Test
     void initialize() {
         UserEntity user = UserEntity.builder().build();
-        LikeEntity boardLikeEntity = LikeFixture.boardLikeEntity(user, 1L);
-        LikeEntity commentLikeEntity = LikeFixture.commentLikeEntity(user, 1L);
+        LikeEntity boardLikeEntity = LikeFixture.boardLikeEntity(1L, user);
+        LikeEntity commentLikeEntity = LikeFixture.commentLikeEntity(1L, user);
 
         assertFalse(boardLikeEntity.isStatus());
         assertFalse(commentLikeEntity.isStatus());
@@ -20,8 +20,8 @@ class LikeEntityTest {
     @Test
     void like_unlike() {
         UserEntity user = UserEntity.builder().build();
-        LikeEntity boardLikeEntity = LikeFixture.boardLikeEntity(user, 1L);
-        LikeEntity commentLikeEntity = LikeFixture.commentLikeEntity(user, 1L);
+        LikeEntity boardLikeEntity = LikeFixture.boardLikeEntity(1L, user);
+        LikeEntity commentLikeEntity = LikeFixture.commentLikeEntity(1L, user);
 
         boardLikeEntity.like();
         commentLikeEntity.like();
