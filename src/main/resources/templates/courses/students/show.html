@@ -10,7 +10,7 @@
     <form th:method="post" th:action="@{/courses/students}" th:object="${filterInfo}">
         <div class="row">
             <div class="col-sm-auto">
-                <label for="week" class = "btn" th:text="${courseName}" />
+                <label for="week" id="course" class = "btn" th:text="${courseName}" />
                 <select th:field="*{week}" id="week" style="width:40px;">
                     <option th:value="${week}" th:text="${week}"/>
                     <option th:each="week : ${#numbers.sequence(1,53)}" th:value="${week}" th:text="${week}"/>
@@ -33,18 +33,24 @@
             <tr>
                 <th th:text="${authName}"></th>
                 <div th:each="taskList : ${taskList}">
-                    <th><a href="/tasks/write.html" th:href="@{/tasks/{taskId}(taskId=${taskList.id})}" th:value="${taskList.title}" th:text="${taskList.title}"/></th>
+                    <th th:attr="data-task_id=${taskList.id}">
+                        <a href="/tasks/write.html" id="popUp" th:href="@{/tasks/{taskId}(taskId=${taskList.id})}" th:value="${taskList.title}" th:text="${taskList.title}"/>
+                        <div class="collapse" id="collapseExample">
+                            <div class="card card-body">
+                                Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
+                            </div>
+                        </div>
+                    </th>
                 </div>
             </tr>
             </thead>
             <tbody>
             <!--학생이름 상태1, 상태2 순으로 뿌려줌-->
             <tr th:classappend="${studentTask.userName == authName} ? 'table-primary' : ''" th:each="studentTask, stat : ${studentTaskList}">
-                <td th:text="${studentTask.realName}"></td>
+                <td th:text="${studentTask.realName}" th:attr="data-user_id=${studentTask.id}" ></td>
                 <div th:each="status : ${studentTask.status}">
                   <td id="test-td" th:attr="data-task_id=${status.taskId}, data-task_name=${status.taskName}, data-user_id=${studentTask.id}"
-                      th:classappend="${status.taskStatus == 'Task등록'} ? 'table-warning' : ''"
-                  >
+                      th:classappend="${status.taskStatus == 'Task등록'} ? 'table-warning' : ''">
                       <div th:if="${studentTask.userName == authName}">
                           <select id="status" th:value="${status.taskId}"
                                   class="form-select form-select-sm" style="width:160px;float:left" th:attr="data-task_id=${status.taskId},data-user_id=${studentTask.id}">
@@ -81,6 +87,58 @@
     <script>
         // cell 클릭 시 해당 taskId, status, userId /userTasks/sendUserTask로 전송
         $(document).ready(function() {
+            // task 별 진행 상황
+            $('th').click(function(){
+                var currentRow=$(this).closest("tr")
+                var thindex = $('th').index(this); // 잘 작동
+                let taskId = currentRow.find("th:eq("+thindex+")").data('task_id');
+                var courseName = $("label[for=week]").text();
+                //ajax로 taskid 보내서 값 가져옴.
+                $.ajax({
+                    type: 'POST',
+                    url: '/userTasks/progressForTask',
+                    data: {
+                        taskId : taskId,
+                        courseName: courseName,
+                    }
+                    , success: function (res) {
+                        alert("task 진행 상황:" + res + "%");
+                    }
+                });
+
+            });
+
+            //학생 별 진행 상황 
+            $('td').click(function(){
+                var tdindex = this.cellIndex;
+                var currentRow=$(this).closest("tr");
+                var userId = currentRow.find("td:eq("+tdindex+")").data('user_id');
+                var week =$("select[name=week]").val();
+                var day =$("select[name=day]").val();
+
+                if(tdindex == 0) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/userTasks/progressForStudent',
+                        data: {
+                            week: week,
+                            day: day,
+                            userId: userId
+                        }
+                        , success: function (res) {
+                            let totalTask = res["totalTask"];
+                            let totalTaskOfStudent = res["totalTaskOfStudent"];
+                            let result = (totalTaskOfStudent / totalTask ) * 100;
+                            if (isNaN(result)) { // 값이 없어서 NaN값이 나올 경우
+                                result = 0;
+                            }
+                            alert(result +"%");
+                        }
+                    })
+                }
+
+            });
+
             $('td').change(function(){
                 var tdindex = this.cellIndex;
                 var trindex = $('tr').index($(this).parent())+1;

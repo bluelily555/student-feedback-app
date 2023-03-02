@@ -268,6 +268,28 @@ main {
 .btn-toggle[aria-expanded="true"]::before {
     transform: rotate(90deg);
 }
+.tooltip {
+    position: relative;
+    display: block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;       /* 이벤트가 없으면 툴팁 영역을 숨김 */
+    width: 120px;             /* 툴팁 영역의 넓이를 설정 */
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    position: absolute;       /* 절대 위치를 사용 */
+    z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;      /* hover 이벤트 발생시 영역을 보여줌 */
+}
+
 
 .btn-toggle-nav a {    padding: .1875rem .5rem;    margin-top: .125rem;    margin-left: 1.25rem;}
 .btn-toggle-nav a:hover,

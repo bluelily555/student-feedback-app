@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Map;
+
 
 @Controller
 @RequestMapping("/userTasks")
@@ -37,6 +39,27 @@ public class UserTaskController {
             }
             result="DONE";
         }
+        return result;
+    }
+
+    @ResponseBody
+    @PostMapping("/progressForStudent")
+    public Map<String, Long> progressForStudent(@RequestParam String week, @RequestParam String day, @RequestParam String userId, Authentication auth){
+        long w = Long.valueOf(week);
+        long d = Long.valueOf(day);
+        long user_Id = Long.valueOf(userId);
+        Map<String, Long> result = userTaskService.progressPercentageByUser(user_Id, w, d);
+
+        return result;
+    }
+
+    @ResponseBody
+    @PostMapping("/progressForTask")
+    public String progressForTask(@RequestParam String taskId, @RequestParam String courseName){
+        long task_Id = Long.valueOf(taskId);
+        long courseId = findService.findCourseByName(courseName).getId();
+        String result = userTaskService.progressPercentageByTask(task_Id, courseId);
+
         return result;
     }
 
