@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class LikeService {
@@ -19,6 +21,19 @@ public class LikeService {
                 .orElseGet(() -> initializeAndSave(type, contentId, from));
 
         likeEntity.like();
+
+        return likeEntity.getId();
+    }
+
+    @Transactional
+    public Long unlike(LikeContentType type, Long contentId, UserEntity from) {
+        Optional<LikeEntity> likeEntityOptional = likeRepository.findByTypeAndContentIdAndFromUser(type, contentId, from);
+
+        if (likeEntityOptional.isEmpty()) return null;
+
+        LikeEntity likeEntity = likeEntityOptional.get();
+
+        likeEntity.unlike();
 
         return likeEntity.getId();
     }
