@@ -1,9 +1,15 @@
 package com.project.feedback.service;
 
 import com.project.feedback.domain.Role;
+import com.project.feedback.domain.dto.board.BoardCreateRequest;
+import com.project.feedback.domain.dto.course.CourseDto;
+import com.project.feedback.domain.dto.course.CourseInfo;
+import com.project.feedback.domain.dto.task.TaskCreateRequest;
+import com.project.feedback.domain.dto.task.TaskCreateResponse;
 import com.project.feedback.domain.dto.user.*;
 import com.project.feedback.domain.entity.CourseEntity;
 import com.project.feedback.domain.entity.CourseUserEntity;
+import com.project.feedback.domain.entity.TaskEntity;
 import com.project.feedback.domain.entity.TokenEntity;
 import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.exception.ErrorCode;
@@ -14,25 +20,21 @@ import com.project.feedback.repository.CourseUserRepository;
 import com.project.feedback.repository.TokenRepository;
 import com.project.feedback.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
-import java.util.Collections;
+
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+
+
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +46,9 @@ public class UserService {
     private final TokenRepository tokenRepository;
     private final BCryptPasswordEncoder encoder;
     private final FindService findService;
+    private final CourseService courseService;
+    private final TaskService taskService;
+    private final BoardService boardService;
 
     @Value("${jwt.token.secret}")
     private String secretKey;
@@ -77,6 +82,7 @@ public class UserService {
         });
         return true;
     }
+
     public UserLoginResponse login(UserLoginRequest req) {
 
         UserEntity user = findService.findUserByUserName(req.getUserName());
@@ -148,6 +154,47 @@ public class UserService {
 
     }
 
+    public void addDummyTasks(){
+        // 처음 등록되는 기본 기수에 대한 Task 등록
+        List<CourseDto> courses = courseService.courses();
+        CourseEntity courseEntity = findService.findCourseByName(courses.get(0).getName());
+
+        int day = CourseInfo.fromEntity(courseEntity).getDayOfWeek();
+        long week = CourseInfo.fromEntity(courseEntity).getWeek(courseEntity.getStartDate());
+
+        //task 10개 등록
+        for( int i = 0; i < 10; i++) {
+            UUID one = UUID.randomUUID();
+            String[] random = one.toString().split("-");
+            TaskCreateRequest req = TaskCreateRequest.builder()
+                .title("Task" + random[0])
+                .description("description")
+                .status("IN_PROGRESS")
+                .courseName(courseEntity.getName())
+                .week(week)
+                .day(Long.valueOf(day))
+                .build();
+            TaskCreateResponse result = taskService.createTask(req, "admin");
+            addDummyBoards(result);
+
+        }
+
+    }
+
+    public void addDummyBoards(TaskCreateResponse req){
+        UserEntity loginUser = findService.findUserByUserName("student");
+        TaskEntity taskEntity = findService.findTaskById(req.getTaskId());
+        // 질문 3개 등록
+        for(int i = 0; i < 3; i++) {
+            BoardCreateRequest boardReq = BoardCreateRequest.builder()
+                .title("title")
+                .content("content")
+                .codeContent("int num = 0")
+                .build();
+            boardService.save(boardReq, loginUser, taskEntity);
+        }
+    }
+
     public void addDummyUsers(){
         String names[] ={"김","이" ,"박" ,"최" ,"정" ,"강","조","윤","장","임"};
         for(int i= 0 ; i < 10; i++) {
@@ -190,6 +237,7 @@ public class UserService {
         user.setRole(newRole);
         userRepository.save(user);
     }
+
     public UserListResponse getUserList(Pageable pageable) {
         Page<UserEntity> users = userRepository.findAll(pageable);
         List<UserListDto> content = new ArrayList<>();

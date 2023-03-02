@@ -46,11 +46,11 @@ public class AdminUiController {
         return "admin/main";
     }
 
-    //Dummy User 등록
-    @PostMapping("/tasks")
+    //Dummy Task 등록
+    @GetMapping("/tasks")
     public String addDummyTasks(){
-
-        return "";
+        userService.addDummyTasks();
+        return "admin/main";
     }
 
 }
