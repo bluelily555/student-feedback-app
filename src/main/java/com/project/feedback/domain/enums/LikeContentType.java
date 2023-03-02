@@ -1,6 +1,6 @@
 package com.project.feedback.domain.enums;
 
-public enum LikeType {
+public enum LikeContentType {
     BOARD,
     COMMENT
 }

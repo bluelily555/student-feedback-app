@@ -1,6 +1,6 @@
 package com.project.feedback.domain.entity;
 
-import com.project.feedback.domain.enums.LikeType;
+import com.project.feedback.domain.enums.LikeContentType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +20,7 @@ public class LikeEntity extends TimeEntity{
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private LikeType type;
+    private LikeContentType type;
 
     private boolean status;
 
@@ -31,7 +31,7 @@ public class LikeEntity extends TimeEntity{
     @JoinColumn(name = "from_user_id")
     private UserEntity fromUser;
 
-    public static LikeEntity of(LikeType type, UserEntity fromUser, Long boardId) {
+    public static LikeEntity of(LikeContentType type, UserEntity fromUser, Long boardId) {
         return LikeEntity.builder()
                 .type(type)
                 .fromUser(fromUser)
