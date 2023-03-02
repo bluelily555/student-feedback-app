@@ -16,7 +16,7 @@ public class LikeFixture {
 
     public static LikeEntity boardLikeEntity_좋아요(Long boardId, UserEntity from) {
         return LikeEntity.builder()
-                .type(LikeContentType.BOARD)
+                .contentType(LikeContentType.BOARD)
                 .contentId(boardId)
                 .fromUser(from)
                 .build();

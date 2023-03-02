@@ -20,7 +20,7 @@ public class LikeEntity extends TimeEntity{
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private LikeContentType type;
+    private LikeContentType contentType;
 
     private boolean status;
 
@@ -33,7 +33,7 @@ public class LikeEntity extends TimeEntity{
 
     public static LikeEntity of(LikeContentType type, Long contentId, UserEntity fromUser) {
         return LikeEntity.builder()
-                .type(type)
+                .contentType(type)
                 .fromUser(fromUser)
                 .contentId(contentId)
                 .build();

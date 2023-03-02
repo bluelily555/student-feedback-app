@@ -28,14 +28,14 @@ class LikeServiceTest {
         LikeContentType type = LikeContentType.BOARD;
         Long boardId = 1L;
         UserEntity from = UserEntity.builder().build();
-        given(likeRepository.findByTypeAndContentIdAndFromUser(eq(type), eq(boardId), any(UserEntity.class)))
+        given(likeRepository.findByContentTypeAndContentIdAndFromUser(eq(type), eq(boardId), any(UserEntity.class)))
                 .willReturn(Optional.empty());
         given(likeRepository.save(any(LikeEntity.class))).willReturn(LikeFixture.boardLikeEntity(boardId, from));
 
         // when
         // then
         assertDoesNotThrow(() -> likeService.like(type, boardId, from));
-        verify(likeRepository).findByTypeAndContentIdAndFromUser(eq(type), eq(1L), any(UserEntity.class));
+        verify(likeRepository).findByContentTypeAndContentIdAndFromUser(eq(type), eq(1L), any(UserEntity.class));
         verify(likeRepository).save(any(LikeEntity.class));
     }
 
@@ -46,13 +46,13 @@ class LikeServiceTest {
         LikeContentType type = LikeContentType.BOARD;
         Long boardId = 1L;
         UserEntity from = UserEntity.builder().build();
-        given(likeRepository.findByTypeAndContentIdAndFromUser(eq(type), eq(boardId), any(UserEntity.class)))
+        given(likeRepository.findByContentTypeAndContentIdAndFromUser(eq(type), eq(boardId), any(UserEntity.class)))
                 .willReturn(Optional.of(LikeFixture.boardLikeEntity(boardId, from)));
 
         // when
         // then
         assertDoesNotThrow(() -> likeService.like(type, boardId, from));
-        verify(likeRepository).findByTypeAndContentIdAndFromUser(eq(type), eq(1L), any(UserEntity.class));
+        verify(likeRepository).findByContentTypeAndContentIdAndFromUser(eq(type), eq(1L), any(UserEntity.class));
         verify(likeRepository, never()).save(any(LikeEntity.class));
     }
 
@@ -62,13 +62,13 @@ class LikeServiceTest {
         LikeContentType type = LikeContentType.BOARD;
         Long boardId = 1L;
         UserEntity from = UserEntity.builder().build();
-        given(likeRepository.findByTypeAndContentIdAndFromUser(eq(type), eq(boardId), any(UserEntity.class)))
+        given(likeRepository.findByContentTypeAndContentIdAndFromUser(eq(type), eq(boardId), any(UserEntity.class)))
                 .willReturn(Optional.of(LikeFixture.boardLikeEntity_좋아요(boardId, from)));
 
         // when
         // then
         assertDoesNotThrow(() -> likeService.unlike(type, boardId, from));
-        verify(likeRepository).findByTypeAndContentIdAndFromUser(eq(type), eq(1L), any(UserEntity.class));
+        verify(likeRepository).findByContentTypeAndContentIdAndFromUser(eq(type), eq(1L), any(UserEntity.class));
     }
 
     @Test
@@ -77,12 +77,12 @@ class LikeServiceTest {
         LikeContentType type = LikeContentType.BOARD;
         Long boardId = 1L;
         UserEntity from = UserEntity.builder().build();
-        given(likeRepository.findByTypeAndContentIdAndFromUser(eq(type), eq(boardId), any(UserEntity.class)))
+        given(likeRepository.findByContentTypeAndContentIdAndFromUser(eq(type), eq(boardId), any(UserEntity.class)))
                 .willReturn(Optional.empty());
 
         // when
         // then
         assertDoesNotThrow(() -> likeService.unlike(type, boardId, from));
-        verify(likeRepository).findByTypeAndContentIdAndFromUser(eq(type), eq(1L), any(UserEntity.class));
+        verify(likeRepository).findByContentTypeAndContentIdAndFromUser(eq(type), eq(1L), any(UserEntity.class));
     }
 }

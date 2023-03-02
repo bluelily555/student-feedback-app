@@ -17,7 +17,7 @@ public class LikeService {
 
     @Transactional
     public Long like(LikeContentType type, Long contentId, UserEntity from) {
-        LikeEntity likeEntity = likeRepository.findByTypeAndContentIdAndFromUser(type, contentId, from)
+        LikeEntity likeEntity = likeRepository.findByContentTypeAndContentIdAndFromUser(type, contentId, from)
                 .orElseGet(() -> initializeAndSave(type, contentId, from));
 
         likeEntity.like();
@@ -27,7 +27,7 @@ public class LikeService {
 
     @Transactional
     public Long unlike(LikeContentType type, Long contentId, UserEntity from) {
-        Optional<LikeEntity> likeEntityOptional = likeRepository.findByTypeAndContentIdAndFromUser(type, contentId, from);
+        Optional<LikeEntity> likeEntityOptional = likeRepository.findByContentTypeAndContentIdAndFromUser(type, contentId, from);
 
         if (likeEntityOptional.isEmpty()) return null;
 
