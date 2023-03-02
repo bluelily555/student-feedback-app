@@ -13,4 +13,12 @@ public class LikeFixture {
     public static LikeEntity commentLikeEntity(Long commentId, UserEntity from) {
         return LikeEntity.of(LikeContentType.COMMENT, commentId, from);
     }
+
+    public static LikeEntity boardLikeEntity_좋아요(Long boardId, UserEntity from) {
+        return LikeEntity.builder()
+                .type(LikeContentType.BOARD)
+                .contentId(boardId)
+                .fromUser(from)
+                .build();
+    }
 }

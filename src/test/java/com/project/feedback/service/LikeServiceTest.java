@@ -55,4 +55,34 @@ class LikeServiceTest {
         verify(likeRepository).findByTypeAndContentIdAndFromUser(eq(type), eq(1L), any(UserEntity.class));
         verify(likeRepository, never()).save(any(LikeEntity.class));
     }
+
+    @Test
+    @DisplayName("좋아요 취소 정상")
+    void unlike() {
+        LikeContentType type = LikeContentType.BOARD;
+        Long boardId = 1L;
+        UserEntity from = UserEntity.builder().build();
+        given(likeRepository.findByTypeAndContentIdAndFromUser(eq(type), eq(boardId), any(UserEntity.class)))
+                .willReturn(Optional.of(LikeFixture.boardLikeEntity_좋아요(boardId, from)));
+
+        // when
+        // then
+        assertDoesNotThrow(() -> likeService.unlike(type, boardId, from));
+        verify(likeRepository).findByTypeAndContentIdAndFromUser(eq(type), eq(1L), any(UserEntity.class));
+    }
+
+    @Test
+    @DisplayName("좋아요를 누르지 않고 취소하는 경우")
+    void unlike_not_found_like_history() {
+        LikeContentType type = LikeContentType.BOARD;
+        Long boardId = 1L;
+        UserEntity from = UserEntity.builder().build();
+        given(likeRepository.findByTypeAndContentIdAndFromUser(eq(type), eq(boardId), any(UserEntity.class)))
+                .willReturn(Optional.empty());
+
+        // when
+        // then
+        assertDoesNotThrow(() -> likeService.unlike(type, boardId, from));
+        verify(likeRepository).findByTypeAndContentIdAndFromUser(eq(type), eq(1L), any(UserEntity.class));
+    }
 }
