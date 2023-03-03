@@ -3,11 +3,12 @@ package com.project.feedback.auth;
 import com.project.feedback.exception.ErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
-
+@Slf4j
 public class JwtTokenUtil {
 
     private static Key getSigningKey(String secretKey) {
@@ -41,14 +42,9 @@ public class JwtTokenUtil {
             return "OK";
         }catch(ExpiredJwtException e){
             return ErrorCode.EXPIRE_TOKEN.name();
-        }catch(JwtException | IllegalArgumentException e){
+        }catch(Exception e){
             return ErrorCode.INVALID_TOKEN.name();
         }
-    }
-    public static boolean isRefreshTokenExpired(String token, String secretKey) {
-        Date expiredDate = extractClaims(token, secretKey).getExpiration();
-        // Token의 만료 날짜가 지금보다 이전인지 check
-        return expiredDate.before(new Date());
     }
 
     // SecretKey를 사용해 Token Parsing

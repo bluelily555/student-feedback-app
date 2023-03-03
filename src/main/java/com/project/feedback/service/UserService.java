@@ -20,7 +20,10 @@ import com.project.feedback.repository.CourseUserRepository;
 import com.project.feedback.repository.TokenRepository;
 import com.project.feedback.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,14 +31,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
-import java.util.ArrayList;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -50,14 +54,16 @@ public class UserService {
     private final TaskService taskService;
     private final BoardService boardService;
 
+
+
     @Value("${jwt.token.secret}")
     private String secretKey;
     @Value("${dummy.default-password}")
     private String defaultPw;
-    //  한시간
     private long accessExpireTimeMs = 1000 * 60 * 60;
-    // 3시간
+//    private long accessExpireTimeMs = 1000 * 3;
     private long refreshExpireTimeMs = 1000 * 60 * 60 * 6;
+//    private long refreshExpireTimeMs = 1000 * 30;
 
     public UserJoinResponse saveUser(UserJoinRequest req) {
 
@@ -82,7 +88,6 @@ public class UserService {
         });
         return true;
     }
-
     public UserLoginResponse login(UserLoginRequest req) {
 
         UserEntity user = findService.findUserByUserName(req.getUserName());
@@ -104,7 +109,6 @@ public class UserService {
 
         return new UserLoginResponse(jwtToken, refreshToken);
     }
-
     public UserChangeRoleResponse changeRole(Long userId, UserChangeRoleRequest req) {
 
         UserEntity user = userRepository.findById(userId)
@@ -153,7 +157,6 @@ public class UserService {
         }
 
     }
-
     public void addDummyTasks(){
         // 처음 등록되는 기본 기수에 대한 Task 등록
         List<CourseDto> courses = courseService.courses();
@@ -167,13 +170,13 @@ public class UserService {
             UUID one = UUID.randomUUID();
             String[] random = one.toString().split("-");
             TaskCreateRequest req = TaskCreateRequest.builder()
-                .title("Task" + random[0])
-                .description("description")
-                .status("IN_PROGRESS")
-                .courseName(courseEntity.getName())
-                .week(week)
-                .day(Long.valueOf(day))
-                .build();
+                    .title("Task" + random[0])
+                    .description("description")
+                    .status("IN_PROGRESS")
+                    .courseName(courseEntity.getName())
+                    .week(week)
+                    .day(Long.valueOf(day))
+                    .build();
             TaskCreateResponse result = taskService.createTask(req, "admin");
             addDummyBoards(result);
 
@@ -187,10 +190,10 @@ public class UserService {
         // 질문 3개 등록
         for(int i = 0; i < 3; i++) {
             BoardCreateRequest boardReq = BoardCreateRequest.builder()
-                .title("title")
-                .content("content")
-                .codeContent("int num = 0")
-                .build();
+                    .title("title")
+                    .content("content")
+                    .codeContent("int num = 0")
+                    .build();
             boardService.save(boardReq, loginUser, taskEntity);
         }
     }
@@ -209,18 +212,16 @@ public class UserService {
             String[] random = one.toString().split("-");
             String randomName = userName + random[0];
             String email =
-                userName + random[0] + "@gmail.com";
+                    userName + random[0] + "@gmail.com";
             UserJoinRequest userJoinRequest = UserJoinRequest.builder()
-                .userName(randomName) // 중복 불가
-                .password(defaultPw)
-                .realName(userName + random[0])
-                .email(email)
-                .build();
+                    .userName(randomName) // 중복 불가
+                    .password(defaultPw)
+                    .realName(userName + random[0])
+                    .email(email)
+                    .build();
             saveUser(userJoinRequest);
         }
     }
-
-
     public void changeDefaultRole(String userRole){
         UserEntity user = userRepository.findByUserName(userRole)
                 .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
@@ -237,7 +238,6 @@ public class UserService {
         user.setRole(newRole);
         userRepository.save(user);
     }
-
     public UserListResponse getUserList(Pageable pageable) {
         Page<UserEntity> users = userRepository.findAll(pageable);
         List<UserListDto> content = new ArrayList<>();
@@ -295,17 +295,18 @@ public class UserService {
     public void deleteToken(Long tokenId){
         tokenRepository.deleteById(tokenId);
     }
-    public boolean refreshToken(String token){
+    public boolean refreshToken(String token, HttpServletResponse response, HttpServletRequest request){
         try {
             TokenEntity tokenEntity = findService.findTokenByCurrentToken(token);
             String refreshToken = tokenEntity.getRefreshToken();
             // refresh token expire 되었는지 여부
-            if (JwtTokenUtil.isRefreshTokenExpired(refreshToken, secretKey)) {
-                // refresh token 까지 만료되었으면 토큰 삭제
+            if(!JwtTokenUtil.isValid(refreshToken, secretKey).equals("OK")){
+                log.info("refresh token 만료");
                 deleteToken(tokenEntity.getId());
                 return false;
-            } else {
+            }else{
                 // refresh token expire 안되어있으면 access token 수정
+                log.info("refresh token 만료 안됨 access token 재발급 시도");
                 String userName = JwtTokenUtil.getUserName(refreshToken, secretKey);
                 String newAccessToken = JwtTokenUtil.createToken(userName, secretKey, accessExpireTimeMs);
 
@@ -315,9 +316,20 @@ public class UserService {
                         .accessToken(newAccessToken)
                         .refreshToken(refreshToken)
                         .build());
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.setHeader("Authorization", "Bearer " + newAccessToken);
+                HttpSession session = request.getSession(false);
+                session.setAttribute("jwt", "Bearer " + newAccessToken);
+                try {
+                    response.sendRedirect(request.getRequestURL().toString());
+                    log.info(request.getRequestURL().toString());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 return true;
             }
         }catch (CustomException e){
+            log.error(e.getMessage() + "customException 발생");
             return false;
         }
     }
