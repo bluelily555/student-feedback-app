@@ -23,6 +23,7 @@ public class BoardListDto {
     private String codeContent;
     private String title;
     private int likes;
+    private String language;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
@@ -30,6 +31,7 @@ public class BoardListDto {
         BoardEntity boardEntity = BoardEntity.builder()
                 .taskEntity(taskEntity)
                 .content(content)
+                .language(language)
                 .user(user)
                 .codeContent(codeContent)
                 .title(title)
@@ -41,6 +43,7 @@ public class BoardListDto {
         return BoardListDto.builder()
             .id(boardEntity.getId())
             .title(boardEntity.getTitle())
+            .language(boardEntity.getLanguage())
             .content(boardEntity.getContent())
             .userName(boardEntity.getUser().getUserName())
             .createdDate(boardEntity.getCreatedDate())
