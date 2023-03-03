@@ -41,6 +41,18 @@
                             </div>
                         </div>
                     </div>
+                    <div class="card-footer d-flex">
+                        <th:block th:if="${isLiked==true}">
+                            <form class="ms-auto" th:action="@{'/boards/' + ${boardInfo.id} + '/unlike'}" method="post">
+                                <input type="submit" class="btn btn-danger" th:value="${boardInfo.likes + ' ♡'}">
+                            </form>
+                        </th:block>
+                        <th:block th:unless="${isLiked==true}">
+                            <form class="ms-auto" th:action="@{'/boards/' + ${boardInfo.id} + '/like'}" method="post">
+                                <input type="submit" class="btn btn-outline-danger" th:value="${boardInfo.likes + ' ♡'}" th:disabled="${#authorization.expression('hasRole(''ROLE_ANONYMOUS'')')}">
+                            </form>
+                        </th:block>
+                    </div>
                 </div>
             </div>
         </div>
