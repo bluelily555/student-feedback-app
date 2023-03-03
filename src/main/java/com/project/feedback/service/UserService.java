@@ -21,6 +21,7 @@ import com.project.feedback.repository.TokenRepository;
 import com.project.feedback.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,10 +60,10 @@ public class UserService {
     private String secretKey;
     @Value("${dummy.default-password}")
     private String defaultPw;
-    //  한시간
     private long accessExpireTimeMs = 1000 * 60 * 60;
-    // 3시간
+//    private long accessExpireTimeMs = 1000 * 3;
     private long refreshExpireTimeMs = 1000 * 60 * 60 * 6;
+//    private long refreshExpireTimeMs = 1000 * 30;
 
     public UserJoinResponse saveUser(UserJoinRequest req) {
 
@@ -299,12 +300,13 @@ public class UserService {
             TokenEntity tokenEntity = findService.findTokenByCurrentToken(token);
             String refreshToken = tokenEntity.getRefreshToken();
             // refresh token expire 되었는지 여부
-            if (JwtTokenUtil.isRefreshTokenExpired(refreshToken, secretKey).equals("true")) {
-                // refresh token 까지 만료되었으면 토큰 삭제
+            if(!JwtTokenUtil.isValid(refreshToken, secretKey).equals("OK")){
+                log.info("refresh token 만료");
                 deleteToken(tokenEntity.getId());
                 return false;
-            } else {
+            }else{
                 // refresh token expire 안되어있으면 access token 수정
+                log.info("refresh token 만료 안됨 access token 재발급 시도");
                 String userName = JwtTokenUtil.getUserName(refreshToken, secretKey);
                 String newAccessToken = JwtTokenUtil.createToken(userName, secretKey, accessExpireTimeMs);
 
@@ -316,8 +318,10 @@ public class UserService {
                         .build());
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.setHeader("Authorization", "Bearer " + newAccessToken);
+                HttpSession session = request.getSession(false);
+                session.setAttribute("jwt", "Bearer " + newAccessToken);
                 try {
-                    response.sendRedirect("/courses/students");
+                    response.sendRedirect(request.getRequestURL().toString());
                     log.info(request.getRequestURL().toString());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -325,6 +329,7 @@ public class UserService {
                 return true;
             }
         }catch (CustomException e){
+            log.error(e.getMessage() + "customException 발생");
             return false;
         }
     }

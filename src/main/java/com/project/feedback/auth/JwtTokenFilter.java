@@ -50,7 +50,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             HttpSession session = request.getSession(false);
             if (session == null || session.getAttribute("jwt") == null) {
                 // session null 이면 -> 인증이 안됨 -> 로그인 화면으로
-                RequestDispatcher rd = request.getRequestDispatcher("/users/login");
+//                RequestDispatcher rd = request.getRequestDispatcher("/users/login");
+
+                log.info("token, session is null");
+//                response.sendRedirect("../../users/login");
                 filterChain.doFilter(request, response);
                 return;
             } else {
@@ -80,19 +83,22 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             // token 재발급할지 말지 결정
             log.info("refresh: " + isRefresh);
             if(isRefresh){
-                log.info("token 재발급 했음");
-                filterChain.doFilter(request, response);
+                log.info("token 재발급 하고 Redirect 까지 했음");
+//                response.sendRedirect(request.getRequestURL().toString());
+//                filterChain.doFilter(request, response);
             }else{
                 log.error("refresh token 만료됨");
                 session.setAttribute("jwt", null);
-                response.sendRedirect("/users/login");
+                request.setAttribute("exception", ErrorCode.EXPIRE_TOKEN);
+                filterChain.doFilter(request, response);
+//                response.sendRedirect("/users/login");
             }
                 return;
         }else if(tokenValidCheck.equals(ErrorCode.INVALID_TOKEN.name())){
             // invalid token
             log.error("invalid token");
             request.setAttribute("exception", ErrorCode.INVALID_TOKEN);
-//            filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);
             return;
         }
 

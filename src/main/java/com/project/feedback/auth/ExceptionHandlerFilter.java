@@ -9,6 +9,7 @@ import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -22,27 +23,32 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
         try{
             filterChain.doFilter(request, response);
-        }catch (CustomException e){
+        } catch (CustomException e){
             log.error(e.getErrorCode().name());
-        } catch(ExpiredJwtException e){
+        } catch(ExpiredJwtException e) {
             log.error("토큰만료");
-            makeErrorResponse(response);
-        }catch(JwtException | IllegalArgumentException e){
+            makeErrorResponse(request, response);
+        } catch(JwtException | IllegalArgumentException e){
             log.error("유효하지 않은 토큰");
-        }catch(ArrayIndexOutOfBoundsException e){
+            makeErrorResponse(request, response);
+        } catch(ArrayIndexOutOfBoundsException e){
             log.error("토큰을 추출할 수 없습니다.");
-        }catch(NullPointerException e){
+            makeErrorResponse(request, response);
+        } catch(NullPointerException e){
             log.error("NULL 에러");
+            makeErrorResponse(request, response);
         }
     }
-    public void makeErrorResponse(HttpServletResponse response) throws IOException {
+    public void makeErrorResponse(HttpServletRequest request, HttpServletResponse response) throws IOException {
 //        response.setStatus(errorCode.getStatus().value());
+        HttpSession session = request.getSession(false);
+        session.setAttribute("jwt", null);
         response.setContentType("text/html; charset=utf-8");
-        String msg = "잘못된 접근입니다.";
+        String msg = "다시 로그인 해주세요.";
         String url = "/users/login";
         PrintWriter w = response.getWriter();
-        w.write("<script>alert('" + msg + "');location.href='" + url + "';</script>");
+        w.write("<script>alert('" + msg + "'); location.href='" + url + "';</script>");
         w.flush();
-        w.close();
+//        w.close();
     }
 }

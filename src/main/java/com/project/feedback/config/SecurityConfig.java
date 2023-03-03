@@ -67,7 +67,11 @@ public class SecurityConfig {
     private static final String[] GET_STUDENT_USER = {
             "/boards",
             "/course/students",
-            "/users/my"
+            "/users/my",
+    };
+    private static final String[] GET_STUDENT_ADMIN_MENTOR_MANAGE_USER = {
+            "/courses/students",
+            "/courses/**/students/weeks/**/days/**",
     };
     private static final String[] PERMIT_ALL = {
             "/",
@@ -75,8 +79,8 @@ public class SecurityConfig {
             "/api/*/users/join",
             "/api/*/users/login",
             "/users/join",
-            "/courses/**/students/weeks/**/days/**",
-            "/courses/students"
+
+
     };
 
 
@@ -93,6 +97,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, GET_STUDENT_USER).hasAnyAuthority(Role.ROLE_STUDENT.name(), Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name(), Role.ROLE_MENTOR.name())
                 .requestMatchers(HttpMethod.DELETE, DELETE_ADMIN_MENTOR_MANAGE_USER).hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name(), Role.ROLE_MENTOR.name())
                 .requestMatchers(HttpMethod.PUT, PUT_ADMIN_MENTOR_MANAGE_USER).hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_MANAGER.name(), Role.ROLE_MENTOR.name())
+                .requestMatchers(HttpMethod.GET, GET_STUDENT_ADMIN_MENTOR_MANAGE_USER).hasAnyAuthority(Role.ROLE_STUDENT.name(),Role.ROLE_ADMIN.name(), Role.ROLE_MENTOR.name(), Role.ROLE_MANAGER.name())
                 .anyRequest().permitAll()
         );
 
@@ -104,8 +109,8 @@ public class SecurityConfig {
                 .authenticationEntryPoint(authenticationManager)
                 .accessDeniedHandler(accessDeniedHandler);
 
-        httpSecurity.addFilterBefore(new JwtTokenFilter(findService, secretkey, userService), UsernamePasswordAuthenticationFilter.class);
-//                .addFilterBefore(new ExceptionHandlerFilter(), JwtTokenFilter.class);
+        httpSecurity.addFilterBefore(new JwtTokenFilter(findService, secretkey, userService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new ExceptionHandlerFilter(), JwtTokenFilter.class);
         return httpSecurity.getOrBuild();
     }
 }
