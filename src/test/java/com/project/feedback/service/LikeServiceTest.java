@@ -85,4 +85,56 @@ class LikeServiceTest {
         assertDoesNotThrow(() -> likeService.unlike(type, boardId, from));
         verify(likeRepository).findByContentTypeAndContentIdAndFromUser(eq(type), eq(1L), any(UserEntity.class));
     }
+
+    @Test
+    @DisplayName("질문 좋아요 상태 확인 - 좋아요")
+    void verifyLikeStatusOfBoard_like() {
+        // given
+        Long boardId = 1L;
+        UserEntity from = UserEntity.builder().build();
+        given(likeRepository.findByContentTypeAndContentIdAndFromUser(eq(LikeContentType.BOARD), eq(boardId), any(UserEntity.class)))
+                .willReturn(Optional.of(LikeFixture.boardLikeEntity_좋아요(boardId, from)));
+
+        // when
+        boolean result = assertDoesNotThrow(() -> likeService.verifyLikeStatusOfBoard(boardId, from));
+
+        // then
+        assertTrue(result);
+        verify(likeRepository).findByContentTypeAndContentIdAndFromUser(eq(LikeContentType.BOARD), eq(boardId), any(UserEntity.class));
+    }
+
+    @Test
+    @DisplayName("질문 좋아요 상태 확인 - 좋아요 취소")
+    void verifyLikeStatusOfBoard_unlike() {
+        // given
+        Long boardId = 1L;
+        UserEntity from = UserEntity.builder().build();
+        given(likeRepository.findByContentTypeAndContentIdAndFromUser(eq(LikeContentType.BOARD), eq(boardId), any(UserEntity.class)))
+                .willReturn(Optional.of(LikeFixture.boardLikeEntity(boardId, from)));
+
+        // when
+        boolean result = assertDoesNotThrow(() -> likeService.verifyLikeStatusOfBoard(boardId, from));
+
+        // then
+        assertFalse(result);
+        verify(likeRepository).findByContentTypeAndContentIdAndFromUser(eq(LikeContentType.BOARD), eq(boardId), any(UserEntity.class));
+    }
+
+
+    @Test
+    @DisplayName("질문 좋아요 상태 확인 - 좋아요 내역이 없는 경우")
+    void verifyLikeStatusOfBoard_not_found_like_history() {
+        // given
+        Long boardId = 1L;
+        UserEntity from = UserEntity.builder().build();
+        given(likeRepository.findByContentTypeAndContentIdAndFromUser(eq(LikeContentType.BOARD), eq(boardId), any(UserEntity.class)))
+                .willReturn(Optional.empty());
+
+        // when
+        boolean result = assertDoesNotThrow(() -> likeService.verifyLikeStatusOfBoard(boardId, from));
+
+        // then
+        assertFalse(result);
+        verify(likeRepository).findByContentTypeAndContentIdAndFromUser(eq(LikeContentType.BOARD), eq(boardId), any(UserEntity.class));
+    }
 }

@@ -19,6 +19,7 @@ public class LikeFixture {
                 .contentType(LikeContentType.BOARD)
                 .contentId(boardId)
                 .fromUser(from)
+                .status(true)
                 .build();
     }
 }
