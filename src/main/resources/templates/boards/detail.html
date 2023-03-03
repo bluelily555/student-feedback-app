@@ -68,7 +68,7 @@
                         <div class="d-flex flex-start w-100">
                             <div class="w-100">
                                 <h5>Add a comment</h5>
-                                <form class="form-group" th:object="${commentCreateRequest}"  th:method="post" th:action="|@{/comments/{boardId} (boardId=${boardInfo.id})}|">
+                                <form class="form-group" th:object="${commentCreateRequest}"  th:method="post" th:action="|@{/boards/{boardId}/comment (boardId=${boardInfo.id})}|">
                                     <div style="text-align: right">
                                         <div>
                                             <textarea rows="3" th:field="*{comment}" style="width: 100%"></textarea>

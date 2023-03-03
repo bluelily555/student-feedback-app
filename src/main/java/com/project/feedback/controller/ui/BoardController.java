@@ -77,6 +77,13 @@ public class BoardController {
         return "boards/detail";
     }
 
+    @PostMapping("/{boardId}/comment")
+    public String write(@PathVariable Long boardId, @ModelAttribute CommentCreateRequest req,
+                        Authentication auth) {
+        commentService.saveComment(req, auth.getName(), boardId);
+        return "redirect:/boards";
+    }
+
     @PostMapping("/{boardId}/like")
     public String likeBoard(@PathVariable Long boardId, Authentication auth) {
         // 로그인하지 않은 경우
