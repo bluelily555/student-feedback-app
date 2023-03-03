@@ -18,6 +18,7 @@ public class BoardCreateRequest {
     private String title;
     private String content;
     private String codeContent;
+    private String language;
 
 
     public BoardEntity toEntity(UserEntity user, TaskEntity taskEntity) {
@@ -25,6 +26,7 @@ public class BoardCreateRequest {
             .title(title)
             .codeContent(codeContent)
             .content(content)
+            .language(language)
             .user(user)
             .taskEntity(taskEntity)
             .build();

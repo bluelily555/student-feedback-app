@@ -31,6 +31,8 @@ public class BoardEntity extends TimeEntity {
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String codeContent;
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String language;
 
     @Column(length = 32, nullable = false)
     private String title;

@@ -36,6 +36,7 @@
                                             <textarea name="codeContent" id="codeContent" th:field="*{codeContent}" hidden></textarea>
                                             <textarea class="form-control" style="height:250px; width:50vw;" maxlength='1000' id="content" th:field="*{content}" name="content"></textarea>
                                             <div id="editor_toolbar" style="margin: 10px;">
+                                                <input type="hidden" id="language" name="language" th:field="*{language}">
 <!--                                                <select class="dropdown-menu" aria-labelledby="dropdownMenuButton">-->
 <!--                                                </select>-->
                                             </div>
@@ -83,6 +84,8 @@
 
     let modes = ["javascript", "html", "css", "python",  "java"];
     let modeDropdown = document.createElement("select");
+    let lang = $("#language").val()
+    lang = "javascript"
     modeDropdown.style.width = "30vw";
     for (let i = 0; i < modes.length; i++) {
         let option = document.createElement("option");
@@ -91,6 +94,7 @@
     }
     modeDropdown.addEventListener("change", function() {
         let mode = this.value;
+        lang = mode;
         editor.session.setMode("ace/mode/" + mode);
     });
 
@@ -98,10 +102,6 @@
     let toolbar = document.getElementById("editor_toolbar");
     toolbar.appendChild(modeDropdown);
 
-
-    // editor.setOptions({
-    //     toolbar: customToolbar
-    // })
 
 
     // editor value를 codeContent로 넣어주는 과정
@@ -111,6 +111,7 @@
     })
     document.getElementById("writeForm").onsubmit = function(evt){
         document.getElementById("codeContent").value = editor.getValue();
+        document.getElementById("language").value = lang
     }
 
 </script>
