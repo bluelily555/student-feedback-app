@@ -6,6 +6,7 @@ import com.project.feedback.domain.dto.comment.CommentCreateRequest;
 import com.project.feedback.domain.dto.comment.CommentListResponse;
 import com.project.feedback.domain.entity.TaskEntity;
 import com.project.feedback.domain.entity.UserEntity;
+import com.project.feedback.domain.enums.LikeContentType;
 import com.project.feedback.service.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ public class BoardController {
     private final BoardService boardService;
     private final TaskService taskService;
     private final FindService findService;
+    private final LikeService likeService;
 
 
     @GetMapping
@@ -49,10 +51,15 @@ public class BoardController {
 
     @GetMapping("/{boardId}")
     public String getBoard(@PathVariable("boardId")Long boardId, Model model,
-                             @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable)
+                             @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable,
+                           Authentication auth)
     {
         BoardListDto boardListDto = boardService.getBoardDetail(boardId);
         model.addAttribute("boardInfo", boardListDto);
+        if (auth != null) {
+            UserEntity loginUser = findService.findUserByUserName(auth.getName());
+            model.addAttribute("isLiked", likeService.verifyLikeStatusOfBoard(boardId, loginUser));
+        }
 
         // 해당 글에 달린 댓글 불러오기
         CommentListResponse res2 = commentService.getCommentList(boardId, pageable);
@@ -68,6 +75,32 @@ public class BoardController {
         model.addAttribute("commentCreateRequest", commentCreateRequest);
 
         return "boards/detail";
+    }
+
+    @PostMapping("/{boardId}/like")
+    public String likeBoard(@PathVariable Long boardId, Authentication auth) {
+        // 로그인하지 않은 경우
+        if (auth == null) return "redirect:/boards/" + boardId;
+
+        UserEntity loginUser = findService.findUserByUserName(auth.getName());
+        findService.findByBoardId(boardId);
+
+        likeService.like(LikeContentType.BOARD, boardId, loginUser);
+
+        return "redirect:/boards/" + boardId;
+    }
+
+    @PostMapping("/{boardId}/unlike")
+    public String unlikeBoard(@PathVariable Long boardId, Authentication auth) {
+        // 로그인하지 않은 경우
+        if (auth == null) return "redirect:/boards/" + boardId;
+
+        UserEntity loginUser = findService.findUserByUserName(auth.getName());
+        findService.findByBoardId(boardId);
+
+        likeService.unlike(LikeContentType.BOARD, boardId, loginUser);
+
+        return "redirect:/boards/" + boardId;
     }
 
     //TASK에 질문 등록

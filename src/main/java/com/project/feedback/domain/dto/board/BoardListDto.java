@@ -22,6 +22,7 @@ public class BoardListDto {
     private String content;
     private String codeContent;
     private String title;
+    private int likes;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 

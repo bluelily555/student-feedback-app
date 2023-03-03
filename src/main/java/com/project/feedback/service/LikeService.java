@@ -38,6 +38,17 @@ public class LikeService {
         return likeEntity.getId();
     }
 
+    public boolean verifyLikeStatusOfBoard(Long boardId, UserEntity from) {
+        return verifyLikeStatus(LikeContentType.BOARD, boardId, from);
+    }
+    private boolean verifyLikeStatus(LikeContentType type, Long contentId, UserEntity from) {
+        Optional<LikeEntity> likeEntityOptional = likeRepository.findByContentTypeAndContentIdAndFromUser(type, contentId, from);
+
+        if (likeEntityOptional.isEmpty()) return false;
+
+        return likeEntityOptional.get().isStatus();
+    }
+
     private LikeEntity initializeAndSave(LikeContentType type, Long contentId, UserEntity from) {
         return likeRepository.save(LikeEntity.of(type, contentId, from));
     }
