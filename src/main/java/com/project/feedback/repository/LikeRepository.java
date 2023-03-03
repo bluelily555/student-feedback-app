@@ -9,4 +9,5 @@ import java.util.Optional;
 
 public interface LikeRepository extends JpaRepository<LikeEntity, Long> {
     Optional<LikeEntity> findByContentTypeAndContentIdAndFromUser(LikeContentType type, Long contentId, UserEntity from);
+    int countByContentTypeAndContentIdAndStatusIsTrue(LikeContentType type, Long contentId);
 }

@@ -5,7 +5,9 @@ import com.project.feedback.domain.dto.board.BoardListDto;
 import com.project.feedback.domain.entity.BoardEntity;
 import com.project.feedback.domain.entity.TaskEntity;
 import com.project.feedback.domain.entity.UserEntity;
+import com.project.feedback.domain.enums.LikeContentType;
 import com.project.feedback.repository.BoardRepository;
+import com.project.feedback.repository.LikeRepository;
 import com.project.feedback.repository.TaskRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import java.util.Optional;
 @Service
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final LikeRepository likeRepository;
     private final TaskService taskService;
 
     private List<BoardListDto> getBoardWriteDtos(List<BoardEntity> boardEntities) {
@@ -79,6 +82,7 @@ public class BoardService {
                 .content(boardEntity.getContent())
                 .codeContent(boardEntity.getCodeContent())
                 .userName(boardEntity.getUser().getRealName())
+                .likes(likeRepository.countByContentTypeAndContentIdAndStatusIsTrue(LikeContentType.BOARD, boardId))
                 .createdDate(boardEntity.getCreatedDate())
                 .build();
         return boardList;
