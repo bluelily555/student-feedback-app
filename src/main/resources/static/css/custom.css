@@ -297,3 +297,28 @@ main {
 .scrollarea {overflow-y: auto;}
 .overflow-x-auto {overflow-x: auto;}
 .overflow-x-auto .table {width: auto!important; table-layout: fixed;white-space: nowrap}
+    .custom-navbar-collapse {
+        flex-grow: 1;
+        display: flex !important;
+        flex-basis: auto;
+        align-items: center;
+    }
+@media (max-width: 992px) {
+    .nav-item{
+        padding-right: 5px;
+    }
+
+}
+@media(min-width: 674px){
+    .custom-nav-item2{
+        display:none;
+    }
+}
+@media (max-width: 674px) {
+    .custom-nav-item1{
+        display: none!important;
+    }
+    .custom-nav-item2{
+        display: inline-block;
+    }
+}
