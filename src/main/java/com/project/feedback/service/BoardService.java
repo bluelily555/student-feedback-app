@@ -10,6 +10,7 @@ import com.project.feedback.repository.BoardRepository;
 import com.project.feedback.repository.LikeRepository;
 import com.project.feedback.repository.TaskRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,7 @@ public class BoardService {
         for(BoardEntity boardEntity : boardEntities){
             BoardListDto codeWriteDto = BoardListDto.builder()
                     .id(boardEntity.getId())
+                    .taskEntity(boardEntity.getTaskEntity())
                     .content(boardEntity.getContent())
                     .codeContent(boardEntity.getCodeContent())
                     .language(boardEntity.getLanguage())
@@ -52,7 +54,8 @@ public class BoardService {
 
     @Transactional
     public List<BoardListDto> searchAllCode(){
-        List<BoardEntity> codeEntities = boardRepository.findAll();
+        // id 기준으로 내림차순
+        List<BoardEntity> codeEntities = boardRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
         return getBoardWriteDtos(codeEntities);
     }
 
