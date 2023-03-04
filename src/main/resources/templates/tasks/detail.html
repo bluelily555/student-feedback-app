@@ -6,6 +6,7 @@
     <div th:insert="~{fragments/navbar :: navbar}"></div>
     <main class="d-flex flex-nowrap" style="max-height: none; height: auto">
         <div th:replace="~{fragments/sidebar :: sidebar}" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')"></div>
+        <div style="width:280px" sec:authorize="hasAnyRole('STUDENT', 'MENTOR')"></div>
         <div class="row" style="margin-top: 15px;">
         <br/><br/>
           <div  class="container table-responsive">
