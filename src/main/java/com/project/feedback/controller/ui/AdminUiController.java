@@ -49,7 +49,7 @@ public class AdminUiController {
     //Dummy Task 등록
     @GetMapping("/tasks")
     public String addDummyTasks(){
-        userService.addDummyTasks();
+        userService.addDummyTasks(10);
         return "admin/main";
     }
 

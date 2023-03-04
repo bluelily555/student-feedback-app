@@ -157,7 +157,7 @@ public class UserService {
         }
 
     }
-    public void addDummyTasks(){
+    public void addDummyTasks(int taskCnt){
         // 처음 등록되는 기본 기수에 대한 Task 등록
         List<CourseDto> courses = courseService.courses();
         CourseEntity courseEntity = findService.findCourseByName(courses.get(0).getName());
@@ -166,7 +166,7 @@ public class UserService {
         long week = CourseInfo.fromEntity(courseEntity).getWeek(courseEntity.getStartDate());
 
         //task 10개 등록
-        for( int i = 0; i < 10; i++) {
+        for( int i = 0; i < taskCnt; i++) {
             UUID one = UUID.randomUUID();
             String[] random = one.toString().split("-");
             TaskCreateRequest req = TaskCreateRequest.builder()
@@ -178,21 +178,24 @@ public class UserService {
                     .day(Long.valueOf(day))
                     .build();
             TaskCreateResponse result = taskService.createTask(req, "admin");
-            addDummyBoards(result);
+
+            // 질문 n개 등록
+            addDummyBoards(result.getTaskId(), 3);
 
         }
 
     }
 
-    public void addDummyBoards(TaskCreateResponse req){
+    public void addDummyBoards(long taskId, int questionCnt){
         UserEntity loginUser = findService.findUserByUserName("student");
-        TaskEntity taskEntity = findService.findTaskById(req.getTaskId());
+        TaskEntity taskEntity = findService.findTaskById(taskId);
         // 질문 3개 등록
-        for(int i = 0; i < 3; i++) {
+        for(int i = 0; i < questionCnt; i++) {
             BoardCreateRequest boardReq = BoardCreateRequest.builder()
                     .title("title")
                     .content("content")
                     .codeContent("int num = 0")
+                    .language("java")
                     .build();
             boardService.save(boardReq, loginUser, taskEntity);
         }
