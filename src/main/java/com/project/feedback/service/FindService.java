@@ -180,7 +180,7 @@ public class FindService {
        return new TaskListResponse(content, pageable, taskEntities);
     }
 
-    @Cacheable(value = "course_student", key = "#courseId + '-' + #week + '-' + #day + '-' + #loginUser.userName")
+//    @Cacheable(value = "course_student", key = "#courseId + '-' + #week + '-' + #day + '-' + #loginUser.userName")
     public CourseTaskListResponse getTasksAndStudentsByWeekAndDay(Long courseId, Long week, Long day, UserEntity loginUser){
         //해당 course에 week, day로 필터 걸어서 task 목록을 가져옴
         List<TaskEntity> taskEntities = taskRepository.findByCourseIdAndWeekAndDay(courseId, week, day);
@@ -208,7 +208,6 @@ public class FindService {
 
     @Cacheable(value = "get_students_with_task", key = "#courseId + '_' + #week + '_' + #day + '_' + #loginUser.id")
     public List<StudentInfo> getStudentsWithTask(Long courseId, Long week, Long day, UserEntity loginUser){
-        log.info("eeeeee");
         // course와 week에 해당하는 task목록
         List<TaskEntity> taskEntities = taskRepository.findByCourseIdAndWeekAndDay(courseId, week, day);
         // filter 정보에 해당하는 task id 정보만 저장
@@ -223,7 +222,6 @@ public class FindService {
         List<StudentInfo> list = new ArrayList<>();
         for(UserEntity user : users){
             List<StatusInfo> status2 = new ArrayList<>();
-            List<UserTaskEntity> userTaskEntities = userTaskRepository.findByUserId(user.getId());
             HashMap<String, String> map = new HashMap<>();
             map.put("studentName", user.getRealName());
             for(TaskEntity taskEntity : taskEntities ){
