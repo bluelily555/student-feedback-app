@@ -28,7 +28,7 @@
     <hr/>
 
     <div class="table-responsive overflow-x-auto">
-        <table class="table table-bordered" id="myTable">
+        <table class="table table-sm table-bordered" id="myTable">
             <thead class="thead-dark">
             <tr>
                 <th th:text="${authName}"></th>
@@ -53,7 +53,7 @@
                       th:classappend="${status.taskStatus == 'Task등록'} ? 'table-warning' : ''">
                       <div th:if="${studentTask.userName == authName}">
                           <select id="status" th:value="${status.taskId}"
-                                  class="form-select form-select-sm" style="width:160px;float:left" th:attr="data-task_id=${status.taskId},data-user_id=${studentTask.id}">
+                                  class="form-select form-select-sm" style="width:130px;float:left" th:attr="data-task_id=${status.taskId},data-user_id=${studentTask.id}">
                               <option th:text="${status.taskStatus}"></option>
                               <option value="IN_PROGRESS">진행중</option>
                               <option value="DONE">완료</option>
