@@ -12,6 +12,7 @@ public interface UserTaskRepository extends JpaRepository<UserTaskEntity, Long> 
    List<UserTaskEntity> findByUserId(Long userId);
 
    Long countByTaskEntityId(Long taskId);
+   List<UserTaskEntity> findAllByUserId(Long userId);
 
     UserTaskEntity findByUserIdAndTaskEntityId(Long userId, Long taskId);
 

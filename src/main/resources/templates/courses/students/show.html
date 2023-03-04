@@ -7,7 +7,7 @@
 <body>
 
 <div th:insert="~{fragments/navbar :: navbar}"></div>
-    <form th:method="post" th:action="@{/courses/students}" th:object="${filterInfo}">
+    <form th:method="post" th:action="@{/courses/students}" th:object="${filterInfo}" style="width: 50vw;display: inline-block;">
         <div class="row">
             <div class="col-sm-auto">
                 <label for="week" id="course" class = "btn" th:text="${courseName}" />
@@ -25,6 +25,9 @@
             </div>
         </div>
     </form>
+    <a th:href="@{'/boards/tasks'}" style="float: right;margin-right: 7vw;margin-top: 1.5vh;">
+        <button type="button" class="btn btn-success btn-sm">질문하러가기</button>
+    </a>
     <hr/>
 
     <div class="table-responsive overflow-x-auto">
@@ -59,9 +62,6 @@
                               <option value="DONE">완료</option>
                               <option value="ERROR">에러</option>
                           </select>
-                          <a th:href="@{'/boards/tasks/' + ${status.taskId}}">
-                              <button type="button" class="btn btn-success btn-sm">질문</button>
-                          </a>
                       </div>
                       <div th:if="${studentTask.userName != authName}">
                           <span class="badge bg-primary" th:if="${status.taskStatus == 'DONE'}">완료</span>

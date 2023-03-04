@@ -6,6 +6,7 @@ import com.project.feedback.domain.dto.comment.CommentCreateRequest;
 import com.project.feedback.domain.dto.comment.CommentListResponse;
 import com.project.feedback.domain.entity.TaskEntity;
 import com.project.feedback.domain.entity.UserEntity;
+import com.project.feedback.domain.entity.UserTaskEntity;
 import com.project.feedback.domain.enums.LikeContentType;
 import com.project.feedback.service.*;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,7 @@ public class BoardController {
     private final TaskService taskService;
     private final FindService findService;
     private final LikeService likeService;
+    private final UserTaskService userTaskService;
 
 
     @GetMapping
@@ -111,14 +113,14 @@ public class BoardController {
     }
 
     //TASK에 질문 등록
-    @GetMapping("/tasks/{taskId}")
-    public String writeBoard(@PathVariable("taskId")Long taskId, Model model, Authentication auth) {
-        String taskTitle = taskService.getOneTask(taskId).getTitle();
+    @GetMapping("/tasks")
+    public String writeBoard(Model model, Authentication auth) {
+        Long userId = findService.findUserByUserName(auth.getName()).getId();
+        List<UserTaskEntity> userTaskEntityList = userTaskService.getAllTaskByUserId(userId);
 
         model.addAttribute("boardCreateRequest", new BoardCreateRequest());
-        model.addAttribute("taskTitle", taskTitle);
+        model.addAttribute("taskList", userTaskEntityList);
         model.addAttribute("userName", auth.getName());
-        model.addAttribute("taskId", taskId);
 
         return "boards/write";
     }

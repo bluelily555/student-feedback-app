@@ -109,4 +109,8 @@ public class UserTaskService {
 
         return map;
     }
+    @Transactional
+    public List<UserTaskEntity>getAllTaskByUserId(Long userId){
+        return userTaskRepository.findAllByUserId(userId);
+    }
 }

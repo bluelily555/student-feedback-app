@@ -18,16 +18,18 @@
                     <div class="d-flex flex-start w-100">
                         <div class="w-100">
                             <div class="form-outline">
-                                <div>
-                                    <p>Task: </p>
-                                    <h1 th:text="${taskTitle}"></h1>
-                                    <hr class="hr">
-                                </div>
                                 <form id="writeForm" autocomplete="off" th:method="post" th:action="|@{/boards/tasks/{taskId} (taskId=${taskId})}|" th:object="${boardCreateRequest}">
+                                    <div>
+                                        <h1>Task 선택</h1>
+                                        <select id="selTaskId" onchange="setTaskId(this.value)">
+                                            <option th:each="task :${taskList}" th:value="${task.taskEntity.getId()}" th:text="${task.taskEntity.getTitle()}"></option>
+                                        </select>
+                                        <hr class="hr">
+                                    </div>
                                     <div>
                                         <!--        th:value="${userName}"-->
                                         <input id="userName" type="hidden" name="userName" th:value="${userName}" />
-                                        <input type="hidden" name="taskId" id="taskId" th:value="${taskId}" />
+<!--                                        <input type="hidden" name="taskId" id="taskId" th:value="${taskId}" />-->
                                         <input class="mt-8" type="text" style="width: 60vw;" maxlength='30' th:field="*{title}" id="title" placeholder="제목을 입력하세요"/>
                                         <br/>
                                         <input type="hidden" id="writer" name="writer" maxlength='10' th:value="${userName}"/>
@@ -63,12 +65,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
 
 <script>
-    /*
-    1. 코드 편집하는 ace Editor의 Font를 20으로 설정 해주세요.
-    2. 현재 글쓰는 부분 왼쪽, 코드 올리는 부분 오른쪽으로 되어 있는데 위 아래로 해서 스크롤 되게 해주세요.
-    3. 작성자가 표시되고 있습니다. 작성자는 빼주세요.
-    4. 텍스트박스 세로 길이를 현재의 절반으로 줄이고 길어지면 스크롤되게 해주세요.
-     */
+    //ace editor 기본 세팅
     let editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
     editor.session.setMode("ace/mode/javascript");
@@ -112,6 +109,15 @@
     document.getElementById("writeForm").onsubmit = function(evt){
         document.getElementById("codeContent").value = editor.getValue();
         document.getElementById("language").value = lang
+    }
+    // taskId 기본값 설정
+    let task = document.getElementById("selTaskId").value;
+    document.querySelector('#writeForm').action = `/boards/tasks/${task}`;
+    console.log(document.querySelector('#writeForm').action)
+    // taskId 동적 변경
+    function setTaskId(taskId) {
+        document.querySelector('#writeForm').action = `/boards/tasks/${taskId}`;
+        console.log(document.querySelector('#writeForm').action)
     }
 
 </script>
