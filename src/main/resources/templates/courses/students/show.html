@@ -38,10 +38,8 @@
                 <div th:each="taskList : ${taskList}">
                     <th th:attr="data-task_id=${taskList.id}">
                         <a href="/tasks/write.html" id="popUp" th:href="@{/tasks/{taskId}(taskId=${taskList.id})}" th:value="${taskList.title}" th:text="${taskList.title}"/>
-                        <div class="collapse" id="collapseExample">
-                            <div class="card card-body">
-                                Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
-                            </div>
+                        <div class="collapse" id="taskProgress" >
+                            <div class="card card-body"></div>
                         </div>
                     </th>
                 </div>
@@ -50,7 +48,13 @@
             <tbody>
             <!--학생이름 상태1, 상태2 순으로 뿌려줌-->
             <tr th:classappend="${studentTask.userName == authName} ? 'table-primary' : ''" th:each="studentTask, stat : ${studentTaskList}">
-                <td th:text="${studentTask.realName}" th:attr="data-user_id=${studentTask.id}" ></td>
+                <td th:attr="data-user_id=${studentTask.id}" >
+                    <label th:text="${studentTask.realName}"></label>
+                    <div class="collapse" id="userProgress">
+                        <div class="card card-body" id="userProgressText">
+                        </div>
+                    </div>
+                </td>
                 <div th:each="status : ${studentTask.status}">
                   <td id="test-td" th:attr="data-task_id=${status.taskId}, data-task_name=${status.taskName}, data-user_id=${studentTask.id}"
                       th:classappend="${status.taskStatus == 'Task등록'} ? 'table-warning' : ''">
@@ -90,7 +94,7 @@
             // task 별 진행 상황
             $('th').click(function(){
                 var currentRow=$(this).closest("tr")
-                var thindex = $('th').index(this); // 잘 작동
+                var thindex = $('th').index(this);
                 let taskId = currentRow.find("th:eq("+thindex+")").data('task_id');
                 var courseName = $("label[for=week]").text();
                 //ajax로 taskid 보내서 값 가져옴.
@@ -102,8 +106,10 @@
                         courseName: courseName,
                     }
                     , success: function (res) {
-                        alert("task 진행 상황:" + res + "%");
+                        currentRow.find("th:eq("+thindex+")").children('div div').text("진행 상황: " + res +"%");
+                        currentRow.find("th:eq("+thindex+")").children('#taskProgress').toggle();
                     }
+
                 });
 
             });
@@ -132,7 +138,8 @@
                             if (isNaN(result)) { // 값이 없어서 NaN값이 나올 경우
                                 result = 0;
                             }
-                            alert(result +"%");
+                            currentRow.find("td:eq("+tdindex+")").children('div div').text("진행 상황: " + result +"%");
+                            currentRow.find("td:eq("+tdindex+")").children('#userProgress').toggle();
                         }
                     })
                 }
