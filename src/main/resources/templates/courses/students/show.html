@@ -134,7 +134,8 @@
                         , success: function (res) {
                             let totalTask = res["totalTask"];
                             let totalTaskOfStudent = res["totalTaskOfStudent"];
-                            let result = (totalTaskOfStudent / totalTask ) * 100;
+                            let temp = (totalTaskOfStudent / totalTask ) * 100;
+                            let result = Math.round(temp);
                             if (isNaN(result)) { // 값이 없어서 NaN값이 나올 경우
                                 result = 0;
                             }

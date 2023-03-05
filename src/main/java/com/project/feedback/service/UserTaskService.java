@@ -75,10 +75,10 @@ public class UserTaskService {
          //전체 학생 수 count 쿼리
          Long countOfStudents = courseUserRepository.countByCourseEntityId(courseId);
 
-         double result = ( (double)countOfDone / (double)countOfStudents ) * 100.0;
-         String progress = String.format("%.0f", result);
-
-         return progress;
+         double num = ((double)countOfDone / (double)countOfStudents ) * 100.0;
+         double result = Math.round(num);
+         String output = String.format("%.0f", result);
+         return output;
     }
 
 
