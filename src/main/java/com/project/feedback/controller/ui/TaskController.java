@@ -14,6 +14,7 @@ import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.service.CourseService;
 import com.project.feedback.service.FindService;
+import com.project.feedback.service.LikeService;
 import com.project.feedback.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,7 @@ public class TaskController {
     private final TaskService taskService;
     private final FindService findService;
     private final CourseService courseService;
+    private final LikeService likeService;
 
     @GetMapping
     public String list(Model model, @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -160,6 +162,7 @@ public class TaskController {
 
         TaskDetailResponse res = taskService.getOneTask(taskId);
         List<BoardListDto> boardList = res.getBoards();
+        boardList.forEach(boardListDto -> boardListDto.setLikes(likeService.countLikesOfBoard(boardListDto.getId())));
         model.addAttribute("taskUpdateRequest", new TaskUpdateRequest());
         model.addAttribute("taskDetail", res);
         model.addAttribute("boardList", boardList);

@@ -90,6 +90,7 @@
                   <th scope="col">번호</th>
                   <th scope="col">글제목</th>
                   <th scope="col">작성자</th>
+                  <th scope="col">좋아요</th>
                   <th scope="col">작성일</th>
                   <th scope="col"></th>
                 </tr>
@@ -100,6 +101,7 @@
                   <th scope="row" th:text="${board.id}"></th>
                   <td th:text="${board.title}"></td>
                   <td th:text="${board.userName}"></td>
+                  <td th:text="${board.likes}"></td>
                   <td th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm')}">
                   </td>
                   <td>

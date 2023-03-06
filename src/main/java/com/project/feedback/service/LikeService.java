@@ -54,6 +54,14 @@ public class LikeService {
         return likeEntityOptional.get().isStatus();
     }
 
+    public int countLikesOfBoard(Long boardId) {
+        return countLikes(LikeContentType.BOARD, boardId);
+    }
+
+    private int countLikes(LikeContentType type, Long contentId) {
+        return likeRepository.countByContentTypeAndContentIdAndStatusIsTrue(type, contentId);
+    }
+
     private LikeEntity initializeAndSave(LikeContentType type, Long contentId, UserEntity from) {
         return likeRepository.save(LikeEntity.of(type, contentId, from));
     }
