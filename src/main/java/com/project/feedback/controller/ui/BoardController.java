@@ -38,6 +38,7 @@ public class BoardController {
     @GetMapping
     public String list(Model model){
         List<BoardListDto> boardList = boardService.searchAllCode();
+        boardList.forEach(boardListDto -> boardListDto.setLikes(likeService.countLikesOfBoard(boardListDto.getId())));
         model.addAttribute("boardList", boardList);
         return "boards/show";
     }
