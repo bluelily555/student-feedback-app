@@ -13,6 +13,7 @@ public enum ErrorCode {
     TASK_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 task가 없습니다."),
     COURSE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 기수가 없습니다."),
     BOARD_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 글이 없습니다."),
+    COMMENTS_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 댓글이 없습니다."),
     USER_COURSE_NOT_FOUND(HttpStatus.NOT_FOUND, "User가 속한 기수가 없습니다."),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "패스워드가 잘못되었습니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "잘못된 토큰입니다."),
