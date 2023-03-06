@@ -7,7 +7,9 @@ import com.project.feedback.domain.dto.comment.CommentListResponse;
 import com.project.feedback.domain.entity.BoardEntity;
 import com.project.feedback.domain.entity.CommentEntity;
 import com.project.feedback.domain.entity.UserEntity;
+import com.project.feedback.domain.enums.LikeContentType;
 import com.project.feedback.repository.CommentRepository;
+import com.project.feedback.repository.LikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +27,7 @@ import java.util.List;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final LikeRepository likeRepository;
     private final FindService findService;
 
     public CommentCreateResponse saveComment(CommentCreateRequest req, String userName, Long boardId) {
@@ -41,7 +44,8 @@ public class CommentService {
 
         List<CommentListDto> content = new ArrayList<>();
         for(CommentEntity comment : comments) {
-            content.add(CommentListDto.of(comment));
+            int likes = likeRepository.countByContentTypeAndContentIdAndStatusIsTrue(LikeContentType.COMMENT, comment.getId());
+            content.add(CommentListDto.of(comment, likes));
         }
 
         return new CommentListResponse(content, pageable, comments);
