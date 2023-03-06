@@ -58,13 +58,17 @@ public class BoardController {
     {
         BoardListDto boardListDto = boardService.getBoardDetail(boardId);
         model.addAttribute("boardInfo", boardListDto);
-        if (auth != null) {
-            UserEntity loginUser = findService.findUserByUserName(auth.getName());
+        UserEntity loginUser = auth != null ? findService.findUserByUserName(auth.getName()) : null;
+        if (loginUser != null) {
             model.addAttribute("isLiked", likeService.verifyLikeStatusOfBoard(boardId, loginUser));
         }
 
         // 해당 글에 달린 댓글 불러오기
         CommentListResponse res2 = commentService.getCommentList(boardId, pageable);
+        if (loginUser != null) {
+            res2.getContent().forEach(commentListDto ->
+                    commentListDto.setLikeStatus(likeService.verifyLikeStatusOfComment(commentListDto.getId(), loginUser)));
+        }
         model.addAttribute("commentList", res2.getContent());
         model.addAttribute("commentSize", res2.getTotalElements());
 

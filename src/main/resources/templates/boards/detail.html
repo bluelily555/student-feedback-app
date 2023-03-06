@@ -94,8 +94,19 @@
             <h5 class="card-title" th:text="'작성자 : ' + ${comment.userName}"></h5>
             <h6 class="card-subtitle mb-2 text-muted" th:text="'작성일 : ' + ${#temporals.format(comment.createdAt, 'yy/MM/dd HH:mm')}"></h6>
            <textarea rows="3" class="card-text" th:text="${comment.comment}" id="comment" name="comment"
-                     style="margin-bottom: 10px; width: 100%"></textarea>
-
+                     style="width: 100%"></textarea>
+            <div class="d-flex">
+                <th:block th:if="${comment.likeStatus==true}">
+                    <form class="ms-auto" th:action="@{'/comments/' + ${comment.id} + '/unlike'}" method="post">
+                        <input type="submit" class="btn btn-danger" th:value="${comment.likes + ' ♡'}">
+                    </form>
+                </th:block>
+                <th:block th:unless="${comment.likeStatus==true}">
+                    <form class="ms-auto" th:action="@{'/comments/' + ${comment.id} + '/like'}" method="post">
+                        <input type="submit" class="btn btn-outline-danger" th:value="${comment.likes + ' ♡'}" th:disabled="${#authorization.expression('hasRole(''ROLE_ANONYMOUS'')')}">
+                    </form>
+                </th:block>
+            </div>
         </div>
 
     <br/>
