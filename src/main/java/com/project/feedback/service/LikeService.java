@@ -41,6 +41,11 @@ public class LikeService {
     public boolean verifyLikeStatusOfBoard(Long boardId, UserEntity from) {
         return verifyLikeStatus(LikeContentType.BOARD, boardId, from);
     }
+
+    public boolean verifyLikeStatusOfComment(Long commentId, UserEntity from) {
+        return verifyLikeStatus(LikeContentType.COMMENT, commentId, from);
+    }
+
     private boolean verifyLikeStatus(LikeContentType type, Long contentId, UserEntity from) {
         Optional<LikeEntity> likeEntityOptional = likeRepository.findByContentTypeAndContentIdAndFromUser(type, contentId, from);
 
