@@ -6,6 +6,7 @@ import com.project.feedback.domain.entity.BoardEntity;
 import com.project.feedback.domain.entity.CommentEntity;
 import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.repository.CommentRepository;
+import com.project.feedback.repository.LikeRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,6 +20,7 @@ import static org.mockito.BDDMockito.given;
 class CommentServiceTest {
 
     private CommentRepository commentRepository = mock(CommentRepository.class);
+    private LikeRepository likeRepository = mock(LikeRepository.class);
 
     private CommentService commentService;
 
@@ -26,7 +28,7 @@ class CommentServiceTest {
 
     @BeforeEach
     void setUp(){
-        this.commentService = new CommentService(commentRepository, findService);
+        this.commentService = new CommentService(commentRepository, likeRepository, findService);
     }
 
 

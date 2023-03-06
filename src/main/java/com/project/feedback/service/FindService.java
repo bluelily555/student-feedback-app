@@ -35,6 +35,7 @@ public class FindService {
     private final BoardRepository boardRepository;
     private final UserTaskRepository userTaskRepository;
     private final TokenRepository tokenRepository;
+    private final CommentRepository commentRepository;
 
     /**
      * userName으로 User을 찾아오는 기능
@@ -246,6 +247,10 @@ public class FindService {
 
     public BoardEntity findByBoardId(long boardId){
        return boardRepository.findById(boardId).orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
+    }
+
+    public CommentEntity findByCommentId(long commentId){
+       return commentRepository.findById(commentId).orElseThrow(() -> new CustomException(ErrorCode.COMMENTS_NOT_FOUND));
     }
     // access token 찾기
     public TokenEntity findTokenByCurrentToken(String token){

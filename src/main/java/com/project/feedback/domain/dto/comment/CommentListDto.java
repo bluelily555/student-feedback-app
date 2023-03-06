@@ -15,13 +15,30 @@ public class CommentListDto {
     private String comment;
     private String userName;
     private Long boardId;
+    private int likes;
+    private boolean likeStatus;
     private LocalDateTime createdAt;
+
+    public void setLikeStatus(boolean status) {
+        this.likeStatus = status;
+    }
 
     public static CommentListDto of(CommentEntity comment) {
         return CommentListDto.builder()
             .id(comment.getId())
             .comment(comment.getComment())
             .userName(comment.getUser().getUserName())
+            .boardId(comment.getBoardEntity().getId())
+            .createdAt(comment.getCreatedDate())
+            .build();
+    }
+
+    public static CommentListDto of(CommentEntity comment, int likes) {
+        return CommentListDto.builder()
+            .id(comment.getId())
+            .comment(comment.getComment())
+            .userName(comment.getUser().getUserName())
+            .likes(likes)
             .boardId(comment.getBoardEntity().getId())
             .createdAt(comment.getCreatedDate())
             .build();
