@@ -9,8 +9,10 @@ import com.project.feedback.domain.dto.mainInfo.StudentInfo;
 import com.project.feedback.domain.dto.mainInfo.TaskInfo;
 import com.project.feedback.domain.entity.CourseEntity;
 import com.project.feedback.domain.entity.UserEntity;
+import com.project.feedback.domain.entity.UserTaskEntity;
 import com.project.feedback.service.CourseService;
 import com.project.feedback.service.FindService;
+import com.project.feedback.service.UserTaskService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -40,6 +42,7 @@ import java.util.Map;
 public class CourseController {
     private final CourseService courseService;
     private final FindService findService;
+    private final UserTaskService userTaskService;
 
     @GetMapping("/write")
     public String writePage(Model model) {
@@ -74,6 +77,8 @@ public class CourseController {
         UserEntity loginUser = findService.findUserByUserName(auth.getName());
         CourseEntity course = findService.findCourseByUserId(loginUser);
         CourseInfo courseInfo = CourseInfo.fromEntity(course);
+//        Long userId = findService.findUserByUserName(auth.getName()).getId();
+//        List<UserTaskEntity> userTaskEntityList = userTaskService.getAllTaskByUserId(userId);
 
         FilterInfo filterInfo = FilterInfo.builder()
             .day(Long.valueOf(courseInfo.getWeek()))
@@ -83,6 +88,7 @@ public class CourseController {
         redirectAttributes.addAttribute("week", courseInfo.getWeek());
         redirectAttributes.addAttribute("day", courseInfo.getDayOfWeek());
         model.addAttribute("filterInfo", filterInfo);
+//        model.addAttribute("taskList", userTaskEntityList);
         redirectAttributes.addAttribute("courseId", course.getId());
 
 
@@ -105,7 +111,11 @@ public class CourseController {
         CourseEntity course = findService.findCourseByUserId(loginUser);
         List<StudentInfo> result = findService.getStudentsWithTask(courseId,  week, day, loginUser);
         CourseTaskListResponse res =  findService.getTasksAndStudentsByWeekAndDay(courseId, week, day, loginUser);
-
+        Long userId = findService.findUserByUserName(auth.getName()).getId();
+        List<UserTaskEntity> userTaskEntityList = userTaskService.getAllTaskByUserId(userId);
+        for(UserTaskEntity userTaskEntity: userTaskEntityList){
+            log.info(userTaskEntity.getTaskEntity().getTitle());
+        }
         List<TaskInfo> taskList = res.getTaskInfoList();
 
         model.addAttribute("filterInfo", new FilterInfo());
@@ -116,6 +126,7 @@ public class CourseController {
         model.addAttribute("authName", auth.getName());
         model.addAttribute("week", week);
         model.addAttribute("day", day);
+        model.addAttribute("userTaskList", userTaskEntityList);
 
         return "courses/students/show";
     }

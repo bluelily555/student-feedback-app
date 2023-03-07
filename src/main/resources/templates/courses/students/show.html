@@ -25,7 +25,10 @@
             </div>
         </div>
     </form>
-    <a th:href="@{'/boards/tasks'}" style="float: right;margin-right: 7vw;margin-top: 1.5vh;">
+    <select id="selTaskId" onchange="setTaskId(this.value)">
+        <option th:each="task :${userTaskList}" th:value="${task.taskEntity.getId()}" th:text="${task.taskEntity.getTitle()}"></option>
+    </select>
+    <a th:href="@{'/boards/tasks'}" id="questionUrl" style="float: right;margin-right: 7vw;margin-top: 1.5vh;">
         <button type="button" class="btn btn-success btn-sm">질문하러가기</button>
     </a>
     <hr/>
@@ -179,6 +182,14 @@
 
             });
         });
+        // taskId 기본값 설정
+        let task = document.getElementById("selTaskId").value;
+        document.querySelector('#questionUrl').href = `/boards/tasks/${task}`;
+        // taskId 동적 변경
+        function setTaskId(taskId) {
+            document.querySelector('#questionUrl').href = `/boards/tasks/${taskId}`;
+            console.log(document.querySelector('#questionUrl').href)
+        }
     </script>
 </body>
 

@@ -110,18 +110,29 @@
         document.getElementById("codeContent").value = editor.getValue();
         document.getElementById("language").value = lang
     }
-    // taskId 기본값 설정
-    let task = document.getElementById("selTaskId").value;
-    document.querySelector('#writeForm').action = `/boards/tasks/${task}`;
-    console.log(document.querySelector('#writeForm').action)
-    // taskId 동적 변경
     function setTaskId(taskId) {
         document.querySelector('#writeForm').action = `/boards/tasks/${taskId}`;
-        console.log(document.querySelector('#writeForm').action)
+        // console.log(document.querySelector('#writeForm').action)
     }
 
 </script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    let data = /*[[${taskId}]]*/
+    console.log(data)
+    if(data === 0){
+        // taskId 기본값 설정
+        let task = document.getElementById("selTaskId").value;
+        document.querySelector('#writeForm').action = `/boards/tasks/${task}`;
+        // console.log(document.querySelector('#writeForm').action)
+        // taskId 동적 변경
+        }else{
+        document.getElementById("selTaskId").value = data
+        document.querySelector('#writeForm').action = `/boards/tasks/${data}`;
+    }
 
+    /*]]>*/
+</script>
 
 </body>
 </html>
