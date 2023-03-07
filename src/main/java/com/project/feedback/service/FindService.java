@@ -36,6 +36,7 @@ public class FindService {
     private final UserTaskRepository userTaskRepository;
     private final TokenRepository tokenRepository;
     private final CommentRepository commentRepository;
+    private final RepositoryRepository repositoryRepository;
 
     /**
      * userName으로 User을 찾아오는 기능
@@ -258,4 +259,7 @@ public class FindService {
                 .orElseThrow(() -> new CustomException(ErrorCode.INVALID_TOKEN));
     }
 
+    public List<RepositoryEntity> findRepositoriesByUser(UserEntity user) {
+        return repositoryRepository.findByUserOrderByModifiedDateDesc(user);
+    }
 }
