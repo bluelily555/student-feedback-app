@@ -41,15 +41,15 @@
                             <button class="btn btn-sm btn-primary ms-auto" data-bs-toggle="modal" data-bs-target="#form-edit-repo-modal">edit</button>
                         </div>
                         <div class="collapse" id="form-add-repo-collapse">
-                            <form class="d-flex flex-row w-auto my-3">
+                            <form class="d-flex flex-row w-auto my-3" action="/repositories" method="post">
                                 <div class="w-100">
                                     <div class="input-group mb-3">
                                         <span class="input-group-text" id="repo-name-addon">이름</span>
-                                        <input type="text" class="form-control" placeholder="Repository 이름" aria-label="repo-name" aria-describedby="repo-name-addon">
+                                        <input type="text" class="form-control" placeholder="Repository 이름" name="name" aria-label="repo-name" aria-describedby="repo-name-addon">
                                     </div>
                                     <div class="input-group">
                                         <span class="input-group-text" id="repo-address-addon">주소</span>
-                                        <input type="text" class="form-control" placeholder="Repository 주소" aria-label="repo-address" aria-describedby="repo-address-addon">
+                                        <input type="text" class="form-control" placeholder="Repository 주소" name="address" aria-label="repo-address" aria-describedby="repo-address-addon">
                                     </div>
                                 </div>
                                 <button class="btn btn-sm btn-primary ms-3" type="submit">add</button>
