@@ -72,46 +72,16 @@
                                 <div class="modal-body">
                                     <div class="card">
                                         <ul class="list-group list-group-flush">
-                                            <li class="list-group-item">
-                                                <form class="d-flex flex-row w-auto my-3">
+                                            <li th:each="repository : ${repositories}" class="list-group-item">
+                                                <form th:action="@{'/repositories/' + ${repository.id} + '/edit'}" method="post" class="d-flex flex-row w-auto my-3">
                                                     <div class="w-100">
                                                         <div class="input-group mb-3">
-                                                            <span class="input-group-text" id="edit-repo-name-addon-1">이름</span>
-                                                            <input type="text" class="form-control" placeholder="Repository 이름" aria-label="repo-name" aria-describedby="edit-repo-name-addon-1" value="Security">
+                                                            <span class="input-group-text" th:id="'edit-repo-name-addon-' + ${repository.id}">이름</span>
+                                                            <input type="text" class="form-control" placeholder="Repository 이름" name="name" aria-label="repo-name" th:aria-describedby="'edit-repo-name-addon-' + ${repository.id}" th:value="${repository.name}">
                                                         </div>
                                                         <div class="input-group">
-                                                            <span class="input-group-text" id="edit-repo-address-addon-1">주소</span>
-                                                            <input type="text" class="form-control" placeholder="Repository 주소" aria-label="repo-address" aria-describedby="edit-repo-address-addon-1" value="https://bootdey.com">
-                                                        </div>
-                                                    </div>
-                                                    <button class="btn btn-sm btn-primary ms-3" type="submit">save</button>
-                                                </form>
-                                            </li>
-                                            <li class="list-group-item">
-                                                <form class="d-flex flex-row w-auto my-3">
-                                                    <div class="w-100">
-                                                        <div class="input-group mb-3">
-                                                            <span class="input-group-text" id="edit-repo-name-addon-2">이름</span>
-                                                            <input type="text" class="form-control" placeholder="Repository 이름" aria-label="repo-name" aria-describedby="edit-repo-name-addon-2" value="Hospital">
-                                                        </div>
-                                                        <div class="input-group">
-                                                            <span class="input-group-text" id="edit-repo-address-addon-2">주소</span>
-                                                            <input type="text" class="form-control" placeholder="Repository 주소" aria-label="repo-address" aria-describedby="edit-repo-address-addon-2" value="https://bootdey.com">
-                                                        </div>
-                                                    </div>
-                                                    <button class="btn btn-sm btn-primary ms-3" type="submit">save</button>
-                                                </form>
-                                            </li>
-                                            <li class="list-group-item">
-                                                <form class="d-flex flex-row w-auto my-3">
-                                                    <div class="w-100">
-                                                        <div class="input-group mb-3">
-                                                            <span class="input-group-text" id="edit-repo-name-addon-3">이름</span>
-                                                            <input type="text" class="form-control" placeholder="Repository 이름" aria-label="repo-name" aria-describedby="edit-repo-name-addon-3" value="SNS">
-                                                        </div>
-                                                        <div class="input-group">
-                                                            <span class="input-group-text" id="edit-repo-address-addon-3">주소</span>
-                                                            <input type="text" class="form-control" placeholder="Repository 주소" aria-label="repo-address" aria-describedby="edit-repo-address-addon-3" value="https://bootdey.com">
+                                                            <span class="input-group-text" th:id="'edit-repo-address-addon-' + ${repository.id}">주소</span>
+                                                            <input type="text" class="form-control" placeholder="Repository 주소" name="address" aria-label="repo-address" th:aria-describedby="'edit-repo-address-addon-' + ${repository.id}" th:value="${repository.address}">
                                                         </div>
                                                     </div>
                                                     <button class="btn btn-sm btn-primary ms-3" type="submit">save</button>
