@@ -21,4 +21,21 @@ class RepositoryEntityTest {
         assertEquals("sns", base.getName());
         assertEquals("https://www.github.com/username/sns", base.getAddress());
     }
+
+    @Test
+    void equalsOwner_true() {
+        UserEntity owner = UserEntity.builder().build();
+        RepositoryEntity repository = RepositoryFixture.securityRepo(owner);
+
+        assertTrue(repository.equalsOwner(owner));
+    }
+
+    @Test
+    void equalsOwner_false() {
+        UserEntity owner = UserEntity.builder().build();
+        UserEntity user = UserEntity.builder().build();
+        RepositoryEntity repository = RepositoryFixture.securityRepo(owner);
+
+        assertFalse(repository.equalsOwner(user));
+    }
 }
