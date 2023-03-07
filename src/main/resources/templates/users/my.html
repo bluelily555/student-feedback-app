@@ -38,7 +38,7 @@
                     <div class="card-header">
                         <div class="d-flex">
                             <button class="btn btn-sm btn-primary" data-bs-toggle="collapse" data-bs-target="#form-add-repo-collapse" aria-expanded="false" aria-controls="form-add-repo-collapse">+</button>
-                            <button class="btn btn-sm btn-primary ms-auto" data-bs-toggle="modal" data-bs-target="#form-edit-repo-modal">edit</button>
+                            <button th:if="${repositories.size() > 0}" class="btn btn-sm btn-primary ms-auto" data-bs-toggle="modal" data-bs-target="#form-edit-repo-modal">edit</button>
                         </div>
                         <div class="collapse" id="form-add-repo-collapse">
                             <form class="d-flex flex-row w-auto my-3" action="/repositories" method="post">
