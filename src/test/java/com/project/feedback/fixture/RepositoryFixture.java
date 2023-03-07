@@ -26,7 +26,14 @@ public class RepositoryFixture {
     public static RepositoryRequest securityRepoRequest() {
         return RepositoryRequest.builder()
                 .name("security")
-                .address("https://www.github.com/username/repo")
+                .address("https://www.github.com/username/security")
+                .build();
+    }
+
+    public static RepositoryRequest snsRepoRequest() {
+        return RepositoryRequest.builder()
+                .name("sns")
+                .address("https://www.github.com/username/sns")
                 .build();
     }
 }
