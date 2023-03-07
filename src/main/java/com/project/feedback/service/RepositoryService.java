@@ -21,14 +21,34 @@ public class RepositoryService {
 
     @Transactional
     public Long update(Long id, RepositoryRequest request, UserEntity user) {
-        RepositoryEntity repository = repositoryRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ErrorCode.REPOSITORY_NOT_FOUND));
+        RepositoryEntity repository = findById(id);
 
         // 소유권 확인
-        if (!user.equals(repository.getUser())) throw new CustomException(ErrorCode.INVALID_PERMISSION);
+        verifyPermission(repository, user);
 
         repository.update(request.toEntity());
 
         return repository.getId();
+    }
+
+    @Transactional
+    public Long delete(Long id, UserEntity user) {
+        RepositoryEntity repository = findById(id);
+
+        // 소유권 확인
+        verifyPermission(repository, user);
+
+        repositoryRepository.delete(repository);
+
+        return repository.getId();
+    }
+
+    private RepositoryEntity findById(Long id) {
+        return repositoryRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.REPOSITORY_NOT_FOUND));
+    }
+
+    private void verifyPermission(RepositoryEntity repository, UserEntity user) {
+        if (!repository.equalsOwner(user)) throw new CustomException(ErrorCode.INVALID_PERMISSION);
     }
 }

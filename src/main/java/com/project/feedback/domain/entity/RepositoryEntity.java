@@ -31,4 +31,8 @@ public class RepositoryEntity extends TimeEntity{
         this.name = update.getName();
         this.address = update.getAddress();
     }
+
+    public boolean equalsOwner(UserEntity user) {
+        return this.user.equals(user);
+    }
 }
