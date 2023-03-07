@@ -9,7 +9,16 @@ public class RepositoryFixture {
         return RepositoryEntity.builder()
                 .id(1L)
                 .name("security")
-                .address("https://www.github.com/username/repo")
+                .address("https://www.github.com/username/security")
+                .user(user)
+                .build();
+    }
+
+    public static RepositoryEntity snsRepo(UserEntity user) {
+        return RepositoryEntity.builder()
+                .id(1L)
+                .name("sns")
+                .address("https://www.github.com/username/sns")
                 .user(user)
                 .build();
     }
