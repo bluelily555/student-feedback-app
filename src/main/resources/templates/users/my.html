@@ -57,17 +57,9 @@
                         </div>
                     </div>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                            <h6 class="mb-0">Security</h6>
-                            <span class="text-secondary">https://bootdey.com</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                            <h6 class="mb-0">Hospital</h6>
-                            <span class="text-secondary">https://bootdey.com</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                            <h6 class="mb-0">SNS</h6>
-                            <span class="text-secondary">https://bootdey.com</span>
+                        <li th:each="repository : ${repositories}" class="list-group-item d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0 me-2 text-nowrap overflow-hidden w-25" th:text="${repository.name}"></h6>
+                            <a class="text-secondary text-nowrap overflow-scroll w-75" th:href="@{${repository.address}}" th:text="${repository.address}" target="_blank"></a>
                         </li>
                     </ul>
                     <div class="modal fade" id="form-edit-repo-modal" tabindex="-1" aria-labelledby="form-edit-repo-modal-label" aria-hidden="true">

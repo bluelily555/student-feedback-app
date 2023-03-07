@@ -3,8 +3,10 @@ package com.project.feedback.controller.ui;
 import com.project.feedback.domain.dto.board.BoardListDto;
 import com.project.feedback.domain.dto.course.AddStudentRequest;
 import com.project.feedback.domain.dto.course.CourseDto;
+import com.project.feedback.domain.dto.repository.RepositoryResponse;
 import com.project.feedback.domain.dto.user.*;
 import com.project.feedback.domain.entity.CourseEntity;
+import com.project.feedback.domain.entity.RepositoryEntity;
 import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/users")
@@ -147,12 +150,15 @@ public class UserUiController {
         UserEntity user = findService.findUserByUserName(auth.getName());
         String userName = user.getUserName();
         CourseEntity course = findService.findCourseByUserId(user);
+        List<RepositoryResponse> repositories = findService.findRepositoriesByUser(user).stream()
+                .map(RepositoryResponse::of).toList();
 
         List<BoardListDto> boardListDtoList = boardService.getBoardListByUserId(user.getId());
         model.addAttribute("user", user);
         model.addAttribute("boardList", boardListDtoList);
         model.addAttribute("userName", auth.getName());
         model.addAttribute("course", course);
+        model.addAttribute("repositories", repositories);
         return "users/my";
     }
     @ResponseBody
