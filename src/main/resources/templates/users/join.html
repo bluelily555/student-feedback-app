@@ -14,7 +14,15 @@
                         <div class="card" style="border-radius: 15px;">
                             <div class="card-body p-5">
                                 <h2 class="text-uppercase text-center mb-5">Create an account</h2>
-                                <form th:method="post" th:action="@{/users/join}" th:object="${userJoinRequest}">
+                                <form th:method="post" th:action="@{/users/join}" th:object="${userJoinRequest}" th:autocomplete="off" autocomplete="off">
+                                    <div class="form-outline mb-4">
+                                        <input type="text" th:field="*{userName}"  class="form-control form-control-lg"/>
+                                        <label class="form-label" th:for="userName">Your Id</label>
+                                        <button onclick="id_check()" id="idCheck" type="button" class="btn btn-primary" disabled>중복확인</button>
+                                        <p id="userNameFail" style="color: red">ID를 입력하세요.</p>
+                                        <p id="userNameCheck" style="color: red" hidden>중복 확인을 해주세요.</p>
+                                        <p id="userNamePass" style="color: green;" hidden >V</p>
+                                    </div>
                                     <div class="form-outline mb-4">
                                         <input type="text" th:field="*{realName}" id="realName" class="form-control form-control-lg" />
                                         <label class="form-label" th:for="realName">Your Name</label>
@@ -22,7 +30,7 @@
                                         <p id="realNamePass" style="color: green;" hidden >V</p>
                                     </div>
                                     <div class="form-outline mb-4">
-                                        <input type="text" class="form-control form-control-lg" id="email" th:id="email" th:field="*{email}" th:errorclass="error-class" />
+                                        <input type="text" class="form-control form-control-lg" id="email" th:id="email" th:field="*{email}" th:errorclass="error-class"/>
                                         <label class="form-label" th:for="eamil">Your email</label>
                                         <!-- Button trigger modal -->
                                         <button onclick="send_email()" id="email_btn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop" disabled>
@@ -33,20 +41,13 @@
                                         <p id="emailPass" style="color: green;" hidden >이메일 인증 완료</p>
                                     </div>
                                     <div class="form-outline mb-4">
-                                        <input type="text" th:field="*{userName}" th:errorclass="error-class" class="form-control form-control-lg" th:autocomplete="off" autocomplete="off" />
-                                        <label class="form-label" th:for="userName">Your Id</label>
-                                        <button onclick="id_check()" id="idCheck" type="button" class="btn btn-primary" disabled>중복확인</button>
-                                        <p id="userNameFail" style="color: red">이름을 적어주세요.</p>
-                                        <p id="userNameCheck" style="color: red" hidden>중복 확인을 해주세요.</p>
-                                        <p id="userNamePass" style="color: green;" hidden >V</p>
-                                    </div>
-                                    <div class="form-outline mb-4">
-                                        <input type="password" th:field="*{password}"  class="form-control form-control-lg" th:autocomplete="off" autocomplete="off" />
+                                        <input type="password" th:field="*{password}"  class="form-control form-control-lg"/>
                                         <label class="form-label" th:for="password">Password</label>
                                         <p id="passwordEmpty" style="color: red">비밀 번호를 적어주세요.</p>
                                     </div>
                                     <div class="form-outline mb-4">
-                                        <input type="password" id="second_password" class="form-control form-control-lg" th:autocomplete="off" autocomplete="off" />
+                                        <input type="password" id="second_password" class="form-control form-control-lg"/>
+                                        <label class="form-label" th:for="second_password">Password Check</label>
                                         <p id="passwordCheck"  style="color: red" hidden>비밀 번호를 확인해주세요.</p>
                                         <p id="passwordFail"  style="color: red" hidden>비밀번호가 맞지 않습니다.</p>
                                         <p id="passwordPass" style="color: green;" hidden >V</p>
