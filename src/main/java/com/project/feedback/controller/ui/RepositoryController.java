@@ -31,4 +31,11 @@ public class RepositoryController {
         repositoryService.update(repositoryId, request, loginUser);
         return "redirect:/users/my";
     }
+
+    @PostMapping("/{repositoryId}/delete")
+    public String delete(@PathVariable Long repositoryId, Authentication auth) {
+        UserEntity loginUser = findService.findUserByUserName(auth.getName());
+        repositoryService.delete(repositoryId, loginUser);
+        return "redirect:/users/my";
+    }
 }
