@@ -12,6 +12,13 @@ public class RepositoryRequest {
     private String name;
     private String address;
 
+    public RepositoryEntity toEntity() {
+        return RepositoryEntity.builder()
+                .name(name)
+                .address(address)
+                .build();
+    }
+
     public RepositoryEntity toEntity(UserEntity user) {
         return RepositoryEntity.builder()
                 .name(name)

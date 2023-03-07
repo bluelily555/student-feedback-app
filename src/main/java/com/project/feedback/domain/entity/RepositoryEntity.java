@@ -26,4 +26,9 @@ public class RepositoryEntity extends TimeEntity{
     private String name;
 
     private String address;
+
+    public void update(RepositoryEntity update) {
+        this.name = update.getName();
+        this.address = update.getAddress();
+    }
 }
