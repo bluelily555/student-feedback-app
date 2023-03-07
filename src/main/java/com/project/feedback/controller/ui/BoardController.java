@@ -40,6 +40,7 @@ public class BoardController {
         List<BoardListDto> boardList = boardService.searchAllCode();
         boardList.forEach(boardListDto -> boardListDto.setLikes(likeService.countLikesOfBoard(boardListDto.getId())));
         model.addAttribute("boardList", boardList);
+        model.addAttribute("nullTaskId", 0);
         return "boards/show";
     }
 
@@ -118,16 +119,17 @@ public class BoardController {
     }
 
     //TASK에 질문 등록
-    @GetMapping("/tasks")
-    public String writeBoard(Model model, Authentication auth) {
+    @GetMapping("/tasks/{taskId}")
+    public String writeBoard(@PathVariable(required = false)Long taskId, Model model, Authentication auth) {
         Long userId = findService.findUserByUserName(auth.getName()).getId();
         List<UserTaskEntity> userTaskEntityList = userTaskService.getAllTaskByUserId(userId);
-
         model.addAttribute("boardCreateRequest", new BoardCreateRequest());
         model.addAttribute("taskList", userTaskEntityList);
         model.addAttribute("userName", auth.getName());
+        model.addAttribute("taskId", taskId);
 
         return "boards/write";
+
     }
 
     //TASK에 질문 등록
