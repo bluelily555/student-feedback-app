@@ -7,12 +7,27 @@ import com.project.feedback.domain.dto.mainInfo.StudentInfo;
 import com.project.feedback.domain.dto.mainInfo.TaskInfo;
 import com.project.feedback.domain.dto.task.TaskListDto;
 import com.project.feedback.domain.dto.task.TaskListResponse;
-import com.project.feedback.domain.entity.*;
+import com.project.feedback.domain.entity.BoardEntity;
+import com.project.feedback.domain.entity.CommentEntity;
+import com.project.feedback.domain.entity.CourseEntity;
+import com.project.feedback.domain.entity.CourseUserEntity;
+import com.project.feedback.domain.entity.TaskEntity;
+import com.project.feedback.domain.entity.TokenEntity;
+import com.project.feedback.domain.entity.UserEntity;
+import com.project.feedback.domain.entity.UserTaskEntity;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
-import com.project.feedback.repository.*;
+import com.project.feedback.repository.BoardRepository;
+import com.project.feedback.repository.CommentRepository;
+import com.project.feedback.repository.CourseRepository;
+import com.project.feedback.repository.CourseUserRepository;
+import com.project.feedback.repository.TaskRepository;
+import com.project.feedback.repository.TokenRepository;
+import com.project.feedback.repository.UserRepository;
+import com.project.feedback.repository.UserTaskRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,8 +35,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 
 @Component
 @RequiredArgsConstructor
@@ -190,6 +210,7 @@ public class FindService {
         for(TaskEntity t : taskEntities){
             taskInfoList.add(TaskInfo.of(t));
         }
+
         // student setting
         List<UserEntity> users = findUserByCourseId(courseId, loginUser);
         List<StudentInfo> studentInfoList = new ArrayList<>();
@@ -212,37 +233,55 @@ public class FindService {
         // course와 week에 해당하는 task목록
         List<TaskEntity> taskEntities = taskRepository.findByCourseIdAndWeekAndDay(courseId, week, day);
         // filter 정보에 해당하는 task id 정보만 저장
-        List<Long> ids = new ArrayList<>();
+        List<Long> taskIds = new ArrayList<>();
         for(TaskEntity taskEntity : taskEntities){
-            ids.add(taskEntity.getId());
-        }
+            taskIds.add(taskEntity.getId());
 
+        }
         // course에 해당하는 USER 정보 가져오기
         List<UserEntity> users = findUserByCourseId(courseId, loginUser);
 
-        List<StudentInfo> list = new ArrayList<>();
+        int size = taskEntities.size();
+
+        List<StudentInfo> list = new ArrayList<>(); // 결과
         for(UserEntity user : users){
-            List<StatusInfo> status2 = new ArrayList<>();
-            HashMap<String, String> map = new HashMap<>();
+
+            List<StatusInfo> statusInfo = new ArrayList<>();
+            Map<String, String> map = new HashMap<>();
+
+            List<Long> userIds = new ArrayList(
+                Collections.nCopies(size, user.getId())
+            );
+
+            //데이터 셋팅
+            taskEntities.forEach(
+                taskEntity -> {
+                    StatusInfo st = StatusInfo.builder()
+                        .taskName(taskEntity.getTitle())
+                        .taskId(taskEntity.getId())
+                        .taskStatus("Task등록")
+                        .build();
+                    statusInfo.add(st);
+                }
+            );
+
             map.put("studentName", user.getRealName());
-            for(TaskEntity taskEntity : taskEntities ){
 
-                // usertask에서 조회해서 가져와야함.
-                // taskid, userid로 조회한 status리스트가 있으면 넣어줌.
-                UserTaskEntity userTaskEntity = userTaskRepository.findByUserIdAndTaskEntityId(user.getId(), taskEntity.getId());
-                if(userTaskEntity != null){
-                    status2.add(StatusInfo.of(taskEntity.getId(), taskEntity.getTitle(), userTaskEntity.getStatus().toString()));
+            userTaskRepository.findByUserIdAndTaskEntityIdIn(userIds, taskIds).forEach(
+                userTaskEntity -> {
+                    for(StatusInfo s : statusInfo){
+                        if(userTaskEntity.getTaskEntity().getId()== s.getTaskId() && userTaskEntity.getUser().getId() == user.getId()){
+                            s.setTaskStatus(userTaskEntity.getStatus().toString());
+                        }
+                    }
                 }
-                else{
-                    // userTask에 데이터가 없어도 해당 cell의 taskid, title을 넣어줌.
-                    status2.add(StatusInfo.of(taskEntity.getId(),taskEntity.getTitle(),"Task등록"));
-                }
+            );
+            list.add(StudentInfo.of(user, statusInfo));
 
-            }
-            list.add(StudentInfo.of(user, status2));
         }
 
         return list;
+
     }
 
     public BoardEntity findByBoardId(long boardId){
