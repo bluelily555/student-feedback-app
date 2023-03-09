@@ -80,6 +80,16 @@
                         </div>
                     </div>
                 </div>
+                <div align="center">
+                    <br/>
+                    <button class="btn page-btn" th:if="${nowPage != 1}" th:onclick="|location.href = '@{/boards(page=${1})}'|">&lt;&lt;</button>
+                    <button class="btn page-btn" th:if="${nowPage != 1}" th:onclick="|location.href='@{/boards(page=${nowPage - 1})}'|">[[${nowPage - 1}]]</button>
+                    <button class="btn page-btn-now">[[${nowPage}]]</button>
+                    <button class="btn page-btn" th:if="${nowPage != lastPage}" th:onclick="|location.href='@{/boards(page=${nowPage + 1})}'|">[[${nowPage + 1}]]</button>
+                    <button class="btn page-btn" th:if="${nowPage != lastPage}" th:onclick="|location.href='@{/boards(page=${lastPage})}'|">&gt;&gt;</button>
+                    <br/><br/><br/>
+
+                </div>
             </div>
             <!-- Sidebar content -->
             <div class="col-lg-3 mb-4 mb-lg-0 px-lg-0 mt-lg-0">

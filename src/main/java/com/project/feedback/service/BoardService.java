@@ -2,6 +2,7 @@ package com.project.feedback.service;
 
 import com.project.feedback.domain.dto.board.BoardCreateRequest;
 import com.project.feedback.domain.dto.board.BoardListDto;
+import com.project.feedback.domain.dto.board.BoardListResponse;
 import com.project.feedback.domain.entity.BoardEntity;
 import com.project.feedback.domain.entity.TaskEntity;
 import com.project.feedback.domain.entity.UserEntity;
@@ -10,6 +11,9 @@ import com.project.feedback.repository.BoardRepository;
 import com.project.feedback.repository.LikeRepository;
 import com.project.feedback.repository.TaskRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +47,25 @@ public class BoardService {
         }
         return codeWriteDtoList;
     }
+    private List<BoardListDto> getBoardWriteDtos(Page<BoardEntity> boardEntities) {
+        // 함수 오버로딩
+        List<BoardListDto> codeWriteDtoList = new ArrayList<>();
+
+        for(BoardEntity boardEntity : boardEntities){
+            BoardListDto codeWriteDto = BoardListDto.builder()
+                    .id(boardEntity.getId())
+                    .taskEntity(boardEntity.getTaskEntity())
+                    .content(boardEntity.getContent())
+                    .codeContent(boardEntity.getCodeContent())
+                    .language(boardEntity.getLanguage())
+                    .title(boardEntity.getTitle())
+                    .userName(boardEntity.getUser().getRealName())
+                    .createdDate(boardEntity.getCreatedDate())
+                    .build();
+            codeWriteDtoList.add(codeWriteDto);
+        }
+        return codeWriteDtoList;
+    }
 
     @Transactional
     public Long save(BoardCreateRequest boardCreateRequest, UserEntity user, TaskEntity taskEntity){
@@ -53,10 +76,14 @@ public class BoardService {
     }
 
     @Transactional
-    public List<BoardListDto> searchAllCode(){
+    public BoardListResponse searchAllCode(Pageable pageable){
+        // pageable 로 찾은 board 데이터
+        Page<BoardEntity> boards = boardRepository.findAll(pageable);
         // id 기준으로 내림차순
-        List<BoardEntity> codeEntities = boardRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
-        return getBoardWriteDtos(codeEntities);
+//        List<BoardEntity> boardEntities = boardRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        List<BoardListDto> boardListDtoList = getBoardWriteDtos(boards);
+
+        return new BoardListResponse(boardListDtoList, pageable, boards);
     }
 
     @Transactional
