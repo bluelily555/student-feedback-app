@@ -5,6 +5,12 @@ import com.project.feedback.domain.dto.board.BoardListDto;
 import com.project.feedback.domain.dto.board.BoardListResponse;
 import com.project.feedback.domain.dto.comment.CommentCreateRequest;
 import com.project.feedback.domain.dto.comment.CommentListResponse;
+import com.project.feedback.domain.dto.course.CourseInfo;
+import com.project.feedback.domain.dto.mainInfo.CourseTaskListResponse;
+import com.project.feedback.domain.dto.mainInfo.FilterInfo;
+import com.project.feedback.domain.dto.mainInfo.StudentInfo;
+import com.project.feedback.domain.dto.mainInfo.TaskInfo;
+import com.project.feedback.domain.entity.CourseEntity;
 import com.project.feedback.domain.entity.TaskEntity;
 import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.domain.entity.UserTaskEntity;
@@ -20,6 +26,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -126,14 +133,43 @@ public class BoardController {
     }
 
     //TASK에 질문 등록
+    @PostMapping("/tasks/{taskId}/check")
+    public String daysCheck(@PathVariable("taskId")Long taskId, @ModelAttribute FilterInfo filterInfo, RedirectAttributes redirectAttribute, Authentication auth){
+        redirectAttribute.addAttribute("week", filterInfo.getWeek());
+        redirectAttribute.addAttribute("day", filterInfo.getDay());
+        redirectAttribute.addAttribute("taskId", taskId);
+        return "redirect:/boards/tasks/{taskId}/weeks/{week}/days/{day}";
+    }
     @GetMapping("/tasks/{taskId}")
-    public String writeBoard(@PathVariable(required = false)Long taskId, Model model, Authentication auth) {
-        Long userId = findService.findUserByUserName(auth.getName()).getId();
-        List<UserTaskEntity> userTaskEntityList = userTaskService.getAllTaskByUserId(userId);
+    public String taskWrite(@PathVariable(required = false)Long taskId, RedirectAttributes redirectAttribute, Authentication auth){
+        UserEntity loginUser = findService.findUserByUserName(auth.getName());
+        CourseEntity course = findService.findCourseByUserId(loginUser);
+        CourseInfo courseInfo = CourseInfo.fromEntity(course);
+        FilterInfo filterInfo = FilterInfo.builder()
+                .day(Long.valueOf(courseInfo.getWeek()))
+                .week(Long.valueOf(courseInfo.getDayOfWeek()))
+                .build();
+
+        redirectAttribute.addAttribute("week", courseInfo.getWeek());
+        redirectAttribute.addAttribute("day", courseInfo.getDayOfWeek());
+        redirectAttribute.addAttribute("taskId", taskId);
+        return "redirect:/boards/tasks/{taskId}/weeks/{week}/days/{day}";
+    }
+    @GetMapping("/tasks/{taskId}/weeks/{week}/days/{day}")
+    public String writeBoard(@PathVariable(required = false)Long taskId, @PathVariable(required = false)Long week, @PathVariable(required = false)Long day, Model model, Authentication auth) {
+        UserEntity loginUser = findService.findUserByUserName(auth.getName());
+        CourseEntity course = findService.findCourseByUserId(loginUser);
+        CourseTaskListResponse res =  findService.getTasksAndStudentsByWeekAndDay(course.getId(), week, day, loginUser);
+        List<TaskInfo> taskList = res.getTaskInfoList();
+
+        model.addAttribute("filterInfo", new FilterInfo());
         model.addAttribute("boardCreateRequest", new BoardCreateRequest());
-        model.addAttribute("taskList", userTaskEntityList);
+        model.addAttribute("taskList", taskList);
         model.addAttribute("userName", auth.getName());
+        model.addAttribute("courseName", course.getName());
         model.addAttribute("taskId", taskId);
+        model.addAttribute("week", week);
+        model.addAttribute("day", day);
 
         return "boards/write";
 
