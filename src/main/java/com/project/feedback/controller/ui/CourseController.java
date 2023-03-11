@@ -112,10 +112,8 @@ public class CourseController {
         List<StudentInfo> result = findService.getStudentsWithTask(courseId,  week, day, loginUser);
         CourseTaskListResponse res =  findService.getTasksAndStudentsByWeekAndDay(courseId, week, day, loginUser);
         Long userId = findService.findUserByUserName(auth.getName()).getId();
-        List<UserTaskEntity> userTaskEntityList = userTaskService.getAllTaskByUserId(userId);
-        for(UserTaskEntity userTaskEntity: userTaskEntityList){
-            log.info(userTaskEntity.getTaskEntity().getTitle());
-        }
+//        List<UserTaskEntity> userTaskEntityList = userTaskService.getAllTaskByUserId(userId);
+
         List<TaskInfo> taskList = res.getTaskInfoList();
 
         model.addAttribute("filterInfo", new FilterInfo());
@@ -126,7 +124,7 @@ public class CourseController {
         model.addAttribute("authName", auth.getName());
         model.addAttribute("week", week);
         model.addAttribute("day", day);
-        model.addAttribute("userTaskList", userTaskEntityList);
+//        model.addAttribute("userTaskList", userTaskEntityList);
 
         return "courses/students/show";
     }
