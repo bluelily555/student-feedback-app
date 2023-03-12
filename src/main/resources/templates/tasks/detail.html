@@ -71,8 +71,8 @@
                 </div>
                 <div>
                   <label style="font-weight:bold;">설명 : </label>
-                  <textarea class="form-control" name="description" rows="10" th:value="${taskDetail.description}" sec:authorize="hasAnyRole('STUDENT', 'TEACHER')" readonly></textarea>
-                  <textarea class="form-control" name="description" id="description" rows="10" th:value="${taskDetail.description}" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')" placeholder="설명이 없습니다."></textarea>
+                  <textarea class="form-control" name="description" rows="10" th:text="${taskDetail.description}" sec:authorize="hasAnyRole('STUDENT', 'TEACHER')" readonly></textarea>
+                  <textarea class="form-control" name="description" id="description" rows="10" th:text="${taskDetail.description}" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')" placeholder="설명이 없습니다."></textarea>
                 </div>
                 <br/> <br/>
                 <div align="right" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')" >
