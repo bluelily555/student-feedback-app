@@ -21,5 +21,5 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     @Transactional
     @Modifying
     @Query(value = "UPDATE BoardEntity entity SET entity.deletedAt = NOW() where entity.taskEntity = :task")
-    BoardEntity deleteAllByTask(@Param("task") TaskEntity taskEntity);
+    void deleteAllByTask(@Param("task") TaskEntity taskEntity);
 }
