@@ -6,15 +6,22 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
 @Entity
 @Builder
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@SQLDelete(sql = "UPDATE task SET deleted_at = NOW() WHERE id=?")
+@Where(clause = "deleted_at is NULL")
 @Table(name = "task")
 public class TaskEntity extends BaseEntity{
 
@@ -44,6 +51,10 @@ public class TaskEntity extends BaseEntity{
 
     @Enumerated(EnumType.STRING)
     private TaskStatus taskStatus;
+
+    //삭제 날짜
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
     // 몇주
     private Long week;
