@@ -5,7 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -13,6 +16,8 @@ import java.util.List;
 @Builder
 @Getter
 @Entity
+@SQLDelete(sql = "UPDATE board SET deleted_at = NOW() WHERE id=?")
+@Where(clause = "deleted_at is NULL")
 @Table(name ="board")
 public class BoardEntity extends TimeEntity {
     @Id
@@ -36,6 +41,10 @@ public class BoardEntity extends TimeEntity {
 
     @Column(length = 32, nullable = false)
     private String title;
+
+    //삭제 날짜
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
