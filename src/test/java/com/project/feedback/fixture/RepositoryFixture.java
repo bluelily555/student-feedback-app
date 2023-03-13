@@ -5,6 +5,13 @@ import com.project.feedback.domain.entity.RepositoryEntity;
 import com.project.feedback.domain.entity.UserEntity;
 
 public class RepositoryFixture {
+    public static RepositoryEntity repository(String address, UserEntity user) {
+        return RepositoryEntity.builder()
+                .id(1L)
+                .address(address)
+                .user(user)
+                .build();
+    }
     public static RepositoryEntity securityRepo(UserEntity user) {
         return RepositoryEntity.builder()
                 .id(1L)
