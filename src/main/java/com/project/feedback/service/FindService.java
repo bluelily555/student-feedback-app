@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -261,5 +263,16 @@ public class FindService {
 
     public List<RepositoryEntity> findRepositoriesByUser(UserEntity user) {
         return repositoryRepository.findByUserOrderByModifiedDateDesc(user);
+    }
+
+    // Distinct Repository Name
+    public Set<String> findAllRepositoryNames() {
+        return repositoryRepository.findAll().stream()
+                .map(RepositoryEntity::getName)
+                .collect(Collectors.toSet());
+    }
+
+    public List<RepositoryEntity> findRepositoryByName(String name) {
+        return repositoryRepository.findByName(name);
     }
 }
