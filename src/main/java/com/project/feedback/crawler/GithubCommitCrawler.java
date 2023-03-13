@@ -1,5 +1,6 @@
 package com.project.feedback.crawler;
 
+import com.project.feedback.domain.entity.RepositoryEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
@@ -7,9 +8,6 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -24,11 +22,9 @@ public class GithubCommitCrawler extends AbstractCommitCrawler {
     }
 
     @Override
-    public List<Commit> execute(Collection<String> addresses) {
-        addresses = addresses.stream()
-                .map(address -> address + COMMIT_URL_SUFFIX)
-                .collect(Collectors.toList());
-        return super.execute(addresses);
+    public Commit execute(RepositoryEntity repository) {
+        repository.setAddress(repository.getAddress() + COMMIT_URL_SUFFIX);
+        return super.execute(repository);
     }
 
     @Override
@@ -40,7 +36,7 @@ public class GithubCommitCrawler extends AbstractCommitCrawler {
     String parseUrl(Elements urlElement) {
         if (urlElement.isEmpty()) return null;
         String url = urlElement.attr("href");
-        return url.isBlank() ? null : url;
+        return url.isBlank() ? null : "https://github.com/" + url;
     }
 
     @Override

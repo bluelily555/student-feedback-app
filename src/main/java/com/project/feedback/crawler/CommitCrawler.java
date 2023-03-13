@@ -1,8 +1,7 @@
 package com.project.feedback.crawler;
 
-import java.util.Collection;
-import java.util.List;
+import com.project.feedback.domain.entity.RepositoryEntity;
 
 public interface CommitCrawler {
-    List<Commit> execute(Collection<String> addresses) throws Exception;
+    Commit execute(RepositoryEntity repository);
 }
