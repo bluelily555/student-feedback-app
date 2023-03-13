@@ -1,5 +1,6 @@
 package com.project.feedback.service;
 
+import com.project.feedback.domain.dao.Impl.UserDAOImpl;
 import com.project.feedback.repository.CourseRepository;
 import com.project.feedback.repository.CourseUserRepository;
 import com.project.feedback.repository.TokenRepository;
@@ -10,7 +11,7 @@ import static org.mockito.Mockito.mock;
 
 class UserServiceTest {
 
-    UserRepository userRepository = mock(UserRepository.class);
+    UserDAOImpl userDAO = mock(UserDAOImpl.class);
     CourseUserRepository courseUserRepository = mock(CourseUserRepository.class);
     CourseRepository courseRepository = mock(CourseRepository.class);
     TokenRepository tokenRepository = mock(TokenRepository.class);
@@ -19,7 +20,7 @@ class UserServiceTest {
     CourseService courseService;
     TaskService taskService;
     BoardService boardService;
-    UserService userService = new UserService(userRepository, courseUserRepository, courseRepository, tokenRepository,
+    UserService userService = new UserService(userDAO, courseUserRepository, courseRepository, tokenRepository,
             encoder, findService, courseService, taskService, boardService);
 
 

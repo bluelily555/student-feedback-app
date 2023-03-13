@@ -12,6 +12,7 @@ import com.project.feedback.repository.CourseUserRepository;
 import com.project.feedback.repository.TaskRepository;
 import com.project.feedback.repository.UserTaskRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,7 @@ import java.util.Set;
 
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserTaskService {
 
@@ -111,6 +113,10 @@ public class UserTaskService {
     }
     @Transactional
     public List<UserTaskEntity>getAllTaskByUserId(Long userId){
+        List<UserTaskEntity> userTaskEntityList = userTaskRepository.findAllByUserId(userId);
+        for(UserTaskEntity userTaskEntity: userTaskEntityList){
+            log.info("userId 로 찾은 데이터들" + userTaskEntity.getTaskEntity().getTitle());
+        }
         return userTaskRepository.findAllByUserId(userId);
     }
 }

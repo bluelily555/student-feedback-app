@@ -26,7 +26,7 @@
         </div>
     </form>
     <select id="selTaskId" onchange="setTaskId(this.value)">
-        <option th:each="task :${userTaskList}" th:value="${task.taskEntity.getId()}" th:text="${task.taskEntity.getTitle()}"></option>
+        <option th:each="task :${taskList}" th:value="${task.id}" th:text="${task.title}"></option>
     </select>
     <a th:href="@{'/boards/tasks'}" id="questionUrl" style="float: right;margin-right: 7vw;margin-top: 1.5vh;">
         <button type="button" class="btn btn-success btn-sm">질문하러가기</button>
@@ -182,14 +182,25 @@
 
             });
         });
+    </script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        let week = /*[[${week}]]*/ 1;
+        let day = /*[[${day}]]*/ 1;
+        console.log(week, day);
         // taskId 기본값 설정
         let task = document.getElementById("selTaskId").value;
-        document.querySelector('#questionUrl').href = `/boards/tasks/${task}`;
+        document.querySelector('#questionUrl').href = `/boards/tasks/${task}/weeks/${week}/days/${day}`;
+        console.log(document.querySelector('#questionUrl').href)
+
         // taskId 동적 변경
         function setTaskId(taskId) {
-            document.querySelector('#questionUrl').href = `/boards/tasks/${taskId}`;
+            document.querySelector('#questionUrl').href = `/boards/tasks/${taskId}/weeks/${week}/days/${day}`;
             console.log(document.querySelector('#questionUrl').href)
         }
+
+
+        /*]]>*/
     </script>
 </body>
 

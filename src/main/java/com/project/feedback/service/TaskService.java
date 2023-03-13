@@ -13,6 +13,7 @@ import com.project.feedback.domain.entity.TaskEntity;
 import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
+import com.project.feedback.repository.BoardRepository;
 import com.project.feedback.repository.TaskRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +33,7 @@ import java.util.List;
 public class TaskService {
 
     private final TaskRepository taskRepository;
+    private final BoardRepository boardRepository;
     private final FindService findService;
 
     public TaskCreateResponse createTask(TaskCreateRequest req, String userName) {
@@ -69,6 +72,7 @@ public class TaskService {
         return TaskUpdateResponse.of(findTask.getId());
     }
 
+    @Transactional
     public TaskDeleteResponse deleteTask(Long taskId, String userName) {
         TaskEntity findTask = findService.findTaskById(taskId);
 
@@ -81,6 +85,8 @@ public class TaskService {
             throw new CustomException(ErrorCode.INVALID_PERMISSION);
         }
 
+        boardRepository.deleteAllByTask(findTask);
+        //삭제할 task Id
         Long deleteId = findTask.getId();
         taskRepository.deleteById(deleteId);
 

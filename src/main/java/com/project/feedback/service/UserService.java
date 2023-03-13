@@ -1,6 +1,7 @@
 package com.project.feedback.service;
 
 import com.project.feedback.domain.Role;
+import com.project.feedback.domain.dao.Impl.UserDAOImpl;
 import com.project.feedback.domain.dto.board.BoardCreateRequest;
 import com.project.feedback.domain.dto.course.CourseDto;
 import com.project.feedback.domain.dto.course.CourseInfo;
@@ -44,7 +45,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final UserDAOImpl userImpl;
     private final CourseUserRepository courseUserRepository;
     private final CourseRepository courseRepository;
     private final TokenRepository tokenRepository;
@@ -68,22 +69,22 @@ public class UserService {
     public UserJoinResponse saveUser(UserJoinRequest req) {
 
         // userName 중복 체크
-        userRepository.findByUserName(req.getUserName()).ifPresent(user -> {
+        userImpl.findByUserName(req.getUserName()).ifPresent(user -> {
             throw new CustomException(ErrorCode.DUPLICATED_USER_NAME, "UserName(" + req.getUserName() + ")이 중복입니다.");
         });
         // email 중복 체크
-        userRepository.findByEmail(req.getEmail()).ifPresent(user -> {
+        userImpl.findByEmail(req.getEmail()).ifPresent(user -> {
             throw new CustomException(ErrorCode.DUPLICATED_EMAIL, "Email(" + req.getEmail() + ")이 중복입니다.");
         });
         // 비밀번호 인코딩 후 저장
         String encodedPassword = encoder.encode( req.getPassword() );
-        UserEntity savedUser = userRepository.save(req.toEntity(encodedPassword));
+        UserEntity savedUser = userImpl.insertUser(req.toEntity(encodedPassword));
 
         return UserJoinResponse.of(savedUser);
     }
     public boolean idCheck(String userName){
         // userName 중복 체크
-        userRepository.findByUserName(userName).ifPresent(user -> {
+        userImpl.findByUserName(userName).ifPresent(user -> {
             throw new CustomException(ErrorCode.DUPLICATED_USER_NAME, "UserName(" + userName + ")이 중복입니다.");
         });
         return true;
@@ -111,7 +112,7 @@ public class UserService {
     }
     public UserChangeRoleResponse changeRole(Long userId, UserChangeRoleRequest req) {
 
-        UserEntity user = userRepository.findById(userId)
+        UserEntity user = userImpl.findUserById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
 
         Role newRole;
@@ -126,16 +127,16 @@ public class UserService {
         }
 
         user.setRole(newRole);
-        userRepository.save(user);
+        userImpl.insertUser(user);
 
         return UserChangeRoleResponse.of(user.getId(), newRole);
     }
 
     public void changeRoles(Long userId, String role) {
-        UserEntity user = userRepository.findById(userId)
+        UserEntity user = userImpl.findUserById(userId)
             .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
         user.setRole(Role.valueOf(role));
-        userRepository.save(user);
+        userImpl.insertUser(user);
     }
 
     public void setDefaultUsers(){
@@ -226,7 +227,7 @@ public class UserService {
         }
     }
     public void changeDefaultRole(String userRole){
-        UserEntity user = userRepository.findByUserName(userRole)
+        UserEntity user = userImpl.findByUserName(userRole)
                 .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
         Role newRole;
         if(userRole.equals("admin")){
@@ -239,10 +240,10 @@ public class UserService {
             throw new RuntimeException();
         }
         user.setRole(newRole);
-        userRepository.save(user);
+        userImpl.insertUser(user);
     }
     public UserListResponse getUserList(Pageable pageable) {
-        Page<UserEntity> users = userRepository.findAll(pageable);
+        Page<UserEntity> users = userImpl.findAll(pageable);
         List<UserListDto> content = new ArrayList<>();
         for(UserEntity user : users) {
             String courseName = "";
@@ -263,7 +264,7 @@ public class UserService {
         return new UserListResponse(content, pageable, users);
     }
     public UserChangePwResponse updatePwByLogin(UserChangePwRequest req){
-        UserEntity user = userRepository.findByUserName(req.getUserName())
+        UserEntity user = userImpl.findByUserName(req.getUserName())
                 .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
         String userPassword = user.getPassword();
 //        기존 비밀번호 체크
@@ -276,13 +277,13 @@ public class UserService {
             }else{
                 String encodedPassword = encoder.encode(req.getChPassword());
                 user.setPassword(encodedPassword);
-                user = userRepository.save(user);
+                user = userImpl.insertUser(user);
             }
         }
         return UserChangePwResponse.of(user.getUserName());
     }
     public UserFindPwResponse updatePwByAnonymous(UserFindPwRequest req){
-        UserEntity user = userRepository.findByUserName(req.getUserName())
+        UserEntity user = userImpl.findByUserName(req.getUserName())
                 .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
         // 현재 비밀번호 알필요 없음 `
         String userPassword = user.getPassword();
@@ -291,7 +292,7 @@ public class UserService {
         }else{
             String encodedPassword = encoder.encode(req.getChPassword());
             user.setPassword(encodedPassword);
-            user = userRepository.save(user);
+            user = userImpl.insertUser(user);
         }
         return UserFindPwResponse.of(user.getUserName());
     }
