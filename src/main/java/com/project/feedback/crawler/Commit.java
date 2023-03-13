@@ -4,10 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
 public class Commit {
+    private static int DEFAULT_OFFSET_MINUTES = 30;
+    private String username;
     private String address;
     private String url;
     private String title;
@@ -20,10 +23,20 @@ public class Commit {
         return new Commit();
     }
 
+    public String getCommittedDatetime() {
+        if (committedDatetime == null) return null;
+        return committedDatetime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    public boolean isNew() {
+        return committedDatetime.isAfter(LocalDateTime.now().minusMinutes(DEFAULT_OFFSET_MINUTES));
+    }
+
     @Override
     public String toString() {
         return "Commit{" +
-                "address='" + address + '\'' +
+                "username='" + username + '\'' +
+                ", address='" + address + '\'' +
                 ", url='" + url + '\'' +
                 ", title='" + title + '\'' +
                 ", committedDatetime=" + committedDatetime +
