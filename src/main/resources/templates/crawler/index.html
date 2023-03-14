@@ -34,7 +34,7 @@
             <th:block th:each="commit : ${commits}" th:if="${commit.getTitle() != null}">
                 <tr role="button" th:data-url="${commit.getUrl()}" onclick="window.open(this.getAttribute('data-url'))">
                     <td th:text="${commit.getUsername()}"></td>
-                    <td th:text="${commit.getTitle()}"><span th:if="${commit.isNew() == true}" class="badge text-bg-secondary me-1">NEW</span></td>
+                    <td><span th:if="${commit.isNew()}" class="badge text-bg-secondary me-1">NEW</span>[[${commit.getTitle()}]]</td>
                     <td th:text="${commit.getCommittedDatetime()}"></td>
                 </tr>
             </th:block>
