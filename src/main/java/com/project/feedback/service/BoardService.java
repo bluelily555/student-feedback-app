@@ -110,6 +110,7 @@ public class BoardService {
         BoardListDto boardList = BoardListDto.builder()
                 .id(boardEntity.getId())
                 .title(boardEntity.getTitle())
+                .taskEntity(boardEntity.getTaskEntity())
                 .language(boardEntity.getLanguage())
                 .content(boardEntity.getContent())
                 .codeContent(boardEntity.getCodeContent())
