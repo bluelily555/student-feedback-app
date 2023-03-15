@@ -20,6 +20,7 @@
           type="text/javascript"
           src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.js"
   ></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script th:inline="javascript">
     window.onload = function () {
       if([[${message}]] != null) {
@@ -68,7 +69,7 @@
           </ul>
         </div>
         <!-- 로그인 했을때 -->
-        <ul class="navbar-nav" sec:authorize="isAuthenticated()">
+        <ul class="navbar-nav align-items-center" sec:authorize="isAuthenticated()">
 
           <li class="nav-item dropdown" >
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -85,10 +86,72 @@
               <li><a class="dropdown-item" href="/users/logout">로그아웃</a></li>
             </ul>
           </li>
+          <!-- 알림 드롭다운-->
+          <div class="dropdown notification-dropdown">
+            <a class="p-2 text-black" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa-solid fa-bell"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end notification-dropdown-menu" style="width: 420px">
+              <li><span class="dropdown-header fs-6">알림</span></li>
+              <li><hr class="dropdown-divider"></li>
+            </ul>
+          </div>
         </ul>
       </div>
     </div>
   </nav>
+  <script th:inline="javascript">
+    const NOTIFICATION_MSG = {
+      'LIKE_BOARD' : '님이 게시물에 좋아요를 눌렀습니다.',
+      'LIKE_COMMENT' : '님이 댓글에 좋아요를 눌렀습니다.',
+      'COMMENT' : '님이 댓글을 남겼습니다.',
+    }
+
+    const notificationMenu = document.querySelector('.notification-dropdown-menu');
+
+    fetch('/api/v1/notifications')
+            .then(response => {
+              if (!response.ok) {
+                writeEmptyNotificationMenu();
+                throw new Error(`[${response.status}] ${response.statusText}`);
+              }
+              return response.json();
+            }).then(data => {
+      writeNotificationMenu(data);
+    })
+
+    function writeEmptyNotificationMenu() {
+      notificationMenu.insertAdjacentHTML('beforeend', `
+        <li><span class="dropdown-item bg-white">알림 없음.</span></li>
+      `)
+    }
+
+    function writeNotificationMenu(notifications) {
+      if (notifications.length < 1) {
+        writeEmptyNotificationMenu();
+        return;
+      }
+
+      notifications.forEach(notification => {
+        notificationMenu.insertAdjacentHTML('beforeend', `
+          <li>
+            <a class="dropdown-item ${notification.confirmed ? 'text-secondary bg-light' : 'text-muted'}" href="/notifications/${notification.id}">
+              <div class="row justify-content-between">
+                <div class="col-7 notification-content">
+                  <div class="fs-6 notification-message">
+                    <span class="${notification.confirmed ? '' : 'text-primary'} fw-bold">${notification.from}</span>
+                    <span class="${notification.confirmed ? '' : 'text-black'}">${NOTIFICATION_MSG[notification.type]}</span>
+                  </div>
+                  <span class="w-100 d-inline-block text-truncate notification-source" style="max-width: 100%">${notification.sourceTitle}</span>
+                </div>
+                <span class="col-3 notification-date text-end">${notification.createdDate}</span>
+              </div>
+            </a>
+          </li>
+        `)
+      })
+    }
+  </script>
 </div>
 </body>
 
