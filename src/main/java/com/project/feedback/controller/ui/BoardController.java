@@ -10,11 +10,9 @@ import com.project.feedback.domain.dto.mainInfo.CourseTaskListResponse;
 import com.project.feedback.domain.dto.mainInfo.FilterInfo;
 import com.project.feedback.domain.dto.mainInfo.StudentInfo;
 import com.project.feedback.domain.dto.mainInfo.TaskInfo;
-import com.project.feedback.domain.entity.CourseEntity;
-import com.project.feedback.domain.entity.TaskEntity;
-import com.project.feedback.domain.entity.UserEntity;
-import com.project.feedback.domain.entity.UserTaskEntity;
+import com.project.feedback.domain.entity.*;
 import com.project.feedback.domain.enums.LikeContentType;
+import com.project.feedback.domain.enums.NotificationType;
 import com.project.feedback.service.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +40,7 @@ public class BoardController {
     private final FindService findService;
     private final LikeService likeService;
     private final UserTaskService userTaskService;
+    private final NotificationService notificationService;
 
 
     @GetMapping
@@ -100,10 +99,16 @@ public class BoardController {
     }
 
     @PostMapping("/{boardId}/comment")
-    public String write(@PathVariable Long boardId, @ModelAttribute CommentCreateRequest req,
+    public String writeComment(@PathVariable Long boardId, @ModelAttribute CommentCreateRequest req,
                         Authentication auth) {
+        UserEntity loginUser = findService.findUserByUserName(auth.getName());
+        BoardEntity board = findService.findByBoardId(boardId);
+
         commentService.saveComment(req, auth.getName(), boardId);
-        return "redirect:/boards";
+
+        notificationService.create(NotificationType.COMMENT, board.getId(), board.getUser(), loginUser);
+
+        return "redirect:/boards/" + boardId;
     }
 
     @PostMapping("/{boardId}/like")
@@ -112,9 +117,11 @@ public class BoardController {
         if (auth == null) return "redirect:/boards/" + boardId;
 
         UserEntity loginUser = findService.findUserByUserName(auth.getName());
-        findService.findByBoardId(boardId);
+        BoardEntity board = findService.findByBoardId(boardId);
 
         likeService.like(LikeContentType.BOARD, boardId, loginUser);
+
+        notificationService.create(NotificationType.LIKE_BOARD, board.getId(), board.getUser(), loginUser);
 
         return "redirect:/boards/" + boardId;
     }
