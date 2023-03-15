@@ -46,12 +46,12 @@
                     <div class="card-footer d-flex">
                         <th:block th:if="${isLiked==true}">
                             <form class="ms-auto" th:action="@{'/boards/' + ${boardInfo.id} + '/unlike'}" method="post">
-                                <input type="submit" class="btn btn-danger" th:value="${boardInfo.likes + ' ♡'}">
+                                <button type="submit" class="btn btn-danger">[[${boardInfo.likes}]] <i class="fa-regular fa-heart"></i></button>
                             </form>
                         </th:block>
                         <th:block th:unless="${isLiked==true}">
                             <form class="ms-auto" th:action="@{'/boards/' + ${boardInfo.id} + '/like'}" method="post">
-                                <input type="submit" class="btn btn-outline-danger" th:value="${boardInfo.likes + ' ♡'}" th:disabled="${#authorization.expression('hasRole(''ROLE_ANONYMOUS'')')}">
+                                <button type="submit" class="btn btn-outline-danger" th:disabled="${#authorization.expression('hasRole(''ROLE_ANONYMOUS'')')}">[[${boardInfo.likes}]] <i class="fa-regular fa-heart"></i></button>
                             </form>
                         </th:block>
                     </div>
@@ -98,12 +98,12 @@
             <div class="d-flex">
                 <th:block th:if="${comment.likeStatus==true}">
                     <form class="ms-auto" th:action="@{'/comments/' + ${comment.id} + '/unlike'}" method="post">
-                        <input type="submit" class="btn btn-danger" th:value="${comment.likes + ' ♡'}">
+                        <button type="submit" class="btn btn-danger">[[${comment.likes}]] <i class="fa-regular fa-heart"></i></button>
                     </form>
                 </th:block>
                 <th:block th:unless="${comment.likeStatus==true}">
                     <form class="ms-auto" th:action="@{'/comments/' + ${comment.id} + '/like'}" method="post">
-                        <input type="submit" class="btn btn-outline-danger" th:value="${comment.likes + ' ♡'}" th:disabled="${#authorization.expression('hasRole(''ROLE_ANONYMOUS'')')}">
+                        <button type="submit" class="btn btn-outline-danger" th:disabled="${#authorization.expression('hasRole(''ROLE_ANONYMOUS'')')}">[[${comment.likes}]] <i class="fa-regular fa-heart"></i></button>
                     </form>
                 </th:block>
             </div>
