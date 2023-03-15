@@ -37,4 +37,8 @@ public class NotificationEntity extends TimeEntity{
     public void confirm() {
         this.confirmed = true;
     }
+
+    public boolean equalsOwner(UserEntity user) {
+        return this.targetUser.equals(user);
+    }
 }
