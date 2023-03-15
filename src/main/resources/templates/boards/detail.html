@@ -23,10 +23,14 @@
                                     <!--                                        <input type="text" name="writer" th:value="${boardList.writer}"/> <br>-->
                                     <h5 style="float: left; margin-right: 5px">제목 :</h5>
                                     <h5 th:text="${boardInfo.title}"></h5>
-                                    <h5 style="float: left; margin-right: 5px">작성자 :</h5>
-                                    <p th:text="${boardInfo.userName}"></p>
+                                    <h5 sec:authorize="hasRole('ROLE_ADMIN')" style="float: left; margin-right: 5px" >작성자 :</h5>
+                                    <p sec:authorize="hasRole('ROLE_ADMIN')" th:text="${boardInfo.userName}"></p>
                                     <h5 style="float: left; margin-right: 5px">작성 시간 :</h5>
                                     <p th:text="${#temporals.format(boardInfo.createdDate, 'yyyy-MM-dd HH:mm')}"></p>
+                                    <h5 style="float: left; margin-right: 5px">태스크 명 :</h5>
+                                    <a th:href="@{'/tasks/' + ${boardInfo.taskEntity.id}}" style="display: inline-block;">
+                                        <h5 th:text="${boardInfo.taskEntity.title}"></h5>
+                                    </a>
                                     <div style="display: block">
                                         <h5>작성 내용</h5>
                                         <input type="hidden" id="language" th:value="${boardInfo.language}"></input>
