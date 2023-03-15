@@ -87,11 +87,12 @@
             </ul>
           </li>
           <!-- 알림 드롭다운-->
-          <div class="dropdown notification-dropdown">
-            <a class="p-2 text-black" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fa-solid fa-bell"></i>
+          <div class="dropdown notification-dropdown mx-2">
+            <a class="text-black position-relative" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa-solid fa-bell fs-4"></i>
+              <span hidden class="notification-indicator position-absolute top-0 start-100 translate-middle badge border border-light rounded-pill bg-danger"></span>
             </a>
-            <ul class="dropdown-menu dropdown-menu-end notification-dropdown-menu" style="width: 420px">
+            <ul class="dropdown-menu dropdown-menu-end overflow-scroll notification-dropdown-menu" style="width: 420px; max-height: 600px">
               <li><span class="dropdown-header fs-6">알림</span></li>
               <li><hr class="dropdown-divider"></li>
             </ul>
@@ -100,7 +101,7 @@
       </div>
     </div>
   </nav>
-  <script th:inline="javascript">
+  <script th:inline="javascript" sec:authorize="isAuthenticated()">
     const NOTIFICATION_MSG = {
       'LIKE_BOARD' : '님이 게시물에 좋아요를 눌렀습니다.',
       'LIKE_COMMENT' : '님이 댓글에 좋아요를 눌렀습니다.',
@@ -108,6 +109,7 @@
     }
 
     const notificationMenu = document.querySelector('.notification-dropdown-menu');
+    const notificationIndicator = document.querySelector('.notification-indicator');
 
     fetch('/api/v1/notifications')
             .then(response => {
@@ -132,7 +134,10 @@
         return;
       }
 
+      let count = 0;
+
       notifications.forEach(notification => {
+        if (!notification.confirmed) count++;
         notificationMenu.insertAdjacentHTML('beforeend', `
           <li>
             <a class="dropdown-item ${notification.confirmed ? 'text-secondary bg-light' : 'text-muted'}" href="/notifications/${notification.id}">
@@ -150,6 +155,9 @@
           </li>
         `)
       })
+
+      notificationIndicator.innerText = count < 10 ? count: '9+';
+      notificationIndicator.hidden = count <= 0;
     }
   </script>
 </div>
