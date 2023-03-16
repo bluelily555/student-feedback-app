@@ -7,16 +7,17 @@
 <body>
 
 <div th:insert="~{fragments/navbar :: navbar}"></div>
+<div>
     <form th:method="post" th:action="@{/courses/students}" th:object="${filterInfo}" style="width: 50vw;display: inline-block;">
         <div class="row">
             <div class="col-sm-auto">
                 <label for="week" id="course" class = "btn" th:text="${courseName}" />
-                <select th:field="*{week}" id="week" style="width:40px;">
+                <select class="form-select" th:field="*{week}" id="week" style="width:70px; display: inline-block">
                     <option th:value="${week}" th:text="${week}"/>
                     <option th:each="week : ${#numbers.sequence(1,53)}" th:value="${week}" th:text="${week}"/>
                 </select>
                 <label for="day" class = "btn">주차</label>
-                <select th:field="*{day}" id="day" style="width:40px;margin-top:10px">
+                <select class="form-select" th:field="*{day}" id="day" style="width:70px;margin-top:10px; display: inline-block">
                     <option th:value="${day}" th:text="${day}"/>
                     <option th:each="day : ${#numbers.sequence(1,7)}" th:value="${day}" th:text="${day}"/>
                 </select>
@@ -25,14 +26,14 @@
             </div>
         </div>
     </form>
-    <select id="selTaskId" onchange="setTaskId(this.value)">
+    <select id="selTaskId" class="form-select" onchange="setTaskId(this.value)" style="width:20vw; display: inline-block">
         <option th:each="task :${taskList}" th:value="${task.id}" th:text="${task.title}"></option>
     </select>
-    <a th:href="@{'/boards/tasks'}" id="questionUrl" style="float: right;margin-right: 7vw;margin-top: 1.5vh;">
+    <a th:href="@{'/boards/tasks'}" id="questionUrl">
         <button type="button" class="btn btn-success btn-sm">질문하러가기</button>
     </a>
     <hr/>
-
+</div>
     <div class="table-responsive overflow-x-auto">
         <table class="table table-sm table-bordered" id="myTable">
             <thead class="thead-dark">
