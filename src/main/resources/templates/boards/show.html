@@ -76,9 +76,9 @@
                             <div class="text-sm op-5">
                                 <a class="text-black mr-2" th:href="@{'/tasks/' + ${board.taskEntity.id}}" th:text=" '#' + ${board.taskEntity.getTitle()}">#Task Title</a>
                                 <a class="text-black mr-2" th:href="@{'/boards/' + ${board.id}}" th:text="'#' + ${board.taskEntity.getWeek()+'주' + board.taskEntity.getDayOfWeek() + '일'}">#Default Date</a>
-                                <a class="candidate-list-favourite order-2 text-danger" href="#"><i class="fas fa-heart"></i></a>
+                                <a class="ms-3 candidate-list-favourite order-2 text-danger" href="#"><i class="fas fa-heart"></i></a>
                                 <a class="text-black mr-2" th:text="${board.likes}"></a>
-                                <a class="text-black mr-2" th:text="'comment ' + ${board.comments} + ' 개'"></a>
+                                <a class="text-black ms-4 mr-2" th:text="'comment ' + ${board.comments} + ' 개'"></a>
                             </div>
                         </div>
                         <div class="col-md-4 op-7" th:if="${#authentication.name} == ${board.userName} or ${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
