@@ -48,7 +48,7 @@ public class BoardController {
         BoardListResponse res = boardService.searchAllCode(pageable);
         List<BoardListDto> boardList = res.getContent();
         boardList.forEach(boardListDto -> boardListDto.setLikes(likeService.countLikesOfBoard(boardListDto.getId())));
-
+        boardList.forEach(boardListDto -> boardListDto.setComments(commentService.countCommentsOfBoard(boardListDto.getId())));
         model.addAttribute("boardList", boardList);
         model.addAttribute("nullTaskId", 0);
         model.addAttribute("nowPage", res.getPageable().getPageNumber() +1);

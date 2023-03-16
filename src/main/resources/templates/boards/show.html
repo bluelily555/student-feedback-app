@@ -60,7 +60,7 @@
                     </div>
                 </div>
                 <!-- End of post 1 -->
-                <div th:each="board: ${boardList}" class="card row-hover pos-relative py-3 px-3 mb-3 border-warning border-top-0 border-right-0 border-bottom-0 rounded-0">
+                <div th:each="board: ${boardList}" class="card row-hover pos-relative h-auto py-3 px-3 mb-3 border-warning border-top-0 border-right-0 border-bottom-0 rounded-0">
                     <div class="row align-items-center">
                         <div class="col-md-8 mb-3 mb-sm-0">
                             <h5>
@@ -72,14 +72,20 @@
                             <div sec:authorize="hasAnyRole('STUDENT')" >
                                 <p class="text-sm"><span class="op-6">Posted</span> <a class="text-black" th:href="@{'/boards/' + ${board.id}}" th:text="${#temporals.format(board.createdDate, 'yyyy년 M월 d일 a h시 m분')}"> </a><!-- <span class="op-6">ago by</span>--> <a class="text-gray" th:href="@{'/boards/' + ${board.id}}"></a></p>
                             </div>
-                            <p class="text-sm text-black" th:text="'좋아요 ' + ${board.likes} + ' 개'"></p>
-                            <div class="text-sm op-5"> <a class="text-black mr-2" th:href="@{'/boards/' + ${board.id}}" th:text=" '#' + ${board.language}">#language</a> <a class="text-black mr-2" th:href="@{'/boards/' + ${board.id}}" th:text=" '#' + ${board.taskEntity.getTitle()}">#Task Title</a> <a class="text-black mr-2" th:href="@{'/boards/' + ${board.id}}" th:text="'#' + ${board.taskEntity.getWeek()+'주' + board.taskEntity.getDayOfWeek() + '일'}">#Default Date</a> </div>
+
+                            <div class="text-sm op-5">
+                                <a class="text-black mr-2" th:href="@{'/tasks/' + ${board.taskEntity.id}}" th:text=" '#' + ${board.taskEntity.getTitle()}">#Task Title</a>
+                                <a class="text-black mr-2" th:href="@{'/boards/' + ${board.id}}" th:text="'#' + ${board.taskEntity.getWeek()+'주' + board.taskEntity.getDayOfWeek() + '일'}">#Default Date</a>
+                                <a class="candidate-list-favourite order-2 text-danger" href="#"><i class="fas fa-heart"></i></a>
+                                <a class="text-black mr-2" th:text="${board.likes}"></a>
+                                <a class="text-black mr-2" th:text="'comment ' + ${board.comments} + ' 개'"></a>
+                            </div>
                         </div>
-                        <div class="col-md-4 op-7">
-                            <div class="row text-center op-7">
+                        <div class="col-md-4 op-7" th:if="${#authentication.name} == ${board.userName} or ${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                            <div class="list-unstyled mb-0 d-flex justify-content-end">
                                 <form  th:action="@{'/boards/' + ${board.id}}" method="post">
                                     <input type="hidden" name="_method" value="delete"/>
-                                    <button class="btn">삭제</button>
+                                    <button style="border: 0; background-color: transparent;" class="text-danger far fa-trash-alt"></button>
                                 </form>
                             </div>
                         </div>

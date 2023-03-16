@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.yaml.snakeyaml.comments.CommentType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,9 @@ public class CommentService {
         return new CommentListResponse(content, pageable, comments);
     }
 
+    public int countCommentsOfBoard(Long boardId) {
+        return commentRepository.countByBoardEntityId(boardId);
+    }
 
 
 
