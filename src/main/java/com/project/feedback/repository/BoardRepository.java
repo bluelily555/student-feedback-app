@@ -15,7 +15,7 @@ import java.util.List;
 
 public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     List<BoardEntity> findAllByUserId(Long userId);
-
+    Page<BoardEntity> findByTitleContaining(Pageable pageable, String title);
     Page<BoardEntity> findAll(Pageable pageable);
 
     @Transactional
