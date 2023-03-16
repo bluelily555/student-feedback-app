@@ -46,6 +46,16 @@ public class BoardController {
     @GetMapping
     public String list(Model model, @PageableDefault(size = 20) @SortDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
         BoardListResponse res = boardService.searchAllCode(pageable);
+        return getBoardList(model, res);
+    }
+    @GetMapping("/search/{title}")
+    public String search(@PathVariable("title")String title, Model model, @PageableDefault(size = 20) @SortDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+        log.info(title);
+        BoardListResponse res = boardService.searchByTitle(pageable, title);
+        return getBoardList(model, res);
+    }
+
+    private String getBoardList(Model model, BoardListResponse res) {
         List<BoardListDto> boardList = res.getContent();
         boardList.forEach(boardListDto -> boardListDto.setLikes(likeService.countLikesOfBoard(boardListDto.getId())));
         boardList.forEach(boardListDto -> boardListDto.setComments(commentService.countCommentsOfBoard(boardListDto.getId())));
@@ -53,7 +63,6 @@ public class BoardController {
         model.addAttribute("nullTaskId", 0);
         model.addAttribute("nowPage", res.getPageable().getPageNumber() +1);
         model.addAttribute("lastPage", res.getTotalPages());
-
         return "boards/show";
     }
 

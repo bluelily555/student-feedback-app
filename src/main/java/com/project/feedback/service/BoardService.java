@@ -74,7 +74,12 @@ public class BoardService {
         BoardEntity savedBoardEntity = boardRepository.save(boardEntity);
         return savedBoardEntity.getId();
     }
-
+    @Transactional
+    public BoardListResponse searchByTitle(Pageable pageable, String title){
+        Page<BoardEntity> boards = boardRepository.findByTitleContaining(pageable, title);
+        List<BoardListDto> boardListDtoList = getBoardWriteDtos(boards);
+        return new BoardListResponse(boardListDtoList, pageable, boards);
+    }
     @Transactional
     public BoardListResponse searchAllCode(Pageable pageable){
         // pageable 로 찾은 board 데이터
