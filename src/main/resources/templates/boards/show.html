@@ -40,7 +40,7 @@
                 <div class="row mb-5">
                     <div class="col-lg-10 mb-3 mb-sm-0">
                         <form id="searchForm" th:action="@{'/boards'}">
-                            <input id="searchKeyword"  type="text" style="width: 80%"/>
+                            <input id="searchKeyword"  type="text" style="width: 80%" th:value="${title}"/>
                             <button onclick="searchBtn()" class="btn btn-success">검색</button>
                         </form>
                     </div>
@@ -77,7 +77,7 @@
                         </div>
                     </div>
                 </div>
-                <div align="center">
+                <div align="center" th:if="${title} == null">
                     <br/>
                     <button class="btn page-btn" th:if="${nowPage != 1}" th:onclick="|location.href = '@{/boards(page=${1})}'|">&lt;&lt;</button>
                     <button class="btn page-btn" th:if="${nowPage != 1}" th:onclick="|location.href='@{/boards(page=${nowPage - 1})}'|">[[${nowPage - 1}]]</button>
@@ -85,7 +85,16 @@
                     <button class="btn page-btn" th:if="${nowPage != lastPage}" th:onclick="|location.href='@{/boards(page=${nowPage + 1})}'|">[[${nowPage + 1}]]</button>
                     <button class="btn page-btn" th:if="${nowPage != lastPage}" th:onclick="|location.href='@{/boards(page=${lastPage})}'|">&gt;&gt;</button>
                     <br/><br/><br/>
+                </div>
+                <div align="center" th:if="${title} != null and !${nothing}">
+                    <br/>
+                    <button class="btn page-btn" th:if="${nowPage != 1}" th:onclick="|location.href = '@{/boards/search/{title}(title= ${title},page=${1})}'|">&lt;&lt;</button>
+                    <button class="btn page-btn" th:if="${nowPage != 1}" th:onclick="|location.href='@{/boards/search/{title}(title= ${title},page=${nowPage - 1})}'|">[[${nowPage - 1}]]</button>
+                    <button class="btn page-btn-now">[[${nowPage}]]</button>
+                    <button class="btn page-btn" th:if="${nowPage != lastPage}" th:onclick="|location.href='@{/boards/search/{title}(title= ${title}, page= ${nowPage + 1})}'|">[[${nowPage + 1}]]</button>
 
+                    <button class="btn page-btn" th:if="${nowPage != lastPage}" th:onclick="|location.href='@{/boards/search/{title}(title= ${title},page=${lastPage})}'|">&gt;&gt;</button>
+                    <br/><br/><br/>
                 </div>
             </div>
             <!-- Sidebar content -->

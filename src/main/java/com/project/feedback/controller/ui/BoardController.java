@@ -51,8 +51,10 @@ public class BoardController {
     }
     @GetMapping("/search/{title}")
     public String search(@PathVariable("title")String title, Model model, @PageableDefault(size = 20) @SortDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
-        log.info(title);
         BoardListResponse res = boardService.searchByTitle(pageable, title);
+
+        model.addAttribute("title", title);
+
         return getBoardList(model, res);
     }
 
@@ -60,6 +62,11 @@ public class BoardController {
         List<BoardListDto> boardList = res.getContent();
         boardList.forEach(boardListDto -> boardListDto.setLikes(likeService.countLikesOfBoard(boardListDto.getId())));
         boardList.forEach(boardListDto -> boardListDto.setComments(commentService.countCommentsOfBoard(boardListDto.getId())));
+        if(res.getContent().size() == 0){
+            model.addAttribute("nothing", true);
+        }else{
+            model.addAttribute("nothing", false);
+        }
         model.addAttribute("boardList", boardList);
         model.addAttribute("nullTaskId", 0);
         model.addAttribute("nowPage", res.getPageable().getPageNumber() +1);
