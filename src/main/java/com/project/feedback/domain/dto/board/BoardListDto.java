@@ -8,6 +8,7 @@ import lombok.*;
 
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,6 +23,7 @@ public class BoardListDto {
     private String content;
     private String codeContent;
     private String title;
+    private List<String> images;
     private int likes;
     private int comments;
     private String language;

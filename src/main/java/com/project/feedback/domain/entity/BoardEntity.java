@@ -9,6 +9,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -31,6 +32,10 @@ public class BoardEntity extends TimeEntity {
     @OneToMany(mappedBy = "boardEntity", orphanRemoval = true)
     private List<CommentEntity> comments;
 
+    @Builder.Default
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "board", cascade = {CascadeType.PERSIST})
+    private List<ImageEntity> images = new ArrayList<>();
+
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
@@ -50,4 +55,8 @@ public class BoardEntity extends TimeEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    public void addImage(ImageEntity image) {
+        image.setBoard(this);
+        this.images.add(image);
+    }
 }
