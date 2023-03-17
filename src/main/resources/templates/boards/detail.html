@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
 <head th:replace="~{fragments/header.html :: head}">
     <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
     <meta charset="UTF-8">
@@ -66,7 +65,50 @@
         </div>
     </div>
 </section>
-
+<!--댓글 목록-->
+<section style="background-color: #ffffff;">
+    <div class="container my-5 py-5">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-10 col-lg-8">
+                <div class="card text-dark">
+                    <div class="card-body p-4">
+                        <h4 class="mb-0">Recent comments</h4>
+                        <p class="fw-light mb-4 pb-2">Latest Comments section by users</p>
+                        <hr class="my-0" />
+                    </div>
+                    <div class="card-body p-4" th:each="comment, i : ${commentList}">
+                        <div class="d-flex flex-start">
+                            <img class="rounded-circle shadow-1-strong me-3"
+                                 src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(33).webp" alt="avatar" width="60"
+                                 height="60" />
+                            <div>
+                                <h6 class="fw-bold mb-1" th:text="'작성자: '+ ${comment.userName}">Writer</h6>
+                                <div class="d-flex align-items-center mb-3">
+                                    <p class="mb-0" th:text="'작성일: '+ ${#temporals.format(comment.createdAt, 'yy/MM/dd/HH:mm')}">
+                                        createdAt
+                                    </p>
+                                    <th:block th:if="${comment.likeStatus==true}">
+                                        <form th:action="@{'/comments/' + ${comment.id} + '/unlike'}" method="post">
+                                            <button type="submit" class="btn btn-link link-danger" style="font-size:15px"><i class="fa-regular fa-heart btn-danger"></i>[[${comment.likes}]] </button>
+                                        </form>
+                                    </th:block>
+                                    <th:block th:unless="${comment.likeStatus==true}">
+                                        <form th:action="@{'/comments/' + ${comment.id} + '/like'}" method="post">
+                                            <button type="submit" class="btn btn-link link-danger" th:disabled="${#authorization.expression('hasRole(''ROLE_ANONYMOUS'')')}" style="font-size:15px"><i class="fa-regular fa-heart"></i>[[${comment.likes}]]</button>
+                                        </form>
+                                    </th:block>
+                                </div>
+                                <div class="mb-0 commentBox" th:text="${comment.comment}" name="comment" style="width:90%;word-break: keep-all; max-width: 44vw"></div>
+                                <a class="showMore" th:index="${i.index}" onclick="showClick(this.getAttribute('index'))" style="color:gray;cursor:pointer" hidden></a>
+                            </div>
+                        </div>
+                        <hr class="my-0" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 <section>
     <div class="my-5 py-5 text-dark">
         <div class="row d-flex justify-content-center">
@@ -93,36 +135,11 @@
     </div>
 </section>
 
-<!--댓글 목록-->
-<div class="offset-3 col-6">
-<div th:each="comment : ${commentList}" th:align="center">
-       <div class="card-body" style="text-align: left;">
-            <h5 class="card-title" th:text="'작성자 : ' + ${comment.userName}"></h5>
-            <h6 class="card-subtitle mb-2 text-muted" th:text="'작성일 : ' + ${#temporals.format(comment.createdAt, 'yy/MM/dd HH:mm')}"></h6>
-           <textarea rows="3" class="card-text" th:text="${comment.comment}" id="comment" name="comment"
-                     style="width: 100%"></textarea>
-            <div class="d-flex">
-                <th:block th:if="${comment.likeStatus==true}">
-                    <form class="ms-auto" th:action="@{'/comments/' + ${comment.id} + '/unlike'}" method="post">
-                        <button type="submit" class="btn btn-danger">[[${comment.likes}]] <i class="fa-regular fa-heart"></i></button>
-                    </form>
-                </th:block>
-                <th:block th:unless="${comment.likeStatus==true}">
-                    <form class="ms-auto" th:action="@{'/comments/' + ${comment.id} + '/like'}" method="post">
-                        <button type="submit" class="btn btn-outline-danger" th:disabled="${#authorization.expression('hasRole(''ROLE_ANONYMOUS'')')}">[[${comment.likes}]] <i class="fa-regular fa-heart"></i></button>
-                    </form>
-                </th:block>
-            </div>
-        </div>
-
-    <br/>
-</div>
-</div>
-
 
 <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.4.12/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
-<script>
+<script th:inline="javascript">
+    let items = []
     $(document).ready(function(){
         let editor = ace.edit("codeContent");
         let lang = document.getElementById("language").value
@@ -133,8 +150,38 @@
         var mode = editor.session.getMode().$id;
         console.log(lang)
         console.log(mode);
-    })
+        let maxLength = 80;
+        let itemLength = document.getElementsByClassName('commentBox').length
 
+        for (let i = 0; i < itemLength; i++){
+            items.push(document.getElementsByClassName('commentBox').item(i).textContent)
+
+            let content = document.getElementsByClassName('commentBox').item(i).textContent
+            let content_txt_short = content.substring(0, maxLength) + "...";
+            let more_btn = document.getElementsByClassName("showMore").item(i)
+            if (content.length > maxLength) {
+                document.getElementsByClassName('commentBox').item(i).textContent = content_txt_short
+                more_btn.textContent = "더보기"
+                more_btn.removeAttribute("hidden")
+            }
+        }
+    });
+    function showClick(id){
+        console.log(id)
+        let content = document.getElementsByClassName('commentBox').item(id).textContent;
+        let maxLength = 80;
+        let content_txt_short = content.substring(0, maxLength) + "...";
+        let content_txt_origin = document.getElementsByClassName('commentBox').item(id).textContent
+        let more_btn = document.getElementsByClassName("showMore").item(id)
+        if (document.getElementsByClassName('commentBox').item(id).textContent.length > maxLength+4) {
+            // 펼쳐진 상태
+            document.getElementsByClassName('commentBox').item(id).textContent = content_txt_short
+            more_btn.textContent = "더보기"
+        }else{
+            document.getElementsByClassName('commentBox').item(id).textContent = items[id]
+            more_btn.textContent = "접기"
+        }
+    }
 </script>
 </body>
 </html>
