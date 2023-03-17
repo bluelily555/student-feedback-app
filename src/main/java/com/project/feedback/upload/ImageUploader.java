@@ -1,5 +1,7 @@
 package com.project.feedback.upload;
 
+import com.project.feedback.exception.CustomException;
+import com.project.feedback.exception.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -18,22 +20,20 @@ public class ImageUploader {
     }
 
     public String upload(MultipartFile file) {
-        String uuid = null;
         if (file.isEmpty()) return null;
 
         try{
             String fileName = file.getOriginalFilename();
             String ext = fileName.substring(fileName.lastIndexOf(".") + 1);
-            uuid = UUID.randomUUID() + "." + ext;
+            String uuid = UUID.randomUUID() + "." + ext;
             String imagePath = imagesFolder.getFile().getAbsolutePath() + File.separator + uuid;
             file.transferTo(new File(imagePath));
             log.info("업로드 완료 file={}", uuid);
             return uuid;
         } catch (IOException e) {
+            log.info("업로드 실패");
             log.error(e.getMessage(), e);
+            throw new CustomException(ErrorCode.IMAGE_UPLOAD_FAILED);
         }
-
-        log.info("업로드 실패");
-        return uuid;
     }
 }
