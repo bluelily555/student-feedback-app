@@ -24,6 +24,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -193,10 +194,10 @@ public class BoardController {
 
     //TASK에 질문 등록
     @PostMapping("/tasks/{taskId}")
-    public String write(@PathVariable("taskId")Long taskId, BoardCreateRequest req, Model model, Authentication auth){
+    public String write(@PathVariable("taskId")Long taskId, BoardCreateRequest req, MultipartFile file, Model model, Authentication auth){
         TaskEntity taskEntity = findService.findTaskById(taskId);
         UserEntity loginUser = findService.findUserByUserName(auth.getName());
-        boardService.save(req, loginUser, taskEntity);
+        boardService.save(req, file, loginUser, taskEntity);
         return "redirect:/boards";
     }
 

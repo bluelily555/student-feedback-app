@@ -4,12 +4,14 @@ import com.project.feedback.domain.dto.board.BoardCreateRequest;
 import com.project.feedback.domain.dto.board.BoardListDto;
 import com.project.feedback.domain.dto.board.BoardListResponse;
 import com.project.feedback.domain.entity.BoardEntity;
+import com.project.feedback.domain.entity.ImageEntity;
 import com.project.feedback.domain.entity.TaskEntity;
 import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.domain.enums.LikeContentType;
 import com.project.feedback.repository.BoardRepository;
 import com.project.feedback.repository.LikeRepository;
 import com.project.feedback.repository.TaskRepository;
+import com.project.feedback.upload.ImageUploader;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +31,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final LikeRepository likeRepository;
     private final TaskService taskService;
+    private final ImageUploader imageUploader;
 
     private List<BoardListDto> getBoardWriteDtos(List<BoardEntity> boardEntities) {
         List<BoardListDto> codeWriteDtoList = new ArrayList<>();
@@ -68,9 +72,17 @@ public class BoardService {
     }
 
     @Transactional
-    public Long save(BoardCreateRequest boardCreateRequest, UserEntity user, TaskEntity taskEntity){
+    public Long save(BoardCreateRequest boardCreateRequest, MultipartFile file, UserEntity user, TaskEntity taskEntity){
 
         BoardEntity boardEntity = boardCreateRequest.toEntity(user, taskEntity);
+
+        // 이미지 저장
+        if (file != null && !file.isEmpty()) {
+            String fileName = imageUploader.upload(file);
+            ImageEntity image = ImageEntity.of(fileName);
+            boardEntity.addImage(image);
+        }
+
         BoardEntity savedBoardEntity = boardRepository.save(boardEntity);
         return savedBoardEntity.getId();
     }
@@ -80,6 +92,11 @@ public class BoardService {
         List<BoardListDto> boardListDtoList = getBoardWriteDtos(boards);
         return new BoardListResponse(boardListDtoList, pageable, boards);
     }
+    @Transactional
+    public Long save(BoardCreateRequest boardCreateRequest, UserEntity user, TaskEntity taskEntity){
+        return save(boardCreateRequest, null, user, taskEntity);
+    }
+
     @Transactional
     public BoardListResponse searchAllCode(Pageable pageable){
         // pageable 로 찾은 board 데이터
@@ -121,6 +138,7 @@ public class BoardService {
                 .codeContent(boardEntity.getCodeContent())
                 .userName(boardEntity.getUser().getRealName())
                 .likes(likeRepository.countByContentTypeAndContentIdAndStatusIsTrue(LikeContentType.BOARD, boardId))
+                .images(boardEntity.getImages().stream().map(ImageEntity::getName).toList())
                 .createdDate(boardEntity.getCreatedDate())
                 .build();
         return boardList;
