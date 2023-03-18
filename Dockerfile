@@ -1,4 +1,5 @@
 FROM gradle:7.5.1-jdk17-alpine as builder
+USER root
 WORKDIR /build
 
 # 그래들 파일이 변경되었을 때만 새롭게 의존패키지 다운로드 받게함.
