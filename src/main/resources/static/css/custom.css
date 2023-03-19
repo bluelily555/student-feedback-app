@@ -290,7 +290,9 @@ main {
     visibility: visible;      /* hover 이벤트 발생시 영역을 보여줌 */
 }
 
-
+.bgc-default-tp1 {
+    background-color: rgba(121,169,197,.92)!important;
+}
 .btn-toggle-nav a {    padding: .1875rem .5rem;    margin-top: .125rem;    margin-left: 1.25rem;}
 .btn-toggle-nav a:hover,
 .btn-toggle-nav a:focus {background-color: #d2f4ea;}
