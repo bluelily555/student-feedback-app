@@ -18,6 +18,8 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     Page<BoardEntity> findByTitleContaining(Pageable pageable, String title);
     Page<BoardEntity> findAll(Pageable pageable);
 
+    Page<BoardEntity> findByTaskEntityId(Pageable pageable, Long taskId);
+
     @Transactional
     @Modifying
     @Query(value = "UPDATE BoardEntity entity SET entity.deletedAt = NOW() where entity.taskEntity = :task")

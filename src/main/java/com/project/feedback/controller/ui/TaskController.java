@@ -12,15 +12,19 @@ import com.project.feedback.domain.entity.CourseEntity;
 import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
+import com.project.feedback.service.BoardService;
+import com.project.feedback.service.CommentService;
 import com.project.feedback.service.CourseService;
 import com.project.feedback.service.FindService;
 import com.project.feedback.service.LikeService;
 import com.project.feedback.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,9 +40,11 @@ import java.util.Map;
 @Slf4j
 public class TaskController {
     private final TaskService taskService;
+    private final BoardService boardService;
     private final FindService findService;
     private final CourseService courseService;
     private final LikeService likeService;
+    private final CommentService commentService;
 
     @GetMapping
     public String list(Model model, @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -155,14 +161,15 @@ public class TaskController {
 
     // task 상세 조회
     @GetMapping("/{taskId}")
-    public String show(@PathVariable Long taskId, Model model, Authentication auth) {
+    public String show(@PathVariable Long taskId, Model model, Authentication auth,  @PageableDefault(size = 20) @SortDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         List<CourseDto> courses = courseService.courses();
         CourseEntity courseEntity = findService.findCourseByName(courses.get(0).getName());
         model.addAttribute("courseList", courses);
 
         TaskDetailResponse res = taskService.getOneTask(taskId);
-        List<BoardListDto> boardList = res.getBoards();
+        List<BoardListDto> boardList = boardService.getBoardListByTaskId(pageable, taskId);
         boardList.forEach(boardListDto -> boardListDto.setLikes(likeService.countLikesOfBoard(boardListDto.getId())));
+        boardList.forEach(boardListDto -> boardListDto.setComments(commentService.countCommentsOfBoard(boardListDto.getId())));
         model.addAttribute("taskUpdateRequest", new TaskUpdateRequest());
         model.addAttribute("taskDetail", res);
         model.addAttribute("boardList", boardList);

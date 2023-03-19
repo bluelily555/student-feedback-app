@@ -75,8 +75,8 @@ public class BoardController {
     }
 
     @GetMapping("/tasks/{taskId}/all")
-    public String listByTaskId(@PathVariable("taskId")Long taskId, Model model){
-        List<BoardListDto> boardList = boardService.getBoardListByTaskId(taskId);
+    public String listByTaskId(@PathVariable("taskId")Long taskId, Model model,@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+        List<BoardListDto> boardList = boardService.getBoardListByTaskId(pageable, taskId);
         String taskTitle = taskService.getOneTask(taskId).getTitle();
         model.addAttribute("taskTitle", taskTitle);
         model.addAttribute("boardList", boardList);

@@ -10,18 +10,14 @@ import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.domain.enums.LikeContentType;
 import com.project.feedback.repository.BoardRepository;
 import com.project.feedback.repository.LikeRepository;
-import com.project.feedback.repository.TaskRepository;
 import com.project.feedback.upload.ImageUploader;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -110,9 +106,10 @@ public class BoardService {
     }
 
     @Transactional
-    public List<BoardListDto> getBoardListByTaskId(Long taskId){
-        List<BoardListDto> codeEntities = taskService.getOneTask(taskId).getBoards();
-        return codeEntities;
+    public List<BoardListDto> getBoardListByTaskId(Pageable pageable, Long taskId){
+        Page<BoardEntity> boards = boardRepository.findByTaskEntityId(pageable, taskId);
+        List<BoardListDto> boardListDtoList = getBoardWriteDtos(boards);
+        return boardListDtoList;
     }
 
     @Transactional
