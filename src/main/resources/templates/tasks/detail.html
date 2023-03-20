@@ -18,38 +18,36 @@
                 <div>
                   <span class="text-sm text-grey-m2 align-middle" style="font-weight:bold;">태스크 명:</span>
                     <div class="form-group row" sec:authorize="hasAnyRole('STUDENT', 'TEACHER')">
-                        <div class="col-sm-4">
+                        <div class="col-sm-10">
                             <label type="text" th:text="${taskDetail.title}" />
                         </div>
                     </div>
                     <div class="form-group row" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
-                        <div class="col-sm-4">
+                        <div class="col-sm-10">
                             <input class ="form-control" id="title" type="text" name="title" th:value="${taskDetail.title}" />
                             <p id="titleEmpty" style="color:red" hidden>타이틀이 비어있습니다.</p>
                         </div>
                     </div>
                 </div>
-                <div class="text-grey-m2">
+                <div>
                   <label for="taskStatus" style="font-weight:bold;">상태:</label>
-                  <div class="my-1">
-                  <div class="col-sm-6" sec:authorize="hasAnyRole('STUDENT', 'TEACHER')">
+                  <div class="col-sm-10" sec:authorize="hasAnyRole('STUDENT', 'TEACHER')">
                       <label type="text" th:text="${taskDetail.taskStatus}"></label>
                   </div>
-                    <div class="col-md-6" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
-                      <select id="taskStatus" name="taskStatus" class ="form-select" th:field="*{taskStatus}" th:value="${taskDetail.taskStatus}" style="width:200px;height:40px;">
+                  <div class="col-sm-10" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+                      <select id="taskStatus" name="taskStatus" class="form-select" th:field="*{taskStatus}" th:value="${taskDetail.taskStatus}">
                         <option value="CREATED">등록</option>
                         <option value="IN_PROGRESS">진행중</option>
                         <option value="ERROR">에러</option>
                         <option value="DONE">완료</option>
                       </select>
                     </div>
-                  </div>
-                  <div>
-                    <span class="text-sm text-grey-m2 align-middle" style="font-weight:bold;">설명:</span>
-                    <span class="text-600 text-110 text-blue align-middle">
+                <div>
+                <span class="text-sm text-grey-m2 align-middle" style="font-weight:bold;">설명:</span>
+                    <div class="col-sm-10">
                       <label name="description" th:text="${taskDetail.description}" sec:authorize="hasAnyRole('STUDENT', 'TEACHER')" readonly></label>
                       <textarea class="form-control" name="description" id="description"th:text="${taskDetail.description}" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')" placeholder="설명이 없습니다."></textarea>
-                    </span>
+                    </div>
                   </div>
                 </div>
               </div>
