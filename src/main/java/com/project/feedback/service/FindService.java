@@ -1,6 +1,7 @@
 package com.project.feedback.service;
 
 import com.project.feedback.domain.Role;
+import com.project.feedback.domain.dto.board.BoardListDto;
 import com.project.feedback.domain.dto.mainInfo.CourseTaskListResponse;
 import com.project.feedback.domain.dto.mainInfo.StatusInfo;
 import com.project.feedback.domain.dto.mainInfo.StudentInfo;
@@ -16,33 +17,21 @@ import com.project.feedback.domain.entity.TaskEntity;
 import com.project.feedback.domain.entity.TokenEntity;
 import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.domain.entity.UserTaskEntity;
+import com.project.feedback.domain.enums.LikeContentType;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
-import com.project.feedback.repository.BoardRepository;
-import com.project.feedback.repository.CommentRepository;
-import com.project.feedback.repository.CourseRepository;
-import com.project.feedback.repository.CourseUserRepository;
-import com.project.feedback.repository.RepositoryRepository;
-import com.project.feedback.repository.TaskRepository;
-import com.project.feedback.repository.TokenRepository;
-import com.project.feedback.repository.UserRepository;
-import com.project.feedback.repository.UserTaskRepository;
+import com.project.feedback.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -59,6 +48,7 @@ public class FindService {
     private final TokenRepository tokenRepository;
     private final CommentRepository commentRepository;
     private final RepositoryRepository repositoryRepository;
+    private final LikeRepository likeRepository;
 
     /**
      * userName으로 User을 찾아오는 기능
@@ -313,5 +303,31 @@ public class FindService {
 
     public List<RepositoryEntity> findRepositoryByName(String name) {
         return repositoryRepository.findByName(name);
+    }
+
+    @Cacheable(value = "get_no_comment_board")
+    public List<BoardListDto> getBoardNoComment() {
+        return boardRepository.findTop10ByCommentsIsNullOrderByIdDesc().stream()
+                .map(BoardListDto::shortOf)
+                .map(this::countBoardLikes)
+                .toList();
+    }
+
+    @Cacheable(value = "get_board_likes_rank")
+    public List<BoardListDto> getBoardLikesRank() {
+        List<Long> boardIds = likeRepository.findLikesOfBoardRank(PageRequest.of(0, 10));
+        return boardRepository.findByIdInFetch(boardIds).stream()
+                .map(BoardListDto::shortOf)
+                .map(this::countBoardLikes)
+                .sorted((b1, b2) -> {
+                    if (b1.getLikes() == b2.getLikes()) return b2.getCreatedDate().compareTo(b1.getCreatedDate());
+                    return b2.getLikes() - b1.getLikes();
+                })
+                .toList();
+    }
+
+    private BoardListDto countBoardLikes(BoardListDto board) {
+        board.setLikes(likeRepository.countByContentTypeAndContentIdAndStatusIsTrue(LikeContentType.BOARD, board.getId()));
+        return board;
     }
 }
