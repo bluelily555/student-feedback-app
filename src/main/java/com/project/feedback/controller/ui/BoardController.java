@@ -47,7 +47,7 @@ public class BoardController {
     @GetMapping
     public String list(Model model, @PageableDefault(size = 20) @SortDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
         BoardListResponse res = boardService.searchAllCode(pageable);
-        return getBoardList(model, res);
+        return getBoardListWithRank(model, res);
     }
     @GetMapping("/search/{title}")
     public String search(@PathVariable("title")String title, Model model, @PageableDefault(size = 20) @SortDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
@@ -55,6 +55,12 @@ public class BoardController {
 
         model.addAttribute("title", title);
 
+        return getBoardList(model, res);
+    }
+
+    private String getBoardListWithRank(Model model, BoardListResponse res) {
+        model.addAttribute("noCommentRank", findService.getBoardNoComment());
+        model.addAttribute("likeRank", findService.getBoardLikesRank());
         return getBoardList(model, res);
     }
 

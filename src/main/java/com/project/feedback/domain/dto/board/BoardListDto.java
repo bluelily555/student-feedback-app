@@ -53,4 +53,13 @@ public class BoardListDto {
             .modifiedDate(boardEntity.getModifiedDate())
             .build();
     }
+
+    public static BoardListDto shortOf(BoardEntity boardEntity) {
+        return BoardListDto.builder()
+                .id(boardEntity.getId())
+                .title(boardEntity.getTitle())
+                .userName(boardEntity.getUser().getUserName())
+                .createdDate(boardEntity.getCreatedDate())
+                .build();
+    }
 }
