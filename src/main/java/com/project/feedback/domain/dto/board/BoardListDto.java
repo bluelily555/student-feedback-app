@@ -2,6 +2,7 @@ package com.project.feedback.domain.dto.board;
 
 
 import com.project.feedback.domain.entity.BoardEntity;
+import com.project.feedback.domain.entity.ImageEntity;
 import com.project.feedback.domain.entity.TaskEntity;
 import com.project.feedback.domain.entity.UserEntity;
 import lombok.*;
@@ -59,6 +60,20 @@ public class BoardListDto {
                 .id(boardEntity.getId())
                 .title(boardEntity.getTitle())
                 .userName(boardEntity.getUser().getUserName())
+                .createdDate(boardEntity.getCreatedDate())
+                .build();
+    }
+
+    public static BoardListDto detailOf(BoardEntity boardEntity) {
+        return BoardListDto.builder()
+                .id(boardEntity.getId())
+                .title(boardEntity.getTitle())
+                .taskEntity(boardEntity.getTaskEntity())
+                .language(boardEntity.getLanguage())
+                .content(boardEntity.getContent())
+                .codeContent(boardEntity.getCodeContent())
+                .userName(boardEntity.getUser().getRealName())
+                .images(boardEntity.getImages().stream().map(ImageEntity::getName).toList())
                 .createdDate(boardEntity.getCreatedDate())
                 .build();
     }

@@ -13,6 +13,8 @@ import com.project.feedback.domain.dto.mainInfo.TaskInfo;
 import com.project.feedback.domain.entity.*;
 import com.project.feedback.domain.enums.LikeContentType;
 import com.project.feedback.domain.enums.NotificationType;
+import com.project.feedback.exception.CustomException;
+import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.service.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -160,6 +162,23 @@ public class BoardController {
         likeService.unlike(LikeContentType.BOARD, boardId, loginUser);
 
         return "redirect:/boards/" + boardId;
+    }
+
+    @GetMapping("/{boardId}/edit")
+    public String editBoard(@PathVariable Long boardId, Model model, Authentication auth) {
+        // 로그인하지 않은 경우
+        if (auth == null) return "redirect:/boards/" + boardId;
+
+        UserEntity loginUser = findService.findUserByUserName(auth.getName());
+
+        BoardEntity board = findService.findByBoardId(boardId);
+
+        // 소유자 확인
+        if (!board.equalsOwner(loginUser) && !loginUser.isManager()) return "redirect:/boards/" + boardId;
+
+        model.addAttribute("boardInfo", BoardListDto.detailOf(board));
+
+        return "/boards/edit";
     }
 
     //TASK에 질문 등록

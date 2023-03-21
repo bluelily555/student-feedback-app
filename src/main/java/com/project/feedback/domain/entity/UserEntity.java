@@ -52,4 +52,8 @@ public class UserEntity extends BaseEntity{
         this.role = role;
     }
     public void setPassword(String password){ this.password = password;}
+
+    public boolean isManager() {
+        return this.role == Role.ROLE_ADMIN || this.role == Role.ROLE_MENTOR;
+    }
 }

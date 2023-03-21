@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header.html :: head}"/>
+<body>
+<div th:insert="~{fragments/navbar :: navbar}"></div>
+<!----------->
+<div class="container-lg px-5 py-3">
+    <div class="card m-lg-5 m-2">
+        <div class="card-body p-5">
+            <form id="edit-form">
+                <div class="row mb-3">
+                    <label class="col-2 col-form-label" for="input-title">제목</label>
+                    <div class="col-10">
+                        <input class="form-control" type="text" th:value="${boardInfo.title}" id="input-title">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-2 col-form-label">태스크 명</label>
+                    <div class="col-10">
+                        <div class="input-group">
+                            <div class="form-control" th:text="${boardInfo.taskEntity.title}"></div>
+                            <button class="btn btn-primary">수정</button>
+                        </div>
+                    </div>
+                    <input type="text" th:value="${boardInfo.taskEntity.id}" hidden>
+                </div>
+
+                <div class="row mb-3" th:if="${boardInfo.images.size() > 0}">
+                    <label class="col-2 col-form-label pt-0">이미지</label>
+                    <div class="col-10">
+                        <div class="position-relative" th:each="image:${boardInfo.images}">
+                            <img class="mb-3 rounded w-100" th:src="@{'/images/' + ${image}}">
+                            <i role="button" class="fa-solid fa-circle-minus text-danger fs-5 mt-2 me-2 position-absolute top-0 end-0"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <hr>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-2 col-form-label">본문</label>
+                    <div class="col-10">
+                        <textarea class="form-control" rows="10" id="content" name="content" th:text="${boardInfo.content}" style="resize: none"></textarea>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-2">
+                        <label class="col-form-label">코드</label>
+                        <div id="editor_toolbar">
+                            <label class="col-form-label">언어</label>
+                            <input type="hidden" id="language" name="language">
+                        </div>
+                    </div>
+<!--                            <label class="col-2 col-form-label">코드</label>-->
+                    <div class="col-10">
+                        <div id="editor" style="height: 300px; overflow-y: scroll;"></div>
+                    </div>
+                    <textarea class="visually-hidden" name="codeContent" id="codeContent"></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer d-flex">
+            <button type="submit" class="btn btn-primary ms-auto">저장</button>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.2/ext-language_tools.min.js" integrity="sha512-jwHjfXzlZZWm/JrYIjGauBO9fNDoxtrl5uVEh8SVu5nZGO38FCFiHx7N5NfLQWsi+cjT4vQcZl9UNLc3oCm+TA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    //ace editor 기본 세팅
+    const editorEle = document.getElementById('editor');
+    const codeContentEle = document.getElementById('codeContent');
+    const languageEle = document.getElementById("language");
+
+    let lang = `[[${boardInfo.language}]]`;
+
+    let editor = ace.edit("editor");
+    editor.session.setValue(`[[${boardInfo.codeContent}]]`);
+    editor.setTheme("ace/theme/monokai");
+    editorEle.style.fontSize='20px';
+    ace.config.loadModule('ace/ext/language_tools', function() {
+        editor.setOptions({
+            enableBasicAutocompletion: true,
+            enableSnippets: true,
+            enableLiveAutocompletion: true
+        })
+    });
+
+
+    // 코드 언어 셀렉트 초기화
+    let modes = ["javascript", "html", "css", "python",  "java"];
+    let modeDropdown = document.createElement("select");
+    modeDropdown.className = 'form-select';
+
+    for (let i = 0; i < modes.length; i++) {
+        let option = document.createElement("option");
+        option.text = modes[i];
+        if (option.text === lang) {
+            option.selected = true;
+            editor.session.setMode("ace/mode/" + lang);
+        }
+        modeDropdown.add(option);
+    }
+
+    modeDropdown.addEventListener("change", function() {
+        let mode = this.value;
+        editor.session.setMode("ace/mode/" + mode);
+        languageEle.value = mode;
+    });
+
+    // 셀렉트 박스 추가
+    let toolbar = document.getElementById("editor_toolbar");
+    toolbar.appendChild(modeDropdown);
+
+    // 제출
+    document.getElementById("edit-form").onsubmit = function(evt){
+        codeContentEle.value = editor.getValue();
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+</body>
+</html>

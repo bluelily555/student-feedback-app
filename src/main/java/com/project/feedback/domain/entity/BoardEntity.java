@@ -59,4 +59,8 @@ public class BoardEntity extends TimeEntity {
         image.setBoard(this);
         this.images.add(image);
     }
+
+    public boolean equalsOwner(UserEntity user) {
+        return this.user.equals(user);
+    }
 }
