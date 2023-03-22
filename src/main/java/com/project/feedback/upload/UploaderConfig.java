@@ -10,12 +10,12 @@ import java.io.IOException;
 @Configuration
 public class UploaderConfig {
     @Bean
-    public ImageUploader imageUploader(ResourceLoader resourceLoader) throws IOException {
+    public ImageManager imageManager(ResourceLoader resourceLoader) throws IOException {
         // image 디렉토리 생성.
         File root = resourceLoader.getResource("file:").getFile();
         String imagePath = root.getAbsolutePath() + File.separator + "images" + File.separator;
         File imageFolder = new File(imagePath);
         if (!imageFolder.exists()) imageFolder.mkdirs();
-        return new ImageUploader(resourceLoader);
+        return new ImageManager(resourceLoader);
     }
 }

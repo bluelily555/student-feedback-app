@@ -10,7 +10,7 @@ import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.domain.enums.LikeContentType;
 import com.project.feedback.repository.BoardRepository;
 import com.project.feedback.repository.LikeRepository;
-import com.project.feedback.upload.ImageUploader;
+import com.project.feedback.upload.ImageManager;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +28,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final LikeRepository likeRepository;
     private final TaskService taskService;
-    private final ImageUploader imageUploader;
+    private final ImageManager imageManager;
 
     private List<BoardListDto> getBoardWriteDtos(List<BoardEntity> boardEntities) {
         List<BoardListDto> codeWriteDtoList = new ArrayList<>();
@@ -75,7 +75,7 @@ public class BoardService {
 
         // 이미지 저장
         if (file != null && !file.isEmpty()) {
-            String fileName = imageUploader.upload(file);
+            String fileName = imageManager.upload(file);
             ImageEntity image = ImageEntity.of(fileName);
             boardEntity.addImage(image);
         }
