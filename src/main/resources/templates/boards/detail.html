@@ -49,7 +49,7 @@
                         </div>
                     </div>
                     <div class="card-footer d-flex">
-                        <div th:if="${auth.getRealName() == boardInfo.getUserName() || #authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="ms-auto">
+                        <div th:if="${auth.getRealName() == boardInfo.getUserName() || #authorization.expression('hasRole(''ROLE_ADMIN'')') || #authorization.expression('hasRole(''ROLE_MENTOR'')')}" class="ms-auto">
                             <a class="btn btn-primary" th:href="@{'/boards/' + ${boardInfo.id} + '/edit'}">수정</a>
                             <a class="btn btn-primary" href="#">삭제</a>
                         </div>
