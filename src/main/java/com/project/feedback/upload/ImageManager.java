@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.UUID;
 
 @Slf4j
@@ -34,5 +35,25 @@ public class ImageManager {
             log.error(e.getMessage(), e);
             throw new CustomException(ErrorCode.IMAGE_UPLOAD_FAILED);
         }
+    }
+
+    public boolean delete(String imageName) {
+        File file = new File(imagesFolderPath + File.separator + imageName);
+        if (file.exists()) {
+            if(file.delete()) {
+                log.info("이미지 삭제 file={}", imageName);
+                return true;
+            }
+        }
+        log.info("이미지 삭제 실패 file={}", imageName);
+        return false;
+    }
+
+    public boolean deleteAll(Collection<String> imageNames) {
+        boolean result = true;
+        for (String imageName : imageNames) {
+            result &= delete(imageName);
+        }
+        return result;
     }
 }
