@@ -67,7 +67,7 @@
                     <div class="col-10">
                         <div id="editor" style="height: 300px; overflow-y: scroll;"></div>
                     </div>
-                    <textarea class="visually-hidden" name="codeContent" id="codeContent"></textarea>
+                    <textarea class="visually-hidden" name="codeContent" id="codeContent" th:text="${boardInfo.codeContent}"></textarea>
                 </div>
                 <input hidden id="input-delete-img-names" name="deleteImageNames">
         </div>
@@ -88,7 +88,7 @@
     let lang = `[[${boardInfo.language}]]`;
 
     let editor = ace.edit("editor");
-    editor.session.setValue(`[[${boardInfo.codeContent}]]`);
+    editor.session.setValue(codeContentEle.value);
     editor.setTheme("ace/theme/monokai");
     editorEle.style.fontSize='20px';
     ace.config.loadModule('ace/ext/language_tools', function() {
