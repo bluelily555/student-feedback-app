@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header.html :: head}"/>
+<script src="/js/inputImgHandler.js"></script>
+<body>
+<div th:insert="~{fragments/navbar :: navbar}"></div>
+<!----------->
+<div class="container-lg px-5 py-4">
+    <div class="card mx-lg-5 mx-2">
+        <form id="edit-form" method="post" th:action="${'/boards/' + boardId + '/edit'}" enctype="multipart/form-data">
+        <div class="card-body p-5">
+                <div class="row mb-3">
+                    <label class="col-2 col-form-label" for="input-title">제목</label>
+                    <div class="col-10">
+                        <input class="form-control" name="title" type="text" th:value="${boardInfo.title}" id="input-title">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-2 col-form-label">태스크 명</label>
+                    <div class="col-10">
+                        <div class="input-group">
+                            <div class="form-control" th:text="${boardInfo.taskEntity.title}"></div>
+                            <button class="btn btn-primary">수정</button>
+                        </div>
+                    </div>
+                    <input type="text" name="taskId" th:value="${boardInfo.taskEntity.id}" hidden>
+                </div>
+
+                <div class="row mb-3" id="view-img-row" th:if="${boardInfo.images.size() > 0}">
+                    <label class="col-2 col-form-label pt-0">이미지</label>
+                    <div class="col-10">
+                        <div class="position-relative" th:each="image:${boardInfo.images}">
+                            <img class="mb-3 rounded w-100" th:src="@{'/images/' + ${image}}">
+                            <i role="button" th:data-file-name="${image}" onclick="imgDeleteHandler(this)" class="fa-solid fa-circle-minus text-danger fs-5 mt-2 me-2 position-absolute top-0 end-0"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3" id="input-img-row" th:style="${boardInfo.images.size() > 0 ? 'display: none;' : ''}">
+                    <label class="col-2 col-form-label pt-0">이미지 추가</label>
+                    <div class="col-10">
+                        <input class="form-control border" type="file" name="file" id="images-input" accept="image/png, image/jpeg, image/jpg, image/gif">
+                        <div class="thumbnails row row-cols-4"></div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <hr>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-2 col-form-label">본문</label>
+                    <div class="col-10">
+                        <textarea class="form-control" rows="10" id="content" name="content" th:text="${boardInfo.content}" style="resize: none"></textarea>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-2">
+                        <label class="col-form-label">코드</label>
+                        <div id="editor_toolbar">
+                            <label class="col-form-label">언어</label>
+                            <input type="hidden" id="language" name="language">
+                        </div>
+                    </div>
+                    <div class="col-10">
+                        <div id="editor" style="height: 300px; overflow-y: scroll;"></div>
+                    </div>
+                    <textarea class="visually-hidden" name="codeContent" id="codeContent" th:text="${boardInfo.codeContent}"></textarea>
+                </div>
+                <input hidden id="input-delete-img-names" name="deleteImageNames">
+        </div>
+        <div class="card-footer d-flex">
+            <button type="submit" class="btn btn-primary ms-auto">저장</button>
+        </div>
+        </form>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.2/ext-language_tools.min.js" integrity="sha512-jwHjfXzlZZWm/JrYIjGauBO9fNDoxtrl5uVEh8SVu5nZGO38FCFiHx7N5NfLQWsi+cjT4vQcZl9UNLc3oCm+TA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    //ace editor 기본 세팅
+    const editorEle = document.getElementById('editor');
+    const codeContentEle = document.getElementById('codeContent');
+    const languageEle = document.getElementById("language");
+
+    let lang = `[[${boardInfo.language}]]`;
+
+    let editor = ace.edit("editor");
+    editor.session.setValue(codeContentEle.value);
+    editor.setTheme("ace/theme/monokai");
+    editorEle.style.fontSize='20px';
+    ace.config.loadModule('ace/ext/language_tools', function() {
+        editor.setOptions({
+            enableBasicAutocompletion: true,
+            enableSnippets: true,
+            enableLiveAutocompletion: true
+        })
+    });
+
+
+    // 코드 언어 셀렉트 초기화
+    let modes = ["javascript", "html", "css", "python",  "java"];
+    let modeDropdown = document.createElement("select");
+    modeDropdown.className = 'form-select';
+
+    for (let i = 0; i < modes.length; i++) {
+        let option = document.createElement("option");
+        option.text = modes[i];
+        if (option.text === lang) {
+            option.selected = true;
+            languageEle.value = lang;
+            editor.session.setMode("ace/mode/" + lang);
+        }
+        modeDropdown.add(option);
+    }
+
+    modeDropdown.addEventListener("change", function() {
+        let mode = this.value;
+        editor.session.setMode("ace/mode/" + mode);
+        languageEle.value = mode;
+    });
+
+    // 셀렉트 박스 추가
+    let toolbar = document.getElementById("editor_toolbar");
+    toolbar.appendChild(modeDropdown);
+
+    // 제출
+    document.getElementById("edit-form").onsubmit = function(evt){
+        document.getElementById('input-delete-img-names').value = deleteImg;
+        codeContentEle.value = editor.getValue();
+    }
+</script>
+<script>
+    let imagesSize = [[${boardInfo.images.size()}]];
+
+    const deleteImg = [];
+
+    const viewImgRow = document.getElementById('view-img-row');
+    const inputImgRow = document.getElementById('input-img-row');
+
+    const imageInput = document.querySelector('input#images-input');
+    inputImgRow.parentElement
+    imageInput.addEventListener('change', event => imageInputOnChange(event));
+
+    function imgDeleteHandler(element) {
+        const fileName = element.getAttribute('data-file-name');
+        if (window.confirm('정말 삭제하시겠습니까?')) {
+            deleteImg.push(fileName);
+            // 해당 이미지 컴포넌트 삭제
+            element.parentElement.style.display = 'none';
+            // imagesSize 감소;
+            imagesSize = imagesSize < 1 ? 0 : imagesSize - 1;
+            // imagesSize < 1 이미지 첨부 display: flex
+            if (imagesSize < 1) setInputImgRowVisible(true);
+        }
+    }
+
+    function setInputImgRowVisible(status) {
+        viewImgRow.style.display = status ? 'none' : 'flex';
+        inputImgRow.style.display = status ? 'flex' : 'none';
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+</body>
+</html>

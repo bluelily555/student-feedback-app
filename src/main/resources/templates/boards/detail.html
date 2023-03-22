@@ -49,6 +49,10 @@
                         </div>
                     </div>
                     <div class="card-footer d-flex">
+                        <div th:if="${auth.getRealName() == boardInfo.getUserName() || #authorization.expression('hasRole(''ROLE_ADMIN'')') || #authorization.expression('hasRole(''ROLE_MENTOR'')')}" class="ms-auto">
+                            <a class="btn btn-primary" th:href="@{'/boards/' + ${boardInfo.id} + '/edit'}">수정</a>
+                            <a class="btn btn-primary" href="#">삭제</a>
+                        </div>
                         <th:block th:if="${isLiked==true}">
                             <form class="ms-auto" th:action="@{'/boards/' + ${boardInfo.id} + '/unlike'}" method="post">
                                 <button type="submit" class="btn btn-danger">[[${boardInfo.likes}]] <i class="fa-regular fa-heart"></i></button>

@@ -10,6 +10,7 @@ import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @AllArgsConstructor
@@ -55,8 +56,24 @@ public class BoardEntity extends TimeEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    public void modify(BoardEntity modifyEntity) {
+        this.title = modifyEntity.getTitle();
+        this.taskEntity = modifyEntity.getTaskEntity();
+        this.content = modifyEntity.getContent();
+        this.codeContent = modifyEntity.getCodeContent();
+        this.language = modifyEntity.getLanguage();
+    }
+
     public void addImage(ImageEntity image) {
         image.setBoard(this);
         this.images.add(image);
+    }
+
+    public void deleteImageAll(Collection<ImageEntity> images) {
+        this.images.removeAll(images);
+    }
+
+    public boolean equalsOwner(UserEntity user) {
+        return this.user.equals(user);
     }
 }

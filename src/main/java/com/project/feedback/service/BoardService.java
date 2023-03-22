@@ -3,14 +3,19 @@ package com.project.feedback.service;
 import com.project.feedback.domain.dto.board.BoardCreateRequest;
 import com.project.feedback.domain.dto.board.BoardListDto;
 import com.project.feedback.domain.dto.board.BoardListResponse;
+import com.project.feedback.domain.dto.board.BoardModifyRequest;
 import com.project.feedback.domain.entity.BoardEntity;
 import com.project.feedback.domain.entity.ImageEntity;
 import com.project.feedback.domain.entity.TaskEntity;
 import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.domain.enums.LikeContentType;
+import com.project.feedback.exception.CustomException;
+import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.repository.BoardRepository;
+import com.project.feedback.repository.ImageRepository;
 import com.project.feedback.repository.LikeRepository;
-import com.project.feedback.upload.ImageUploader;
+import com.project.feedback.repository.TaskRepository;
+import com.project.feedback.upload.ImageManager;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,8 +32,9 @@ import java.util.Optional;
 public class BoardService {
     private final BoardRepository boardRepository;
     private final LikeRepository likeRepository;
-    private final TaskService taskService;
-    private final ImageUploader imageUploader;
+    private final TaskRepository taskRepository;
+    private final ImageRepository imageRepository;
+    private final ImageManager imageManager;
 
     private List<BoardListDto> getBoardWriteDtos(List<BoardEntity> boardEntities) {
         List<BoardListDto> codeWriteDtoList = new ArrayList<>();
@@ -75,7 +81,7 @@ public class BoardService {
 
         // 이미지 저장
         if (file != null && !file.isEmpty()) {
-            String fileName = imageUploader.upload(file);
+            String fileName = imageManager.upload(file);
             ImageEntity image = ImageEntity.of(fileName);
             boardEntity.addImage(image);
         }
@@ -127,6 +133,38 @@ public class BoardService {
            result.add(b.getId());
         });
         return result;
+    }
+
+    @Transactional
+    public BoardListDto modifyBoard(Long boardId, BoardModifyRequest request, MultipartFile file) {
+        BoardEntity board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
+
+        TaskEntity task = taskRepository.getReferenceById(request.getTaskId());
+
+        List<String> deleteImgList = request.getDeleteImageNames();
+
+        // 이미지 삭제
+        if (!deleteImgList.isEmpty()) {
+            imageManager.deleteAll(deleteImgList);
+            List<ImageEntity> imageEntities = imageRepository.findByNameIn(deleteImgList);
+            imageRepository.deleteAll(imageEntities);
+            board.deleteImageAll(imageEntities);
+        }
+
+        // 새로운 이미지 저장
+        if (file != null && !file.isEmpty()) {
+            String fileName = imageManager.upload(file);
+            ImageEntity image = ImageEntity.of(fileName);
+            board.addImage(image);
+        }
+
+        // board entity 수정
+        BoardEntity modifyEntity = request.toEntity(task);
+
+        board.modify(modifyEntity);
+
+        return BoardListDto.detailOf(board);
     }
 
     @Transactional
