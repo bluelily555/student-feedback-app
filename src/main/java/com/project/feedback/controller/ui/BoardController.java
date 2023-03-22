@@ -181,7 +181,7 @@ public class BoardController {
 
         model.addAttribute("boardInfo", BoardListDto.detailOf(board));
 
-        return "/boards/edit";
+        return "boards/edit";
     }
 
     // 질문 수정
