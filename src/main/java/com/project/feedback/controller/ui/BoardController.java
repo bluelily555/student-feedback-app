@@ -3,6 +3,7 @@ package com.project.feedback.controller.ui;
 import com.project.feedback.domain.dto.board.BoardCreateRequest;
 import com.project.feedback.domain.dto.board.BoardListDto;
 import com.project.feedback.domain.dto.board.BoardListResponse;
+import com.project.feedback.domain.dto.board.BoardModifyRequest;
 import com.project.feedback.domain.dto.comment.CommentCreateRequest;
 import com.project.feedback.domain.dto.comment.CommentListResponse;
 import com.project.feedback.domain.dto.course.CourseInfo;
@@ -99,6 +100,7 @@ public class BoardController {
         BoardListDto boardListDto = boardService.getBoardDetail(boardId);
         model.addAttribute("boardInfo", boardListDto);
         UserEntity loginUser = auth != null ? findService.findUserByUserName(auth.getName()) : null;
+        model.addAttribute("auth", loginUser);
         if (loginUser != null) {
             model.addAttribute("isLiked", likeService.verifyLikeStatusOfBoard(boardId, loginUser));
         }
@@ -164,8 +166,9 @@ public class BoardController {
         return "redirect:/boards/" + boardId;
     }
 
+    // 질문 수정 페이지
     @GetMapping("/{boardId}/edit")
-    public String editBoard(@PathVariable Long boardId, Model model, Authentication auth) {
+    public String editBoardPage(@PathVariable Long boardId, Model model, Authentication auth) {
         // 로그인하지 않은 경우
         if (auth == null) return "redirect:/boards/" + boardId;
 
@@ -179,6 +182,27 @@ public class BoardController {
         model.addAttribute("boardInfo", BoardListDto.detailOf(board));
 
         return "/boards/edit";
+    }
+
+    // 질문 수정
+    @PostMapping("/{boardId}/edit")
+    public String editBoard(@PathVariable Long boardId, BoardModifyRequest request, MultipartFile file, Authentication auth) {
+        log.info("file : {}", file == null ? "null" : file.getOriginalFilename());
+        log.info("{}", request);
+
+        // 로그인하지 않은 경우
+        if (auth == null) return "redirect:/boards/" + boardId;
+
+        UserEntity loginUser = findService.findUserByUserName(auth.getName());
+
+        BoardEntity board = findService.findByBoardId(boardId);
+
+        // 소유자 확인
+        if (!board.equalsOwner(loginUser) && !loginUser.isManager()) return "redirect:/boards/" + boardId;
+
+        boardService.modifyBoard(boardId, request, file);
+
+        return "redirect:/boards/" + boardId;
     }
 
     //TASK에 질문 등록
