@@ -113,9 +113,20 @@ public class BoardService {
     }
 
     @Transactional
-    public List<BoardListDto> getBoardListByUserId(Long userId){
-        List<BoardEntity> codeEntities = boardRepository.findAllByUserId(userId);
-        return getBoardWriteDtos(codeEntities);
+    public BoardListResponse getBoardListByUserId(Long userId, Pageable pageable){
+        Page<BoardEntity> boardEntities = boardRepository.findAllByUserId(pageable, userId);
+        List<BoardListDto> boards = getBoardWriteDtos(boardEntities);
+        return new BoardListResponse(boards, pageable, boardEntities);
+    }
+
+
+    public List<Long> getBoardCountByUserId(Long userId){
+        List<Long> result = new ArrayList<>();
+        List<BoardEntity> boards = boardRepository.findByUserId(userId);
+        boards.forEach( b -> {
+           result.add(b.getId());
+        });
+        return result;
     }
 
     @Transactional

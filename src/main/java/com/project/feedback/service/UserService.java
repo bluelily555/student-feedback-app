@@ -16,8 +16,10 @@ import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.auth.JwtTokenUtil;
+import com.project.feedback.repository.CommentRepository;
 import com.project.feedback.repository.CourseRepository;
 import com.project.feedback.repository.CourseUserRepository;
+import com.project.feedback.repository.LikeRepository;
 import com.project.feedback.repository.TokenRepository;
 import com.project.feedback.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,10 +50,13 @@ public class UserService {
     private final UserDAOImpl userImpl;
     private final CourseUserRepository courseUserRepository;
     private final CourseRepository courseRepository;
+    private final CommentRepository commentRepository;
+    private final LikeRepository likeRepository;
     private final TokenRepository tokenRepository;
     private final BCryptPasswordEncoder encoder;
     private final FindService findService;
     private final CourseService courseService;
+    private final CommentService commentService;
     private final TaskService taskService;
     private final BoardService boardService;
 
@@ -342,6 +347,20 @@ public class UserService {
             String token = authorizationHeader.split(" ")[1];
             Long curTokenId = findService.findTokenByCurrentToken(token).getId();
             deleteToken(curTokenId);
+    }
+
+    public int getCountOfComments(Long userId){
+        int count = commentRepository.countByUserId(userId);
+        return count;
+    }
+
+    public int getCountOfLikes(Long userId){
+        int count = 0;
+        List<Long> contentIds = new ArrayList<>();
+        contentIds.addAll(boardService.getBoardCountByUserId(userId));
+        contentIds.addAll(commentService.getBoardCountByUserId(userId));
+        count = likeRepository.findByContentIdIn(contentIds).size();
+        return count;
     }
  }
 

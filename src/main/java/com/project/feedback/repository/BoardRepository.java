@@ -14,7 +14,7 @@ import java.util.List;
 
 
 public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
-    List<BoardEntity> findAllByUserId(Long userId);
+    Page<BoardEntity> findAllByUserId(Pageable pageable, Long userId);
     Page<BoardEntity> findByTitleContaining(Pageable pageable, String title);
     Page<BoardEntity> findAll(Pageable pageable);
 
@@ -28,4 +28,6 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     @Modifying
     @Query(value = "UPDATE BoardEntity entity SET entity.deletedAt = NOW() where entity.taskEntity = :task")
     void deleteAllByTask(@Param("task") TaskEntity taskEntity);
+
+    List<BoardEntity> findByUserId(Long userId);
 }

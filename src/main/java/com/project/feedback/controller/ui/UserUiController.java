@@ -1,6 +1,7 @@
 package com.project.feedback.controller.ui;
 
 import com.project.feedback.domain.dto.board.BoardListDto;
+import com.project.feedback.domain.dto.board.BoardListResponse;
 import com.project.feedback.domain.dto.course.AddStudentRequest;
 import com.project.feedback.domain.dto.course.CourseDto;
 import com.project.feedback.domain.dto.repository.RepositoryResponse;
@@ -16,7 +17,9 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.security.core.Authentication;
@@ -35,6 +38,8 @@ import java.util.stream.Collectors;
 public class UserUiController {
 
     private final UserService userService;
+    private final LikeService likeService;
+    private final CommentService commentService;
     private final CourseService courseService;
     private final FindService findService;
     private final BoardService boardService;
@@ -146,16 +151,24 @@ public class UserUiController {
 
 
     @GetMapping("/my")
-    public String myPage(Authentication auth, Model model){
+    public String myPage(Authentication auth, Model model,  @PageableDefault(size = 5) @SortDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
         UserEntity user = findService.findUserByUserName(auth.getName());
         String userName = user.getUserName();
         CourseEntity course = findService.findCourseByUserId(user);
         List<RepositoryResponse> repositories = findService.findRepositoriesByUser(user).stream()
                 .map(RepositoryResponse::of).toList();
-
-        List<BoardListDto> boardListDtoList = boardService.getBoardListByUserId(user.getId());
+        // 받은 커멘트 수
+        int countOfComments = userService.getCountOfComments(user.getId());
+        int countOfLikes = userService.getCountOfLikes(user.getId());
+        BoardListResponse boardListDtoList = boardService.getBoardListByUserId(user.getId(), pageable);
+        boardListDtoList.getContent().forEach(boardListDto -> boardListDto.setLikes(likeService.countLikesOfBoard(boardListDto.getId())));
+        boardListDtoList.getContent().forEach(boardListDto -> boardListDto.setComments(commentService.countCommentsOfBoard(boardListDto.getId())));
         model.addAttribute("user", user);
-        model.addAttribute("boardList", boardListDtoList);
+        model.addAttribute("commentCount", countOfComments);
+        model.addAttribute("likeCount", countOfLikes);
+        model.addAttribute("boardList", boardListDtoList.getContent());
+        model.addAttribute("nowPage", boardListDtoList.getPageable().getPageNumber() +1);
+        model.addAttribute("lastPage", boardListDtoList.getTotalPages());
         model.addAttribute("userName", auth.getName());
         model.addAttribute("course", course);
         model.addAttribute("repositories", repositories);
