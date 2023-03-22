@@ -127,11 +127,14 @@ public class TaskController {
 
 
     @GetMapping("/write")
-    public String writePage(Model model) {
+    public String writePage(Model model, Authentication auth) {
+        UserEntity loginUser = findService.findUserByUserName(auth.getName());
         model.addAttribute("taskCreateRequest", new TaskCreateRequest());
         List<CourseDto> courses = courseService.courses();
         CourseEntity courseEntity = findService.findCourseByName(courses.get(0).getName());
+        CourseEntity course = findService.findCourseByUser(loginUser);
         model.addAttribute("courseList", courses);
+        model.addAttribute("courseName", course.getName());
         int day = CourseInfo.fromEntity(courseEntity).getDayOfWeek();
         long week = CourseInfo.fromEntity(courseEntity).getWeek(courseEntity.getStartDate());
         model.addAttribute("week", week);

@@ -19,8 +19,11 @@
                     <label for="courseName" class="col-form-label">기수</label>
                 </div>
                 <div class="col">
-                    <select id="courseName" onchange="sendCourse()" name="courseName" class ="form-select" th:field="*{courseName}" style="width:200px;height:40px;">
-                        <option th:each="course:${courseList}" th:value="${course.name}" th:text="${course.name}" />
+                    <select id="courseName" onchange="sendCourse()" name="courseName" class ="form-select"  style="width:200px;height:40px;">
+                        <th:block th:each = "course:${courseList}">
+                            <option th:value="${course.name}" th:text="${course.name}" th:selected="${course.name} == ${courseName}">
+                            </option>
+                        </th:block>
                     </select>
                 </div>
             </div>

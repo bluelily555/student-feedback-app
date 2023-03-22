@@ -107,15 +107,14 @@ public class FindService {
     }
 
     /**
-     * 로그인 한 user의 courseId 리턴
+     * 로그인 한 user의 course 리턴
      **/
     @ModelAttribute("courseId")
-    public Long findUserByCourseId(UserEntity loginUser){
-        // 로그인한 user가 속한 course_id를 리턴한다.
+    public CourseEntity findCourseByUser(UserEntity loginUser){
         CourseUserEntity courseUserEntity = courseUserRepository.findCourseEntityUserByUserId(loginUser.getId())
             .orElseThrow(() -> new CustomException(ErrorCode.USER_COURSE_NOT_FOUND));
 
-        return courseUserEntity.getCourseEntity().getId();
+        return courseUserEntity.getCourseEntity();
     }
     /**
      * 로그인한 User(student)가 속한 Course의 학생들 목록을 가져오는 api
