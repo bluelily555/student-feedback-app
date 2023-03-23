@@ -35,7 +35,7 @@
                       <label type="text" th:text="${taskDetail.taskStatus}"></label>
                   </div>
                   <div class="col-sm-10" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
-                      <select id="taskStatus" name="taskStatus" class="form-select" th:field="*{taskStatus}" th:value="${taskDetail.taskStatus}">
+                      <select id="taskStatus" name="taskStatus"  th:attr="data-task_status=${taskDetail.taskStatus}" class="form-select" th:field="*{taskStatus}" th:value="${taskDetail.taskStatus}">
                         <option value="CREATED">등록</option>
                         <option value="IN_PROGRESS">진행중</option>
                         <option value="ERROR">에러</option>
@@ -60,7 +60,7 @@
                       <label th:text="${taskDetail.courseInfo.name}"/>
                     </div>
                     <div class="col" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
-                      <select id="courseName" onchange="sendCourse()" name="courseName" class ="form-select" th:field="*{courseName}" style="width:200px;height:40px;">
+                      <select id="courseName"th:attr="data-course_name=${taskDetail.courseInfo.name}" onchange="sendCourse()" name="courseName" class ="form-select" th:field="*{courseName}" style="width:200px;height:40px;">
                         <option th:each="course:${courseList}" th:value="${course.name}" th:text="${course.name}" />
                       </select>
                     </div>
@@ -128,7 +128,13 @@
     <script type="text/javascript" src="/js/custom_func.js"></script>
     <script>
       $(document).ready(function() {
-        $('#title').on("propertychange change keyup paste input ", function() {
+          let taskStatus = $('#taskStatus').data('task_status');
+          $("#taskStatus").val(taskStatus).prop("selected", true);
+
+          let courseName = $('#courseName').data('course_name');
+          $("#courseName").val(courseName).prop("selected", true);
+
+          $('#title').on("propertychange change keyup paste input ", function() {
           let title = $("#title").val();
           if(title.length === 0){
             show("titleEmpty")
