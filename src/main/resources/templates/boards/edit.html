@@ -20,11 +20,11 @@
                     <label class="col-2 col-form-label">태스크 명</label>
                     <div class="col-10">
                         <div class="input-group">
-                            <div class="form-control" th:text="${boardInfo.taskEntity.title}"></div>
-                            <button class="btn btn-primary">수정</button>
+                            <div class="form-control" id="task-title" th:text="${boardInfo.taskEntity.title}"></div>
+                            <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#edit-task-modal">수정</button>
                         </div>
                     </div>
-                    <input type="text" name="taskId" th:value="${boardInfo.taskEntity.id}" hidden>
+                    <input type="text" id="input-task-id" name="taskId" th:value="${boardInfo.taskEntity.id}" hidden>
                 </div>
 
                 <div class="row mb-3" id="view-img-row" th:if="${boardInfo.images.size() > 0}">
@@ -75,6 +75,50 @@
             <button type="submit" class="btn btn-primary ms-auto">저장</button>
         </div>
         </form>
+    </div>
+    <div class="modal" id="edit-task-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">태스크 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3 justify-content-center align-items-center">
+                        <div class="col">
+                            <select class="form-select" id="week-select">
+                                <option th:each="week : ${#numbers.sequence(1,53)}" th:value="${week}" th:text="${week}" th:selected="${week == boardInfo.taskEntity.week}"></option>
+                            </select>
+                        </div>
+                        <div class="col-auto">
+                            <label class="align-middle">주차</label>
+                        </div>
+                        <div class="col">
+                            <select class="form-select" id="day-select">
+                                <option th:each="day : ${#numbers.sequence(1,7)}" th:value="${day}" th:text="${day}" th:selected="${day == boardInfo.taskEntity.dayOfWeek}"></option>
+                            </select>
+                        </div>
+                        <div class="col-auto">
+                            <label class="align-middle">일</label>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-primary" onclick="fetchGetTasks()">조회</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <select class="form-select" id="task-select">
+                                <option th:each="task : ${tasks}" th:value="${task.id}" th:text="${task.title}" th:selected="${task.id == boardInfo.taskEntity.id}"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="modalSaveHandler()">Save changes</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
@@ -139,6 +183,7 @@
 
     const viewImgRow = document.getElementById('view-img-row');
     const inputImgRow = document.getElementById('input-img-row');
+    const taskSelect = document.getElementById('task-select');
 
     const imageInput = document.querySelector('input#images-input');
     inputImgRow.parentElement
@@ -160,6 +205,44 @@
     function setInputImgRowVisible(status) {
         viewImgRow.style.display = status ? 'none' : 'flex';
         inputImgRow.style.display = status ? 'flex' : 'none';
+    }
+
+    const courseId = [[${boardInfo.taskEntity.courseEntity.id}]]
+
+    function fetchGetTasks() {
+        const week = document.getElementById('week-select').value;
+        const day = document.getElementById('day-select').value;
+
+        fetch(`/api/v1/courses/${courseId}/tasks/weeks/${week}/days/${day}`)
+            .then(res => {
+                if (!res.ok) {
+                    alert('조회 실패');
+                    return;
+                }
+                return res.json();
+            }).then(data => {
+                const tasks = data.result.taskInfoList;
+
+                while (taskSelect.firstChild) {
+                    taskSelect.removeChild(taskSelect.firstChild);
+                }
+
+                for (let task of tasks) {
+                    const option = document.createElement('option');
+                    option.value = task.id;
+                    option.innerText = task.title;
+
+                    taskSelect.appendChild(option);
+                }
+            });
+    }
+
+    function modalSaveHandler() {
+        const taskTitle = document.getElementById('task-title');
+        const taskId = document.getElementById('input-task-id');
+
+        taskTitle.innerText = taskSelect.innerText;
+        taskId.value = taskSelect.value;
     }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
