@@ -6,12 +6,18 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
 @Entity
+@SQLDelete(sql = "UPDATE notification SET deleted_at = NOW() WHERE id=?")
+@Where(clause = "deleted_at is NULL")
 @Table(name ="notification")
 public class NotificationEntity extends TimeEntity{
     @Id
@@ -33,6 +39,8 @@ public class NotificationEntity extends TimeEntity{
     private Long sourceId;
 
     private boolean confirmed;
+
+    private LocalDateTime deletedAt;
 
     public void confirm() {
         this.confirmed = true;
