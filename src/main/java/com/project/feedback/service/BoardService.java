@@ -4,10 +4,7 @@ import com.project.feedback.domain.dto.board.BoardCreateRequest;
 import com.project.feedback.domain.dto.board.BoardListDto;
 import com.project.feedback.domain.dto.board.BoardListResponse;
 import com.project.feedback.domain.dto.board.BoardModifyRequest;
-import com.project.feedback.domain.entity.BoardEntity;
-import com.project.feedback.domain.entity.ImageEntity;
-import com.project.feedback.domain.entity.TaskEntity;
-import com.project.feedback.domain.entity.UserEntity;
+import com.project.feedback.domain.entity.*;
 import com.project.feedback.domain.enums.LikeContentType;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
@@ -165,6 +162,27 @@ public class BoardService {
         board.modify(modifyEntity);
 
         return BoardListDto.detailOf(board);
+    }
+
+    @Transactional
+    public void delete(Long boardId, UserEntity loginUser){
+        BoardEntity board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
+
+        if(!board.equalsOwner(loginUser) && !loginUser.isManager()) throw new CustomException(ErrorCode.INVALID_PERMISSION);
+
+        // 이미지 삭제
+        board.getImages().forEach(image -> imageManager.delete(image.getName()));
+
+        // 좋아요 삭제
+        likeRepository.deleteByContentTypeAndContentId(LikeContentType.BOARD, boardId);
+
+        // 댓글 좋아요 삭제
+        for (CommentEntity comment : board.getComments()) {
+            likeRepository.deleteByContentTypeAndContentId(LikeContentType.COMMENT, comment.getId());
+        }
+
+        delete(boardId);
     }
 
     @Transactional

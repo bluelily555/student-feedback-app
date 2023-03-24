@@ -21,7 +21,7 @@ public interface LikeRepository extends JpaRepository<LikeEntity, Long> {
     List<Long> findLikesOfBoardRank(Pageable pageable);
 
     @Query(value = "select likeEntity from LikeEntity as likeEntity where  likeEntity.contentId in (:contentId)")
-    List<LikeEntity> findByContentIdIn(@Param("contentId") List<Long> contentId );
+    List<LikeEntity> findByContentIdIn(@Param("contentId") List<Long> contentId);
 
-
+    void deleteByContentTypeAndContentId(LikeContentType type, Long contentId);
 }

@@ -241,7 +241,7 @@
         const taskTitle = document.getElementById('task-title');
         const taskId = document.getElementById('input-task-id');
 
-        taskTitle.innerText = taskSelect.innerText;
+        taskTitle.innerText = taskSelect.options[taskSelect.selectedIndex].text;
         taskId.value = taskSelect.value;
     }
 </script>

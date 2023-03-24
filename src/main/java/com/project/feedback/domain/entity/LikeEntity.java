@@ -6,14 +6,20 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
 @Entity
-@Table(name ="likes")
-public class LikeEntity extends TimeEntity{
+@SQLDelete(sql = "UPDATE likes SET deleted_at = NOW() WHERE id=?")
+@Where(clause = "deleted_at is NULL")
+@Table(name = "likes")
+public class LikeEntity extends TimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,6 +36,8 @@ public class LikeEntity extends TimeEntity{
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "from_user_id")
     private UserEntity fromUser;
+
+    private LocalDateTime deletedAt;
 
     public static LikeEntity of(LikeContentType type, Long contentId, UserEntity fromUser) {
         return LikeEntity.builder()

@@ -13,6 +13,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -20,6 +24,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@SQLDelete(sql = "UPDATE comments SET deleted_at = NOW() WHERE id=?")
+@Where(clause = "deleted_at is NULL")
 @Table(name = "comments")
 public class CommentEntity extends TimeEntity{
 
@@ -37,6 +43,8 @@ public class CommentEntity extends TimeEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_entity_id")
     private BoardEntity boardEntity;
+
+    private LocalDateTime deletedAt;
 
     public void update(String newComment) {
         this.comment = newComment;
