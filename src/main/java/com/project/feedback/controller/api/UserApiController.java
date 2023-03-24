@@ -49,7 +49,7 @@ public class UserApiController {
     @GetMapping
     public Response<UserListResponse> list(
         @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        UserListResponse res = userService.getUserList(pageable);
+        UserListResponse res = userService.getUserList(pageable, "", "");
         return Response.success(res);
     }
 

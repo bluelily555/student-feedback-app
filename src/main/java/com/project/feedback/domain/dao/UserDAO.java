@@ -19,4 +19,8 @@ public interface UserDAO {
 
     Page<UserEntity> findAll(Pageable pageable);
 
+    Page<UserEntity> findByUserName(Pageable pageable, String userName);
+
+    Page<UserEntity> findByRealName(Pageable pageable, String realName);
+
 }

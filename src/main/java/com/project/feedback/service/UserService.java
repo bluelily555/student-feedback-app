@@ -29,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -247,8 +248,18 @@ public class UserService {
         user.setRole(newRole);
         userImpl.insertUser(user);
     }
-    public UserListResponse getUserList(Pageable pageable) {
-        Page<UserEntity> users = userImpl.findAll(pageable);
+
+    public UserListResponse getUserList(Pageable pageable, String filter, String name) {
+        Page<UserEntity> users = null;
+        if(filter.equals("userName")){
+            users  = userImpl.findByUserName(pageable, name);
+        }else if(filter.equals("realName")){
+            users = userImpl.findByRealName(pageable, name);
+
+        }else{
+            users = userImpl.findAll(pageable);
+        }
+
         List<UserListDto> content = new ArrayList<>();
         for(UserEntity user : users) {
             String courseName = "";
@@ -268,6 +279,36 @@ public class UserService {
 
         return new UserListResponse(content, pageable, users);
     }
+
+    public UserListResponse getUserListByFilter(Pageable pageable, String filter, String userName) {
+        Page<UserEntity> users = null;
+        if(filter.equals("userName")){
+            users  = userImpl.findByUserName(pageable, userName);
+        }else{
+            users = userImpl.findByRealName(pageable, userName);
+
+        }
+
+        List<UserListDto> content = new ArrayList<>();
+        for(UserEntity user : users) {
+            String courseName = "";
+
+            Optional<CourseUserEntity> courseEntityUser = courseUserRepository.findCourseEntityUserByUserId(user.getId());
+            courseEntityUser.ifPresent(result -> courseEntityUser.get());
+
+            if(courseEntityUser.isPresent()) {
+                Optional<CourseEntity> courseEntity =
+                    courseRepository.findById(courseEntityUser.get().getCourseEntity().getId());
+                if(courseEntity.isPresent()){
+                    courseName = courseEntity.get().getName();
+                }
+            }
+            content.add(UserListDto.of(user,courseName));
+        }
+
+        return new UserListResponse(content, pageable, users);
+    }
+
     public UserChangePwResponse updatePwByLogin(UserChangePwRequest req){
         UserEntity user = userImpl.findByUserName(req.getUserName())
                 .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
