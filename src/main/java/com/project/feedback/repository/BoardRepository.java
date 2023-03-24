@@ -21,7 +21,7 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     Page<BoardEntity> findByTaskEntityId(Pageable pageable, Long taskId);
 
     List<BoardEntity> findTop10ByCommentsIsNullOrderByIdDesc();
-    @Query("SELECT b FROM BoardEntity b JOIN FETCH b.comments WHERE b.id IN :ids")
+    @Query("SELECT b FROM BoardEntity b LEFT JOIN b.comments WHERE b.id IN :ids")
     List<BoardEntity> findByIdInFetch(List<Long> ids);
 
     @Transactional
