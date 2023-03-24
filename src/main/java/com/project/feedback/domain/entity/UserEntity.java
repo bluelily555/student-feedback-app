@@ -25,6 +25,7 @@ public class UserEntity extends BaseEntity{
 
 
     private String realName;
+
     private String password;
 
     @Column(unique = true)

@@ -1,13 +1,12 @@
 package com.project.feedback.controller.ui;
 
-import com.project.feedback.domain.dto.board.BoardListDto;
 import com.project.feedback.domain.dto.board.BoardListResponse;
 import com.project.feedback.domain.dto.course.AddStudentRequest;
 import com.project.feedback.domain.dto.course.CourseDto;
 import com.project.feedback.domain.dto.repository.RepositoryResponse;
+import com.project.feedback.domain.dto.task.TaskFilterInfo;
 import com.project.feedback.domain.dto.user.*;
 import com.project.feedback.domain.entity.CourseEntity;
-import com.project.feedback.domain.entity.RepositoryEntity;
 import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
@@ -20,12 +19,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Map;
@@ -51,10 +49,14 @@ public class UserUiController {
         List<CourseDto> courses = courseService.courses();
         model.addAttribute("courseList", courses);
         model.addAttribute("addStudentRequest", new AddStudentRequest());
-        UserListResponse res = userService.getUserList(pageable);
+
+        UserListResponse res = userService.getUserList(pageable,"","");
         model.addAttribute("userList", res.getContent());
         model.addAttribute("nowPage", res.getPageable().getPageNumber() + 1);
         model.addAttribute("lastPage", res.getTotalPages());
+
+        UserFilterInfo userFilterInfo = new UserFilterInfo();
+        model.addAttribute("userFilterInfo", userFilterInfo);
         return "users/show";
     }
 
@@ -254,5 +256,37 @@ public class UserUiController {
         model.addAttribute("message", "비밀번호가 변경되었습니다.\n새로 로그인해주세요.");
         model.addAttribute("nextUrl", "/");
         return "users/find_pw";
+    }
+
+    //이름, 사용자명 필터링해서 user 목록 출력
+    @PostMapping("/filter")
+    public String getUsersByFitler(@ModelAttribute UserFilterInfo userFilterInfo, RedirectAttributes redirectAttribute, Authentication auth) {
+        String filter = userFilterInfo.getFilter();
+        String name = userFilterInfo.getName();
+        redirectAttribute.addAttribute("filter", filter);
+        redirectAttribute.addAttribute("name", name);
+
+        if(name == ""){ // 입력 값 없는 경우
+            return "redirect:/users";
+        }
+        return "redirect:/users/filter";
+    }
+
+    @GetMapping("/filter")
+    public String listByFilter(Model model, @PageableDefault(size = 20) Pageable pageable, @RequestParam String filter, @RequestParam String name) {
+        UserListResponse res =  userService.getUserList(pageable, filter, name);
+        System.out.print(filter + "filter");
+        model.addAttribute("userList", res.getContent());
+        model.addAttribute("nowPage", res.getPageable().getPageNumber() + 1);
+        model.addAttribute("lastPage", res.getTotalPages());
+
+
+        List<CourseDto> courses = courseService.courses();
+        model.addAttribute("courseList", courses);
+        model.addAttribute("addStudentRequest", new AddStudentRequest());
+
+        UserFilterInfo userFilterInfo = new UserFilterInfo(filter, name);
+        model.addAttribute("userFilterInfo", userFilterInfo);
+        return "users/show";
     }
 }

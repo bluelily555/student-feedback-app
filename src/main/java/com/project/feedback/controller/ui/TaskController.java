@@ -96,7 +96,6 @@ public class TaskController {
         }
         // 해당 기수에 해당하는 TASK만 조회
         if(taskFilterInfo.getCourseName() != "" && taskFilterInfo.getWeek() == null){
-            System.out.print("test test");
             redirectAttribute.addAttribute("courseId", courseService.findByCourseName(courseName).getId());
             return "redirect:courses/{courseId}";
         }

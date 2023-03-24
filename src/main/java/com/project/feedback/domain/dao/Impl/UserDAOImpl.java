@@ -47,4 +47,14 @@ public class UserDAOImpl implements UserDAO {
     public Page<UserEntity> findAll(Pageable pageable){
         return userRepository.findAll(pageable);
     }
+
+    @Override
+    public Page<UserEntity> findByUserName(Pageable pageable, String userName) {
+        return userRepository.findByUserName(pageable, userName);
+    }
+
+    @Override
+    public Page<UserEntity> findByRealName(Pageable pageable, String realName) {
+        return userRepository.findByRealName(pageable, realName);
+    }
 }
