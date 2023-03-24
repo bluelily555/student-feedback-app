@@ -50,7 +50,8 @@
                                         <!--        th:value="${userName}"-->
                                         <input id="userName" type="hidden" name="userName" th:value="${userName}" />
 <!--                                        <input type="hidden" name="taskId" id="taskId" th:value="${taskId}" />-->
-                                        <input class="mt-8" type="text" style="width: 60vw;" maxlength='30' th:field="*{title}" id="title" placeholder="제목을 입력하세요"/>
+                                        <input class="mt-8" type="text" style="width: 60vw;" maxlength='30' th:field="*{title}" id="title" placeholder="제목을 입력해주세요."/>
+                                        <div id="titleAlert"></div>
                                         <br/>
                                         <input type="hidden" id="writer" name="writer" maxlength='10' th:value="${userName}"/>
                                         <br/>
@@ -90,6 +91,42 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
 
 <script>
+    const alertPlaceholder = document.getElementById('titleAlert')
+
+    const alert = (message) => {
+        const wrapper = document.createElement('div')
+        wrapper.innerHTML = [
+            `<div class="alert alert-danger d-flex align-items-center" style="width: 270px;height: 45px;margin-top: 10px" role="alert">`,
+            `<svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+  </svg>`,
+            `<div>${message}</div>`,
+            '   <button type="button" class="btn-close" style="margin-left: 40px" data-bs-dismiss="alert" aria-label="Close"></button>',
+            '</div>'
+        ].join('')
+
+        alertPlaceholder.append(wrapper)
+    }
+
+    const alertTrigger = document.getElementById('submitBtn')
+    if (alertTrigger) {
+        alertTrigger.addEventListener('click', () => {
+            alert('제목을 입력해주세요.')
+        })
+    }
+
+    $(document).ready(function() {
+        $("#writeForm").submit(function (event) {
+            var title = $('#title').val();
+            if (title == "") {
+             //   $('#title').addClass('alert alert-danger');
+
+                setTimeout(function(){ $('#title'). focus (); }, 500);
+                event.preventDefault();
+                return;
+            }
+        });
+    });
     //ace editor 기본 세팅
     let editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
@@ -130,7 +167,7 @@
     $("#editor").on("propertychange change keyup paste input ", function() {
         postContent = editor.getValue();
         console.log(postContent)
-    })
+    });
     document.getElementById("writeForm").onsubmit = function(evt){
         document.getElementById("codeContent").value = editor.getValue();
         document.getElementById("language").value = lang
