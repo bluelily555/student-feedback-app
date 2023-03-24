@@ -6,12 +6,10 @@ import com.project.feedback.domain.dto.board.BoardListResponse;
 import com.project.feedback.domain.dto.board.BoardModifyRequest;
 import com.project.feedback.domain.entity.*;
 import com.project.feedback.domain.enums.LikeContentType;
+import com.project.feedback.domain.enums.NotificationType;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
-import com.project.feedback.repository.BoardRepository;
-import com.project.feedback.repository.ImageRepository;
-import com.project.feedback.repository.LikeRepository;
-import com.project.feedback.repository.TaskRepository;
+import com.project.feedback.repository.*;
 import com.project.feedback.upload.ImageManager;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,6 +29,7 @@ public class BoardService {
     private final LikeRepository likeRepository;
     private final TaskRepository taskRepository;
     private final ImageRepository imageRepository;
+    private final NotificationRepository notificationRepository;
     private final ImageManager imageManager;
 
     private List<BoardListDto> getBoardWriteDtos(List<BoardEntity> boardEntities) {
@@ -181,6 +180,9 @@ public class BoardService {
         for (CommentEntity comment : board.getComments()) {
             likeRepository.deleteByContentTypeAndContentId(LikeContentType.COMMENT, comment.getId());
         }
+
+        // 관련 알림 삭제
+        notificationRepository.deleteByTypeInAndSourceId(NotificationType.SOURCE_IS_BOARD, boardId);
 
         delete(boardId);
     }
