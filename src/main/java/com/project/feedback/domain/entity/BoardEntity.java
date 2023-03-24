@@ -34,7 +34,7 @@ public class BoardEntity extends TimeEntity {
     private List<CommentEntity> comments;
 
     @Builder.Default
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "board", cascade = {CascadeType.PERSIST})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "board", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<ImageEntity> images = new ArrayList<>();
 
     @Column(columnDefinition = "TEXT", nullable = false)

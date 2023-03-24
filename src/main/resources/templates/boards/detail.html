@@ -51,7 +51,7 @@
                     <div class="card-footer d-flex">
                         <div th:if="${auth.getRealName() == boardInfo.getUserName() || #authorization.expression('hasRole(''ROLE_ADMIN'')') || #authorization.expression('hasRole(''ROLE_MENTOR'')')}" class="ms-auto">
                             <a class="btn btn-primary" th:href="@{'/boards/' + ${boardInfo.id} + '/edit'}">수정</a>
-                            <a class="btn btn-primary" href="#">삭제</a>
+                            <button class="btn btn-primary" th:data-board-id="${boardInfo.id}" onclick="deleteBoard(this)">삭제</button>
                         </div>
                         <th:block th:if="${isLiked==true}">
                             <form class="ms-auto" th:action="@{'/boards/' + ${boardInfo.id} + '/unlike'}" method="post">
@@ -186,6 +186,23 @@
             more_btn.textContent = "접기"
         }
     }
+
+    function deleteBoard(self) {
+        if (window.confirm('정말 삭제하시겠습니까?')) {
+            const id = self.getAttribute('data-board-id');
+
+            fetch(`/api/v1/boards/${id}`, {method: "DELETE"})
+                .then(res => res.json().catch(reason => alert('삭제 실패 : 예기치 못한 에러')))
+                .then(data => {
+                    if (data.resultCode && data.resultCode === 'ERROR') {
+                        alert(data.result.message);
+                    }
+                    alert('삭제 완료');
+                    location.replace('/boards')
+                })
+        }
+    }
+
 </script>
 </body>
 </html>
