@@ -179,7 +179,12 @@ public class BoardController {
         // 소유자 확인
         if (!board.equalsOwner(loginUser) && !loginUser.isManager()) return "redirect:/boards/" + boardId;
 
+        CourseEntity course = findService.findCourseByUserId(loginUser);
+        TaskEntity task = board.getTaskEntity();
+        List<TaskInfo> tasks = findService.getTasksAndStudentsByWeekAndDay(course.getId(), task.getWeek(), task.getDayOfWeek(), loginUser).getTaskInfoList();
+
         model.addAttribute("boardInfo", BoardListDto.detailOf(board));
+        model.addAttribute("tasks", tasks);
 
         return "boards/edit";
     }
@@ -187,9 +192,6 @@ public class BoardController {
     // 질문 수정
     @PostMapping("/{boardId}/edit")
     public String editBoard(@PathVariable Long boardId, BoardModifyRequest request, MultipartFile file, Authentication auth) {
-        log.info("file : {}", file == null ? "null" : file.getOriginalFilename());
-        log.info("{}", request);
-
         // 로그인하지 않은 경우
         if (auth == null) return "redirect:/boards/" + boardId;
 
