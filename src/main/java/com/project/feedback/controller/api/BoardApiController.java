@@ -4,6 +4,7 @@ import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.service.BoardService;
 import com.project.feedback.service.FindService;
 import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,6 +20,7 @@ public class BoardApiController {
     private final FindService findService;
     private final BoardService boardService;
 
+    @Operation(summary = "질문 삭제")
     @DeleteMapping("/{id}")
     public Long delete(@PathVariable Long id, Authentication auth) {
         UserEntity loginUser = findService.findUserByUserName(auth.getName());
