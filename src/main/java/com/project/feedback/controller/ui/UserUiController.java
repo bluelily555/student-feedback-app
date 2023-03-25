@@ -212,7 +212,7 @@ public class UserUiController {
 
     @ResponseBody
     @PostMapping("/emailSend")
-    public String emailSend(@RequestParam String email) throws  Exception{
+    public EmailAuthResponse emailSend(@RequestParam String email) throws  Exception{
         return emailService.sendSimpleMessage(email);
     }
 
