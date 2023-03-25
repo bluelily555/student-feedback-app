@@ -20,7 +20,7 @@ public class HomeController {
             UserEntity userInfo = findService.findUserByUserName(auth.getPrincipal().toString());
             boolean CheckAdmin = findService.checkAdmin(userInfo);
             if(CheckAdmin){
-                return "users/admin";
+                return "admin/dummy_objects";
             }else{
                 return "home";
             }

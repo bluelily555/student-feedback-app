@@ -45,7 +45,7 @@ public class UserUiController {
     private final EmailService emailService;
 
     @GetMapping
-    public String list(Model model, @PageableDefault(size = 20) Pageable pageable) {
+    public String list(Model model, @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         List<CourseDto> courses = courseService.courses();
         model.addAttribute("courseList", courses);
         model.addAttribute("addStudentRequest", new AddStudentRequest());
