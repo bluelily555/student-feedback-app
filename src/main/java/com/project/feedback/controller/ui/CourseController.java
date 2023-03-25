@@ -51,6 +51,7 @@ public class CourseController {
         String dateNow  = now.format(formatter);
         int cnt = courseService.getCourseLength()+1;
 //        String cnt = String.valueOf(courseService.getCourseLength()+1);
+        model.addAttribute("currentPage", "create_course");
         model.addAttribute("cnt", cnt);
         model.addAttribute("date", dateNow);
         model.addAttribute("courseCreateRequest", new CourseCreateRequest());

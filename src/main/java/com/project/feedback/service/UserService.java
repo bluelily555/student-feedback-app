@@ -67,6 +67,9 @@ public class UserService {
     private String secretKey;
     @Value("${dummy.default-password}")
     private String defaultPw;
+
+    @Value("${dummy.admin-password}")
+    private String adminPw;
     private long accessExpireTimeMs = 1000 * 60 * 60;
 //    private long accessExpireTimeMs = 1000 * 3;
     private long refreshExpireTimeMs = 1000 * 60 * 60 * 6;
@@ -147,7 +150,7 @@ public class UserService {
 
     public void setDefaultUsers(){
         UserJoinRequest[] userJoinRequests = new UserJoinRequest[4];
-        userJoinRequests[0] = new UserJoinRequest("admin", defaultPw, "관리자", "aaa1@aaaaa.com");
+        userJoinRequests[0] = new UserJoinRequest("admin", adminPw, "관리자", "aaa1@aaaaa.com");
         userJoinRequests[1] = new UserJoinRequest("student", defaultPw, "학생", "aaa2@aaaaa.com");
         userJoinRequests[2] = new UserJoinRequest("manager", defaultPw, "관리자", "aaa3@aaaaa.com");
         userJoinRequests[3] = new UserJoinRequest("teacher", defaultPw, "선생님", "aaa4@aaaaa.com");

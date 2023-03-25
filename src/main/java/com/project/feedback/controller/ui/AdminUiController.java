@@ -28,6 +28,7 @@ public class AdminUiController {
 
     @GetMapping(value = {"/dummy"})
     public String dummy(Authentication auth, Model model){
+        model.addAttribute("currentPage", "dummy");
         return "admin/dummy_objects";
     }
 

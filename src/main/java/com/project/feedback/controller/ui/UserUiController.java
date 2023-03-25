@@ -47,6 +47,7 @@ public class UserUiController {
     @GetMapping
     public String list(Model model, @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         List<CourseDto> courses = courseService.courses();
+        model.addAttribute("currentPage", "users");
         model.addAttribute("courseList", courses);
         model.addAttribute("addStudentRequest", new AddStudentRequest());
 
@@ -56,6 +57,24 @@ public class UserUiController {
         model.addAttribute("lastPage", res.getTotalPages());
 
         UserFilterInfo userFilterInfo = new UserFilterInfo();
+        model.addAttribute("userFilterInfo", userFilterInfo);
+        return "users/show";
+    }
+
+    @GetMapping("/filter")
+    public String listByFilter(Model model, @PageableDefault(size = 20) Pageable pageable, @RequestParam String filter, @RequestParam String name) {
+        UserListResponse res =  userService.getUserList(pageable, filter, name);
+        model.addAttribute("currentPage", "users");
+        model.addAttribute("userList", res.getContent());
+        model.addAttribute("nowPage", res.getPageable().getPageNumber() + 1);
+        model.addAttribute("lastPage", res.getTotalPages());
+
+
+        List<CourseDto> courses = courseService.courses();
+        model.addAttribute("courseList", courses);
+        model.addAttribute("addStudentRequest", new AddStudentRequest());
+
+        UserFilterInfo userFilterInfo = new UserFilterInfo(filter, name);
         model.addAttribute("userFilterInfo", userFilterInfo);
         return "users/show";
     }
@@ -272,21 +291,4 @@ public class UserUiController {
         return "redirect:/users/filter";
     }
 
-    @GetMapping("/filter")
-    public String listByFilter(Model model, @PageableDefault(size = 20) Pageable pageable, @RequestParam String filter, @RequestParam String name) {
-        UserListResponse res =  userService.getUserList(pageable, filter, name);
-        System.out.print(filter + "filter");
-        model.addAttribute("userList", res.getContent());
-        model.addAttribute("nowPage", res.getPageable().getPageNumber() + 1);
-        model.addAttribute("lastPage", res.getTotalPages());
-
-
-        List<CourseDto> courses = courseService.courses();
-        model.addAttribute("courseList", courses);
-        model.addAttribute("addStudentRequest", new AddStudentRequest());
-
-        UserFilterInfo userFilterInfo = new UserFilterInfo(filter, name);
-        model.addAttribute("userFilterInfo", userFilterInfo);
-        return "users/show";
-    }
 }

@@ -7,8 +7,10 @@
 <main class="d-flex flex-nowrap" style="max-height:none; height: auto">
     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
     <br/>
-    <div class="row" style="width: 100vw">
-        <br/>
+    <div class="container-lg px-2 py-2">
+        <div>
+            <h3 class="mt-4">Task 목록</h3>
+        </div>
         <form th:method="post" th:action="@{/tasks/filter}"  th:object="${taskFilterInfo}">
             <div class="row">
                 <div class="col-sm-auto">

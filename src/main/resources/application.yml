@@ -81,4 +81,5 @@ AdminMail:
 
 dummy:
   default-password: 11111
+  admin-password: 1123
 

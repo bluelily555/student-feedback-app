@@ -6,9 +6,11 @@
     <div th:insert="~{fragments/navbar :: navbar}"></div>
     <main class="d-flex flex-nowrap">
         <div th:replace="~{fragments/sidebar :: sidebar}"></div>
-        <div class="row" style="margin-top: 15px;">
-            <br/><br/>
-            <form class="offset-3 col-6 form-group" th:method="post" th:action="@{/courses/write}" th:object="${courseCreateRequest}">
+        <div class="container-lg">
+            <div>
+                <h3 class="mt-4" style="margin-bottom: 20px">코스 등록</h3>
+            </div>
+            <form class="col-6 form-group" th:method="post" th:action="@{/courses/write}" th:object="${courseCreateRequest}">
                 <script th:inline="javascript">
                     /*<![CDATA[*/
                     let cnt = "[[${cnt}]]";
@@ -71,13 +73,6 @@
             </form>
         </div>
     </main>
-<!--    <script th:inline="javascript">-->
-<!--        /*<![CDATA[*/-->
-<!--            const page = /[[${courseList}]]/;-->
-<!--            console.log(page);-->
-<!--        console.log("week:", /[[${week}]]/);-->
-<!--        /*]]>*/-->
-<!--    </script>-->
 </body>
 <footer th:replace="fragments/footer.html :: footer"/>
 </html>

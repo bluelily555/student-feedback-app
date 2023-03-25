@@ -49,6 +49,7 @@ public class TaskController {
     @GetMapping
     public String list(Model model, @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         TaskListResponse res = taskService.getTaskList(pageable);
+        model.addAttribute("currentPage", "tasks");
         model.addAttribute("taskList", res.getContent());
         model.addAttribute("nowPage", res.getPageable().getPageNumber() + 1);
         model.addAttribute("lastPage", res.getTotalPages());
@@ -70,6 +71,8 @@ public class TaskController {
     @GetMapping("/courses/{courseId}")
     public String listByCourseId(Model model, @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, @PathVariable Long courseId) {
         TaskListResponse res = taskService.getTaskListByCourseId(pageable, courseId);
+
+        model.addAttribute("currentPage", "tasks");
         model.addAttribute("taskList", res.getContent());
         model.addAttribute("nowPage", res.getPageable().getPageNumber() + 1);
         model.addAttribute("lastPage", res.getTotalPages());
@@ -110,6 +113,7 @@ public class TaskController {
         CourseEntity course = findService.findCourseByUserId(loginUser);
         TaskListResponse res =  findService.getTasksByCourseIdAndWeek(pageable, courseId, week);
 
+        model.addAttribute("currentPage", "tasks");
         model.addAttribute("taskList", res.getContent());
         model.addAttribute("nowPage", res.getPageable().getPageNumber() + 1);
         model.addAttribute("lastPage", res.getTotalPages());
@@ -128,6 +132,8 @@ public class TaskController {
     @GetMapping("/write")
     public String writePage(Model model, Authentication auth) {
         UserEntity loginUser = findService.findUserByUserName(auth.getName());
+
+        model.addAttribute("currentPage", "create_task");
         model.addAttribute("taskCreateRequest", new TaskCreateRequest());
         List<CourseDto> courses = courseService.courses();
         CourseEntity courseEntity = findService.findCourseByName(courses.get(0).getName());
