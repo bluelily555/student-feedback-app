@@ -22,15 +22,15 @@ public class HomeController {
             if(CheckAdmin){
                 return "admin/dummy_objects";
             }else{
-                return "home";
+                return "redirect:/users/my";
             }
         }else{
-            return "home";
+            return "redirect:/users/my";
         }
     }
     @GetMapping(value = {"/home"})
     public String home(Authentication auth, Model model){
-        return "home";
+        return "/users/my";
     }
 
 }
