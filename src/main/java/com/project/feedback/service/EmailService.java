@@ -1,5 +1,7 @@
 package com.project.feedback.service;
 
+import com.project.feedback.domain.dto.user.EmailAuthResponse;
+
 public interface EmailService {
-    String sendSimpleMessage(String to)throws Exception;
+    EmailAuthResponse sendSimpleMessage(String to)throws Exception;
 }

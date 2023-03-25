@@ -75,6 +75,16 @@ public class UserService {
     private long refreshExpireTimeMs = 1000 * 60 * 60 * 6;
 //    private long refreshExpireTimeMs = 1000 * 30;
 
+    public boolean checkEmailValid(String email) {
+        // email 중복 체크
+        Optional<UserEntity> user = userImpl.findByEmail(email);
+        if(user.isEmpty()){
+            return false;
+        }else {
+            return true;
+        }
+    }
+
     public UserJoinResponse saveUser(UserJoinRequest req) {
 
         // userName 중복 체크

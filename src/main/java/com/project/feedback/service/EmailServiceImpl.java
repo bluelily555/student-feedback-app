@@ -1,7 +1,11 @@
 package com.project.feedback.service;
 
+import com.project.feedback.domain.dto.user.EmailAuthResponse;
+import com.project.feedback.exception.CustomException;
+import com.project.feedback.exception.ErrorCode;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -10,9 +14,11 @@ import org.springframework.stereotype.Service;
 import java.util.Random;
 
 @Service
+@RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService{
-    @Autowired
-    JavaMailSender emailSender;
+
+    private final JavaMailSender emailSender;
+    private final UserService userService;
 
     public static final String ePw = createKey();
 
@@ -65,14 +71,26 @@ public class EmailServiceImpl implements EmailService{
         return key.toString();
     }
     @Override
-    public String sendSimpleMessage(String to) throws Exception {
+    public EmailAuthResponse sendSimpleMessage(String to) throws Exception {
         MimeMessage msg = createMessage(to);
-        try{
-            emailSender.send(msg);
-        }catch (MailException e){
-            e.printStackTrace();
-            throw new IllegalAccessException();
+
+        // db에서 찾음
+        if(userService.checkEmailValid(to)){
+            try{
+                emailSender.send(msg);
+            }catch (MailException e){
+                e.printStackTrace();
+                throw new IllegalAccessException();
+            }
+            return EmailAuthResponse.builder()
+                    .requestedEmail(to)
+                    .status("SUCCESS").build();
+        }else {
+            return EmailAuthResponse.builder()
+                    .requestedEmail(to)
+                    .status("FAIL")
+                    .message("EMAIL이 없습니다.")
+                    .build();
         }
-        return ePw;
     }
 }
