@@ -50,6 +50,7 @@ public class SecurityConfig {
     @Value("${jwt.token.secret}")
     private String secretkey;
     private static final String[] GET_ADMIN_MENTOR_MANAGE_USER = {
+            "/admin/**",
             "/users",
             "/tasks/write",
             "/courses/write"

@@ -21,7 +21,6 @@ import com.project.feedback.repository.CourseRepository;
 import com.project.feedback.repository.CourseUserRepository;
 import com.project.feedback.repository.LikeRepository;
 import com.project.feedback.repository.TokenRepository;
-import com.project.feedback.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -29,7 +28,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,6 +35,8 @@ import org.springframework.stereotype.Service;
 
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -164,7 +164,27 @@ public class UserService {
         }
 
     }
-    public void addDummyTasks(int taskCnt){
+
+    public TaskCreateRequest createADummyTask(CourseEntity courseEntity, long week, long day) {
+        UUID one = UUID.randomUUID();
+        String[] random = one.toString().split("-");
+
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDateTime = now.format(formatter);
+
+        TaskCreateRequest req = TaskCreateRequest.builder()
+                .title(String.format("[%d주차 %d일차] %s", week, day, formattedDateTime))
+                .description("description")
+                .status("IN_PROGRESS")
+                .courseName(courseEntity.getName())
+                .week(week)
+                .day(Long.valueOf(day))
+                .build();
+        return req;
+    }
+    public void addDummyTasks(int taskCnt, int questionCnt){
+
         // 처음 등록되는 기본 기수에 대한 Task 등록
         List<CourseDto> courses = courseService.courses();
         CourseEntity courseEntity = findService.findCourseByName(courses.get(0).getName());
@@ -174,21 +194,12 @@ public class UserService {
 
         //task 10개 등록
         for( int i = 0; i < taskCnt; i++) {
-            UUID one = UUID.randomUUID();
-            String[] random = one.toString().split("-");
-            TaskCreateRequest req = TaskCreateRequest.builder()
-                    .title("Task" + random[0])
-                    .description("description")
-                    .status("IN_PROGRESS")
-                    .courseName(courseEntity.getName())
-                    .week(week)
-                    .day(Long.valueOf(day))
-                    .build();
+
+            TaskCreateRequest req = createADummyTask(courseEntity, week, day);
             TaskCreateResponse result = taskService.createTask(req, "admin");
 
             // 질문 n개 등록
-            addDummyBoards(result.getTaskId(), 3);
-
+            addDummyBoards(result.getTaskId(), questionCnt);
         }
 
     }
@@ -196,7 +207,7 @@ public class UserService {
     public void addDummyBoards(long taskId, int questionCnt){
         UserEntity loginUser = findService.findUserByUserName("student");
         TaskEntity taskEntity = findService.findTaskById(taskId);
-        // 질문 3개 등록
+        // 질문 n개 등록
         for(int i = 0; i < questionCnt; i++) {
             BoardCreateRequest boardReq = BoardCreateRequest.builder()
                     .title("title")
@@ -208,30 +219,30 @@ public class UserService {
         }
     }
 
-    public void addDummyUsers(){
-        String names[] ={"김","이" ,"박" ,"최" ,"정" ,"강","조","윤","장","임"};
-        for(int i= 0 ; i < 10; i++) {
-            String userName = names[i];
-            naming(userName);
+    public void addDummyUsers(int userCnt){
+        int cnt = 0;
+        String names[] ={"김","이","박","최","정","강","조","윤","장","임"};
+        while(cnt < userCnt){
+            int i = (int) (Math.random() * names.length); // 0 (inclusive)부터 11 (exclusive) 사이의 정수를 생성합니다.
+            String userFamilyName = names[i];
+            for (int j = 0; j < userCnt; j++) {
+                UUID one = UUID.randomUUID();
+                String[] random = one.toString().split("-");
+                String randomName = userFamilyName + random[0];
+                String email =
+                        userFamilyName + random[0] + "@gmail.com";
+                UserJoinRequest userJoinRequest = UserJoinRequest.builder()
+                        .userName(randomName) // 중복 불가
+                        .password(defaultPw)
+                        .realName(userFamilyName + random[0])
+                        .email(email)
+                        .build();
+                saveUser(userJoinRequest);
+                cnt++;
+            }
         }
     }
 
-    public void naming(String userName){
-        for (int j = 0; j < 10; j++) {
-            UUID one = UUID.randomUUID();
-            String[] random = one.toString().split("-");
-            String randomName = userName + random[0];
-            String email =
-                    userName + random[0] + "@gmail.com";
-            UserJoinRequest userJoinRequest = UserJoinRequest.builder()
-                    .userName(randomName) // 중복 불가
-                    .password(defaultPw)
-                    .realName(userName + random[0])
-                    .email(email)
-                    .build();
-            saveUser(userJoinRequest);
-        }
-    }
     public void changeDefaultRole(String userRole){
         UserEntity user = userImpl.findByUserName(userRole)
                 .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));

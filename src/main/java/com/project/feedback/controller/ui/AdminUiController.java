@@ -10,10 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/admin")
@@ -26,31 +23,31 @@ public class AdminUiController {
 
     @GetMapping(value = {"", "/"})
     public String root(Authentication auth, Model model) {
-        if(auth != null){
-            UserEntity userInfo = findService.findUserByUserName(auth.getPrincipal().toString());
-            boolean CheckAdmin = findService.checkAdmin(userInfo);
-            if(CheckAdmin){
-                return "admin/main";
-            }else{
-                return "home";
-            }
-        }else{
-            return "home";
-        }
+        return "admin/dummy_objects";
     }
+
+    @GetMapping(value = {"/dummy"})
+    public String dummy(Authentication auth, Model model){
+        return "admin/dummy_objects";
+    }
+
 
     //Dummy User 등록
     @GetMapping("/users")
-    public String addDummyUsers(){
-        userService.addDummyUsers();
-        return "admin/main";
+    public String addDummyUsers(@RequestParam(name = "userCnt", defaultValue = "0") int userCnt){
+        log.info("userCnt:{}", userCnt);
+        userService.addDummyUsers(userCnt);
+        return "redirect:/users";
     }
 
     //Dummy Task 등록
     @GetMapping("/tasks")
-    public String addDummyTasks(){
-        userService.addDummyTasks(10);
-        return "admin/main";
+    public String addDummyTasks(@RequestParam(name = "taskCnt", defaultValue = "0") int taskCnt,
+                                @RequestParam(name = "questionCnt", defaultValue = "0") int questionCnt){
+        log.info("taskCnt:{}", taskCnt);
+        log.info("questionCnt:{}", questionCnt);
+        userService.addDummyTasks(taskCnt, questionCnt);
+        return "redirect:/tasks";
     }
 
 }
