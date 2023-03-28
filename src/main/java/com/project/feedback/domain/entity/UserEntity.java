@@ -34,6 +34,9 @@ public class UserEntity extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Builder.Default
+    private String profile = "default.png";
+
     @OneToMany(mappedBy = "user")
     private List<CommentEntity> comments;
 
