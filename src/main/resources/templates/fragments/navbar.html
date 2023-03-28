@@ -80,7 +80,7 @@
               <span sec:authorize="isAuthenticated()"><span th:text="${#authentication.name}" />님 안녕하세요.</span>
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <li><a class="dropdown-item" th:if="${#authorization.expression('hasRole(''STUDENT'')')}" href="/users/my">마이페이지</a></li>
+              <li><a class="dropdown-item" th:if="${#authorization.expression('hasAnyRole(''STUDENT'',''ROLE_ADMIN'')')}" href="/users/my">마이페이지</a></li>
               <li><a class="dropdown-item" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" href="/admin">Admin</a></li>
               <li><a class="dropdown-item" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" href="/tasks/write">Task등록</a></li>
               <li><a class="dropdown-item" href="/users/logout">로그아웃</a></li>
