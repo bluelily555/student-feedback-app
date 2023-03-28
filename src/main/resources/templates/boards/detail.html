@@ -31,7 +31,7 @@
                                         <h5 th:text="${boardInfo.taskEntity.title}"></h5>
                                     </a>
                                     <h5 th:if="${boardInfo.images.size() > 0}">이미지</h5>
-                                    <img th:each="image:${boardInfo.images}" class="w-100 mb-3" th:src="@{'/images/' + ${image}}">
+                                    <img th:each="image:${boardInfo.images}" class="w-100 mb-3" th:src="@{'/images/board/' + ${image}}">
                                     <div style="display: block">
                                         <h5>작성 내용</h5>
                                         <input type="hidden" id="language" th:value="${boardInfo.language}"></input>
