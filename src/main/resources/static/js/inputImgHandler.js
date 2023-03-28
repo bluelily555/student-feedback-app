@@ -1,6 +1,6 @@
 // 이미지 첨부파일 수정 핸들러
 function imageInputOnChange(event) {
-    fileTypeCheck(event);
+    fileTypeAndSizeCheck(event);
     setThumbnail(event);
 }
 
@@ -18,21 +18,30 @@ const fileTypes = [
 ];
 
 // 이미지 업로드 확장자 더블 체크
-function fileTypeCheck(event) {
+function fileTypeAndSizeCheck(event) {
     let hasWrongFile = false;
+    let hasTooBigFile = false;
     const dataTransfer = new DataTransfer();
 
     for (let file of event.target.files) {
-        if (fileTypes.includes(file.type)) {
+        if (fileTypes.includes(file.type) && fileSizeCheck(file)) {
             dataTransfer.items.add(file);
-        } else {
+        } else if (!fileTypes.includes(file.type)){
             hasWrongFile = true;
+        } else if (!fileSizeCheck(file)) {
+            hasTooBigFile = true;
         }
     }
 
-    if (hasWrongFile) alert('이미지 파일만 업로드할 수 있습니다.')
+    if (hasWrongFile) alert('이미지 파일만 업로드할 수 있습니다.');
+    if (hasTooBigFile) alert('3MB 이하의 파일만 업로드할 수 있습니다.');
 
     event.target.files = dataTransfer.files;
+}
+
+function fileSizeCheck(file) {
+    const MAX_SIZE = 3 * 1024 * 1024; // 3MB
+    return file.size <= MAX_SIZE;
 }
 
 // 썸네일 설정
