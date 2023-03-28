@@ -4,6 +4,7 @@
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sidebars/">
     <link rel="stylesheet" href="../../static/css/custom.css">
 </head>
+<script src="/js/inputImgHandler.js"></script>
 <body>
 <div th:insert="~{fragments/navbar :: navbar}"></div>
 <div class="container">
@@ -52,8 +53,11 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
+                                                    <span class="text-muted">3MB 이하의 이미지 파일만 등록 가능합니다.</span>
+                                                </div>
+                                                <div class="row">
                                                     <div class="col">
-                                                        <input type="file" class="form-control" id="update-image" onchange="fileTypeCheck(this)" name="profile" accept="image/png, image/jpeg, image/jpg, image/gif">
+                                                        <input type="file" class="form-control" id="update-image" name="profile" accept="image/png, image/jpeg, image/jpg, image/gif">
                                                     </div>
                                                     <div class="col-auto">
                                                         <button class="btn btn-primary" type="submit">프로필 변경</button>
@@ -259,8 +263,10 @@
     const fileInput = document.getElementById('update-image');
     const preview = document.getElementById('preview');
 
-    fileInput.addEventListener('change', function() {
+    fileInput.addEventListener('change', event => {
+        fileTypeAndSizeCheck(event);
         const file = fileInput.files[0];
+        if (!file) return;
         const reader = new FileReader();
 
         reader.addEventListener('load', function() {
