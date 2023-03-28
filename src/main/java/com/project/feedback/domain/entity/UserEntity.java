@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "users")
 public class UserEntity extends BaseEntity{
+    private static final String DEFAULT_PROFILE_IMG = "default.png";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +36,7 @@ public class UserEntity extends BaseEntity{
     private Role role;
 
     @Builder.Default
-    private String profile = "default.png";
+    private String profile = DEFAULT_PROFILE_IMG;
 
     @OneToMany(mappedBy = "user")
     private List<CommentEntity> comments;
@@ -56,6 +57,18 @@ public class UserEntity extends BaseEntity{
         this.role = role;
     }
     public void setPassword(String password){ this.password = password;}
+
+    public boolean isDefaultProfile() {
+        return profile.equals(DEFAULT_PROFILE_IMG);
+    }
+
+    public void updateProfile(String profileImgName) {
+        this.profile = profileImgName;
+    }
+
+    public void deleteProfile() {
+        this.profile = DEFAULT_PROFILE_IMG;
+    }
 
     public boolean isManager() {
         return this.role == Role.ROLE_ADMIN || this.role == Role.ROLE_MENTOR;

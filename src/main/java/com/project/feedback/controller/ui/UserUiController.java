@@ -4,7 +4,6 @@ import com.project.feedback.domain.dto.board.BoardListResponse;
 import com.project.feedback.domain.dto.course.AddStudentRequest;
 import com.project.feedback.domain.dto.course.CourseDto;
 import com.project.feedback.domain.dto.repository.RepositoryResponse;
-import com.project.feedback.domain.dto.task.TaskFilterInfo;
 import com.project.feedback.domain.dto.user.*;
 import com.project.feedback.domain.entity.CourseEntity;
 import com.project.feedback.domain.entity.UserEntity;
@@ -23,11 +22,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/users")
@@ -291,4 +290,15 @@ public class UserUiController {
         return "redirect:/users/filter";
     }
 
+    @PostMapping("/profile/edit")
+    public String modifyProfile(MultipartFile profile, Authentication auth) {
+        userService.modifyProfile(profile, auth.getName());
+        return "redirect:/users/my";
+    }
+
+    @PostMapping("/profile/delete")
+    public String deleteProfile(Authentication auth) {
+        userService.deleteProfile(auth.getName());
+        return "redirect:/users/my";
+    }
 }
