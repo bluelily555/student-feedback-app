@@ -11,9 +11,17 @@ import java.io.IOException;
 public class ImageManagerConfig {
     @Bean
     public BoardImageManager boardImageManager(ResourceLoader resourceLoader) throws IOException {
-        String IMAGE_FOLDER_PATH = File.separator + "images";
+        String BOARD_IMAGE_FOLDER_PATH = File.separator + "images" + File.separator + "board";
         File root = resourceLoader.getResource("file:").getFile();
-        String absoluteImagePath = root.getAbsolutePath() + IMAGE_FOLDER_PATH;
+        String absoluteImagePath = root.getAbsolutePath() + BOARD_IMAGE_FOLDER_PATH;
         return new BoardImageManager(absoluteImagePath);
+    }
+
+    @Bean
+    public ProfileImageManager profileImageManager(ResourceLoader resourceLoader) throws IOException {
+        String PROFILE_IMAGE_FOLDER_PATH = File.separator + "images" + File.separator + "profile";
+        File root = resourceLoader.getResource("file:").getFile();
+        String absoluteImagePath = root.getAbsolutePath() + PROFILE_IMAGE_FOLDER_PATH;
+        return new ProfileImageManager(absoluteImagePath);
     }
 }
