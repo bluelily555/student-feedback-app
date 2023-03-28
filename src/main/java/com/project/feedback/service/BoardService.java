@@ -10,7 +10,7 @@ import com.project.feedback.domain.enums.NotificationType;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.repository.*;
-import com.project.feedback.upload.ImageManager;
+import com.project.feedback.upload.BoardImageManager;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +30,7 @@ public class BoardService {
     private final TaskRepository taskRepository;
     private final ImageRepository imageRepository;
     private final NotificationRepository notificationRepository;
-    private final ImageManager imageManager;
+    private final BoardImageManager boardImageManager;
 
     private List<BoardListDto> getBoardWriteDtos(List<BoardEntity> boardEntities) {
         List<BoardListDto> codeWriteDtoList = new ArrayList<>();
@@ -77,7 +77,7 @@ public class BoardService {
 
         // 이미지 저장
         if (file != null && !file.isEmpty()) {
-            String fileName = imageManager.upload(file);
+            String fileName = boardImageManager.upload(file);
             ImageEntity image = ImageEntity.of(fileName);
             boardEntity.addImage(image);
         }
@@ -142,7 +142,7 @@ public class BoardService {
 
         // 이미지 삭제
         if (!deleteImgList.isEmpty()) {
-            imageManager.deleteAll(deleteImgList);
+            boardImageManager.deleteAll(deleteImgList);
             List<ImageEntity> imageEntities = imageRepository.findByNameIn(deleteImgList);
             imageRepository.deleteAll(imageEntities);
             board.deleteImageAll(imageEntities);
@@ -150,7 +150,7 @@ public class BoardService {
 
         // 새로운 이미지 저장
         if (file != null && !file.isEmpty()) {
-            String fileName = imageManager.upload(file);
+            String fileName = boardImageManager.upload(file);
             ImageEntity image = ImageEntity.of(fileName);
             board.addImage(image);
         }
@@ -171,7 +171,7 @@ public class BoardService {
         if(!board.equalsOwner(loginUser) && !loginUser.isManager()) throw new CustomException(ErrorCode.INVALID_PERMISSION);
 
         // 이미지 삭제
-        board.getImages().forEach(image -> imageManager.delete(image.getName()));
+        board.getImages().forEach(image -> boardImageManager.delete(image.getName()));
 
         // 좋아요 삭제
         likeRepository.deleteByContentTypeAndContentId(LikeContentType.BOARD, boardId);
