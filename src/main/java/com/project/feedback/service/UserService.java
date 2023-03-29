@@ -436,7 +436,7 @@ public class UserService {
         UserEntity user = findService.findUserByUserName(userName);
 
         // 프로필 사진이 기본이 아닌 경우(이미 프로필 사진이 등록되어 있는 경우) : 기존 프로필 사진 삭제
-        if (!user.isDefaultProfile()) {
+        if (!(user.getProfile() == null)) {
             profileImageManager.delete(user.getProfile());
         }
 
@@ -451,7 +451,7 @@ public class UserService {
         UserEntity user = findService.findUserByUserName(userName);
 
         // 프로필 사진이 기본이 아닌 경우(이미 프로필 사진이 등록되어 있는 경우) : 기존 프로필 사진 삭제
-        if (!user.isDefaultProfile()) {
+        if (!(user.getProfile() == null)) {
             profileImageManager.delete(user.getProfile());
         }
 
