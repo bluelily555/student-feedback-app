@@ -14,6 +14,7 @@ public class CommentListDto {
     private Long id;
     private String comment;
     private String userName;
+    private String userProfile;
     private Long boardId;
     private int likes;
     private boolean likeStatus;
@@ -38,6 +39,7 @@ public class CommentListDto {
             .id(comment.getId())
             .comment(comment.getComment())
             .userName(comment.getUser().getUserName())
+            .userProfile(comment.getUser().getProfilePath())
             .likes(likes)
             .boardId(comment.getBoardEntity().getId())
             .createdAt(comment.getCreatedDate())

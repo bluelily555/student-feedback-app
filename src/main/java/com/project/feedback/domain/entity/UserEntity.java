@@ -16,6 +16,8 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "users")
 public class UserEntity extends BaseEntity{
+    private static final String DEFAULT_PROFILE_IMG = "https://bootdey.com/img/Content/avatar/avatar7.png";
+    private static final String PROFILE_PATH = "/images/profile/";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +35,8 @@ public class UserEntity extends BaseEntity{
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    private String profile;
 
     @OneToMany(mappedBy = "user")
     private List<CommentEntity> comments;
@@ -53,6 +57,18 @@ public class UserEntity extends BaseEntity{
         this.role = role;
     }
     public void setPassword(String password){ this.password = password;}
+
+    public String getProfilePath() {
+        return profile == null ? DEFAULT_PROFILE_IMG : PROFILE_PATH + profile;
+    }
+
+    public void updateProfile(String profileImgName) {
+        this.profile = profileImgName;
+    }
+
+    public void deleteProfile() {
+        this.profile = null;
+    }
 
     public boolean isManager() {
         return this.role == Role.ROLE_ADMIN || this.role == Role.ROLE_MENTOR;

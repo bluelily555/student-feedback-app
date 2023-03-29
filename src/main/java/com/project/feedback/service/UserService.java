@@ -21,6 +21,7 @@ import com.project.feedback.repository.CourseRepository;
 import com.project.feedback.repository.CourseUserRepository;
 import com.project.feedback.repository.LikeRepository;
 import com.project.feedback.repository.TokenRepository;
+import com.project.feedback.upload.ProfileImageManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -31,7 +32,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.IOException;
@@ -60,6 +62,7 @@ public class UserService {
     private final CommentService commentService;
     private final TaskService taskService;
     private final BoardService boardService;
+    private final ProfileImageManager profileImageManager;
 
 
 
@@ -426,6 +429,33 @@ public class UserService {
         contentIds.addAll(commentService.getBoardCountByUserId(userId));
         count = likeRepository.findByContentIdIn(contentIds).size();
         return count;
+    }
+
+    @Transactional
+    public void modifyProfile(MultipartFile file, String userName) {
+        UserEntity user = findService.findUserByUserName(userName);
+
+        // 프로필 사진이 기본이 아닌 경우(이미 프로필 사진이 등록되어 있는 경우) : 기존 프로필 사진 삭제
+        if (!(user.getProfile() == null)) {
+            profileImageManager.delete(user.getProfile());
+        }
+
+        // 새로운 프로필 사진 저장
+        String profileImgName = profileImageManager.upload(file);
+
+        user.updateProfile(profileImgName);
+    }
+
+    @Transactional
+    public void deleteProfile(String userName) {
+        UserEntity user = findService.findUserByUserName(userName);
+
+        // 프로필 사진이 기본이 아닌 경우(이미 프로필 사진이 등록되어 있는 경우) : 기존 프로필 사진 삭제
+        if (!(user.getProfile() == null)) {
+            profileImageManager.delete(user.getProfile());
+        }
+
+        user.deleteProfile();
     }
  }
 
