@@ -60,6 +60,7 @@ public class BoardListDto {
                 .id(boardEntity.getId())
                 .title(boardEntity.getTitle())
                 .userName(boardEntity.getUser().getUserName())
+                .comments(boardEntity.getComments().size())
                 .createdDate(boardEntity.getCreatedDate())
                 .build();
     }
