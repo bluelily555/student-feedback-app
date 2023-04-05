@@ -23,7 +23,7 @@ public class AdminUiController {
 
     @GetMapping(value = {"", "/"})
     public String root(Authentication auth, Model model) {
-        return "admin/dummy_objects";
+        return "redirect:admin/dummy";
     }
 
     @GetMapping(value = {"/dummy"})
