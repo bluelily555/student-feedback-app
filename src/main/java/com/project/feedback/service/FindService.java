@@ -152,6 +152,10 @@ public class FindService {
         return courseUserEntity.getCourseEntity();
     }
 
+    public List<CourseEntity> findAllCourse() {
+         return courseRepository.findAll();
+    }
+
     /**
      * 학생이 속한 코스의 테스크들과, 학생이 속한 코스의 다른 학생들 목록이 아래와 같이 json형태로 합쳐보여줄 수 있도록
      * [

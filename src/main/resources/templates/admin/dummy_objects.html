@@ -15,6 +15,12 @@
         <div>
             <form class="col-6 form-group" th:method="get" th:action="@{/admin/tasks}" >
                 <div class="mb-3 row">
+                    <label for="taskCnt" class="col-sm-4 col-form-label">Dummy Task 기수 선택</label>
+                    <div class="col-sm-10">
+                        <select class="form-select" name="courseId">
+                            <option th:each="course : ${courses}" th:text="${course.name}" th:value="${course.id}"></option>
+                        </select>
+                    </div>
                     <label for="taskCnt" class="col-sm-4 col-form-label">Dummy Task개수</label>
                     <div class="col-sm-10">
                         <input class ="form-control" id="taskCnt" name="taskCnt" type="text" value="10"/>

@@ -199,11 +199,11 @@ public class UserService {
                 .build();
         return req;
     }
-    public void addDummyTasks(int taskCnt, int questionCnt){
+    public void addDummyTasks(long courseId, int taskCnt, int questionCnt){
 
         // 처음 등록되는 기본 기수에 대한 Task 등록
-        List<CourseDto> courses = courseService.courses();
-        CourseEntity courseEntity = findService.findCourseByName(courses.get(0).getName());
+        CourseEntity courseEntity = courseRepository.findById(courseId)
+                .orElseThrow(() -> new CustomException(ErrorCode.COURSE_NOT_FOUND));
 
         int day = CourseInfo.fromEntity(courseEntity).getDayOfWeek();
         long week = CourseInfo.fromEntity(courseEntity).getWeek(courseEntity.getStartDate());

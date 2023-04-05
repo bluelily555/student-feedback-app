@@ -29,6 +29,7 @@ public class AdminUiController {
     @GetMapping(value = {"/dummy"})
     public String dummy(Authentication auth, Model model){
         model.addAttribute("currentPage", "dummy");
+        model.addAttribute("courses", findService.findAllCourse());
         return "admin/dummy_objects";
     }
 
@@ -44,10 +45,12 @@ public class AdminUiController {
     //Dummy Task 등록
     @GetMapping("/tasks")
     public String addDummyTasks(@RequestParam(name = "taskCnt", defaultValue = "0") int taskCnt,
-                                @RequestParam(name = "questionCnt", defaultValue = "0") int questionCnt){
+                                @RequestParam(name = "questionCnt", defaultValue = "0") int questionCnt,
+                                @RequestParam(name = "courseId") long courseId){
+        log.info("courseId:{}", courseId);
         log.info("taskCnt:{}", taskCnt);
         log.info("questionCnt:{}", questionCnt);
-        userService.addDummyTasks(taskCnt, questionCnt);
+        userService.addDummyTasks(courseId, taskCnt, questionCnt);
         return "redirect:/tasks";
     }
 
