@@ -136,12 +136,11 @@ public class TaskController {
         model.addAttribute("currentPage", "create_task");
         model.addAttribute("taskCreateRequest", new TaskCreateRequest());
         List<CourseDto> courses = courseService.courses();
-        CourseEntity courseEntity = findService.findCourseByName(courses.get(0).getName());
         CourseEntity course = findService.findCourseByUser(loginUser);
         model.addAttribute("courseList", courses);
         model.addAttribute("courseName", course.getName());
-        int day = CourseInfo.fromEntity(courseEntity).getDayOfWeek();
-        long week = CourseInfo.fromEntity(courseEntity).getWeek(courseEntity.getStartDate());
+        int day = CourseInfo.fromEntity(course).getDayOfWeek();
+        long week = CourseInfo.fromEntity(course).getWeek(course.getStartDate());
         model.addAttribute("week", week);
         model.addAttribute("day", day);
         return "tasks/write";
