@@ -1,5 +1,6 @@
 package com.project.feedback.service;
 
+import com.project.feedback.domain.Course;
 import com.project.feedback.domain.dto.course.AddStudentRequest;
 import com.project.feedback.domain.dto.course.CourseCreateRequest;
 import com.project.feedback.domain.dto.course.CourseCreateResponse;
@@ -13,6 +14,7 @@ import com.project.feedback.repository.CourseRepository;
 import com.project.feedback.repository.CourseUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -29,6 +31,12 @@ public class CourseService {
     private final CourseUserRepository courseUserRepository;
     private final FindService findService;
 
+
+    public List<Course> getCourses(Pageable pageable) {
+        return courseRepository.findAll(pageable)
+                .stream()
+                .map(courseEntity -> Course.toCourse(courseEntity)).collect(Collectors.toList());
+    }
 
     public int getCourseLength(){
         return courseRepository.findAll().size();
@@ -60,6 +68,13 @@ public class CourseService {
 
     }
 
+    public Course findByCourseId2(Long courseId){
+        CourseEntity courseEntity = courseRepository.findById(courseId)
+                .orElseThrow(()-> new CustomException(ErrorCode.COURSE_NOT_FOUND))
+                ;
+        return Course.toCourse(courseEntity);
+
+    }
 
     public void registerStudent(AddStudentRequest req) {
         CourseEntity course = findService.findCourseByName(req.getCourseName());

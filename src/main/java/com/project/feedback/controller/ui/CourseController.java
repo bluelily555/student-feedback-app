@@ -1,12 +1,16 @@
 package com.project.feedback.controller.ui;
 
+import com.project.feedback.domain.Course;
 import com.project.feedback.domain.dto.course.AddStudentRequest;
 import com.project.feedback.domain.dto.course.CourseCreateRequest;
+import com.project.feedback.domain.dto.course.CourseDto;
 import com.project.feedback.domain.dto.course.CourseInfo;
 import com.project.feedback.domain.dto.mainInfo.CourseTaskListResponse;
 import com.project.feedback.domain.dto.mainInfo.FilterInfo;
 import com.project.feedback.domain.dto.mainInfo.StudentInfo;
 import com.project.feedback.domain.dto.mainInfo.TaskInfo;
+import com.project.feedback.domain.dto.task.TaskFilterInfo;
+import com.project.feedback.domain.dto.task.TaskListResponse;
 import com.project.feedback.domain.entity.CourseEntity;
 import com.project.feedback.domain.entity.UserEntity;
 import com.project.feedback.domain.entity.UserTaskEntity;
@@ -15,6 +19,10 @@ import com.project.feedback.service.FindService;
 import com.project.feedback.service.UserTaskService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -44,6 +52,18 @@ public class CourseController {
     private final FindService findService;
     private final UserTaskService userTaskService;
 
+    @GetMapping
+    public String list(Model model, @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        List<Course> courses = courseService.getCourses(pageable);
+
+        model.addAttribute("currentPage", "courses");
+        model.addAttribute("courses", courses);
+        model.addAttribute("nowPage", pageable.getPageNumber() + 1);
+        model.addAttribute("lastPage", pageable.getPageSize());
+
+        return "courses/show";
+    }
+
     @GetMapping("/write")
     public String writePage(Model model) {
         LocalDate now = LocalDate.now();
@@ -62,6 +82,18 @@ public class CourseController {
     public String write(@ModelAttribute CourseCreateRequest req, Authentication auth) {
         courseService.createCourse(req, auth.getName());
         return "redirect:/";
+    }
+
+
+    // course 수정 화면
+    @GetMapping("/{courseId}")
+    public String show(@PathVariable Long courseId, Model model, Authentication auth,
+                       @PageableDefault(size = 20)
+                       @SortDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        model.addAttribute("course", courseService.findByCourseId2(courseId));
+
+        return "courses/edit";
     }
 
 
