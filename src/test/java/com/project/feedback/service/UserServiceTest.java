@@ -20,8 +20,6 @@ class UserServiceTest {
     CourseService courseService;
     TaskService taskService;
     BoardService boardService;
-    UserService userService = new UserService(userDAO, courseUserRepository, courseRepository, tokenRepository,
-            encoder, findService, courseService, taskService, boardService);
 
 
 }
