@@ -8,134 +8,125 @@
 <body>
 <section>
     <div th:insert="~{fragments/navbar :: navbar}"></div>
-    <div class="text-dark">
-        <div class="row d-flex justify-content-center">
-            <div class="col-md-10 col-lg-8 col-xl-6">
-                <div class="card">
-                    <div class="card-body p-4">
-                        <div class="d-flex flex-start w-100">
-                            <div class="w-100">
-                                <div class="form-outline">
-                                    <!--                                        <input type="hidden" name="_method" value="put"/>-->
-                                    <!--                                        <input type="hidden" name="id" th:value="${boardList.id}"/>-->
-                                    <!--                                        <input type="text" name="title" th:value="${boardList.title}"/> <br>-->
-                                    <!--                                        <input type="text" name="writer" th:value="${boardList.writer}"/> <br>-->
-                                    <h5 style="float: left; margin-right: 5px">제목 :</h5>
-                                    <h5 th:text="${boardInfo.title}"></h5>
-                                    <h5 sec:authorize="hasRole('ROLE_ADMIN')" style="float: left; margin-right: 5px" >작성자 :</h5>
-                                    <p sec:authorize="hasRole('ROLE_ADMIN')" th:text="${boardInfo.userName}"></p>
-                                    <h5 style="float: left; margin-right: 5px">작성 시간 :</h5>
-                                    <p th:text="${#temporals.format(boardInfo.createdDate, 'yyyy-MM-dd HH:mm')}"></p>
-                                    <h5 style="float: left; margin-right: 5px">태스크 명 :</h5>
-                                    <a th:href="@{'/tasks/' + ${boardInfo.taskEntity.id}}" style="display: inline-block;">
-                                        <h5 th:text="${boardInfo.taskEntity.title}"></h5>
-                                    </a>
-                                    <h5 th:if="${boardInfo.images.size() > 0}">이미지</h5>
-                                    <img th:each="image:${boardInfo.images}" class="w-100 mb-3" th:src="@{'/images/board/' + ${image}}">
-                                    <div style="display: block">
-                                        <h5>작성 내용</h5>
-                                        <input type="hidden" id="language" th:value="${boardInfo.language}"></input>
-                                        <pre class="prettyprint" th:text="${boardInfo.content}"></pre>
-                                        <div id="codeContent" style="width:45vw; height: 50vh; display: inline-block;" th:text="${boardInfo.codeContent}" th:value="${boardInfo.codeContent}"></div>
-
-                                    </div>
-<!--                                    <div style="display: block">-->
-<!--                                        <a th:href="@{'/boards/edit/' + ${boardList.id}}">-->
-<!--                                            <button class="btn btn-danger" style="float:right;margin-right: 5px;">수정</button>-->
-<!--                                        </a>-->
-<!--                                    </div>-->
-                                </div>
-                            </div>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Post content-->
+                <article>
+                    <!-- Post header-->
+                    <header class="mb-4">
+                        <!-- Post title-->
+                        <h1 class="fw-bolder mb-1" th:text="${boardInfo.title}"/>
+                        <!-- Post meta content-->
+                        <div class="text-muted fst-italic mb-2">
+                            <span th:text="${#temporals.format(boardInfo.createdDate, 'yyyy-MM-dd HH:mm')}"></span><span sec:authorize="hasRole('ROLE_ADMIN')" th:text="${' '+boardInfo.userName}">by user</span>
                         </div>
+                        <!-- Post categories-->
+                        <a class="badge bg-secondary text-decoration-none link-light" th:href="@{'/tasks/' + ${boardInfo.taskEntity.id}}" th:text="${boardInfo.taskEntity.title}" href="#!"></a>
+                    </header>
+                    <!-- Preview image figure-->
+                    <figure class="mb-4">
+                        <img th:each="image:${boardInfo.images}" class="img-fluid rounded border" th:src="@{'/images/board/' + ${image}}" alt="..."/>
+                    </figure>
+                    <!-- Post content-->
+                    <section class="mb-5">
+                        <h2>내용</h2>
+                        <pre class="prettyprint border mh-30" th:text="${boardInfo.content}"></pre>
+                    </section>
+
+                    <div>
+                        <h2>코드</h2>
+                        <input type="hidden" id="language" th:value="${boardInfo.language}"></input>
+                        <div id="codeContent" style="width:100%; height: 30vh; display: inline-block;" th:text="${boardInfo.codeContent}" th:value="${boardInfo.codeContent}"></div>
                     </div>
+                </article>
+
+                <!-- 수정 삭제 좋아요-->
+                <article>
                     <div class="card-footer d-flex">
+                        <!-- 수정 삭제 -->
                         <div th:if="${auth.getRealName() == boardInfo.getUserName() || #authorization.expression('hasRole(''ROLE_ADMIN'')') || #authorization.expression('hasRole(''ROLE_MENTOR'')')}" class="ms-auto">
                             <a class="btn btn-primary" th:href="@{'/boards/' + ${boardInfo.id} + '/edit'}">수정</a>
                             <button class="btn btn-primary" th:data-board-id="${boardInfo.id}" onclick="deleteBoard(this)">삭제</button>
                         </div>
+                        <!-- 좋아요 -->
                         <th:block th:if="${isLiked==true}">
                             <form class="ms-auto" th:action="@{'/boards/' + ${boardInfo.id} + '/unlike'}" method="post">
                                 <button type="submit" class="btn btn-danger">[[${boardInfo.likes}]] <i class="fa-regular fa-heart"></i></button>
                             </form>
                         </th:block>
+                        <!-- 좋아요 -->
                         <th:block th:unless="${isLiked==true}">
                             <form class="ms-auto" th:action="@{'/boards/' + ${boardInfo.id} + '/like'}" method="post">
                                 <button type="submit" class="btn btn-outline-danger" th:disabled="${#authorization.expression('hasRole(''ROLE_ANONYMOUS'')')}">[[${boardInfo.likes}]] <i class="fa-regular fa-heart"></i></button>
                             </form>
                         </th:block>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!--댓글 목록-->
-<section style="background-color: #ffffff;">
-    <div class="container my-5 py-5">
-        <div class="row d-flex justify-content-center">
-            <div class="col-md-10 col-lg-8">
-                <div class="card text-dark">
-                    <div class="card-body p-4">
-                        <h4 class="mb-0">Recent comments</h4>
-                        <p class="fw-light mb-4 pb-2">Latest Comments section by users</p>
-                        <hr class="my-0" />
-                    </div>
-                    <div class="card-body p-4" th:each="comment, i : ${commentList}">
-                        <div class="d-flex flex-start">
-                            <img class="rounded-circle shadow-1-strong me-3" th:src="${comment.userProfile}" alt="avatar" width="60" height="60" />
-                            <div>
-                                <h6 class="fw-bold mb-1" th:text="'작성자: '+ ${comment.userName}">Writer</h6>
-                                <div class="d-flex align-items-center mb-3">
-                                    <p class="mb-0" th:text="'작성일: '+ ${#temporals.format(comment.createdAt, 'yy/MM/dd/HH:mm')}">
-                                        createdAt
-                                    </p>
-                                    <th:block th:if="${comment.likeStatus==true}">
-                                        <form th:action="@{'/comments/' + ${comment.id} + '/unlike'}" method="post">
-                                            <button type="submit" class="btn btn-link link-danger" style="font-size:15px"><i class="fa-regular fa-heart btn-danger"></i>[[${comment.likes}]] </button>
-                                        </form>
-                                    </th:block>
-                                    <th:block th:unless="${comment.likeStatus==true}">
-                                        <form th:action="@{'/comments/' + ${comment.id} + '/like'}" method="post">
-                                            <button type="submit" class="btn btn-link link-danger" th:disabled="${#authorization.expression('hasRole(''ROLE_ANONYMOUS'')')}" style="font-size:15px"><i class="fa-regular fa-heart"></i>[[${comment.likes}]]</button>
-                                        </form>
-                                    </th:block>
+                </article>
+
+                <!-- Comments section-->
+                <section class="mb-5">
+                    <div class="row d-flex">
+                        <div>
+                            <div class="card text-dark">
+                                <div class="card-body p-4">
+                                    <h4 class="mb-0">Recent comments</h4>
+                                    <p class="fw-light mb-4 pb-2">Latest Comments section by users</p>
+                                    <hr class="my-0" />
                                 </div>
-                                <pre class="mb-0 commentBox" th:text="${comment.comment}" name="comment" style="width:90%;word-break: keep-all; max-width: 44vw; white-space: pre-wrap"></pre>
-                                <a class="showMore" th:index="${i.index}" onclick="showClick(this.getAttribute('index'))" style="color:gray;cursor:pointer" hidden></a>
-                            </div>
-                        </div>
-                        <hr class="my-0" />
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<section>
-    <div class="my-5 py-5 text-dark">
-        <div class="row d-flex justify-content-center">
-            <div class="col-md-10 col-lg-8 col-xl-6">
-                <div class="card">
-                    <div class="card-body p-4">
-                        <div class="d-flex flex-start w-100">
-                            <div class="w-100">
-                                <h5>Add a comment</h5>
-                                <form class="form-group" th:object="${commentCreateRequest}"  th:method="post" th:action="|@{/boards/{boardId}/comment (boardId=${boardInfo.id})}|">
-                                    <div style="text-align: right">
+                                <div class="card-body" th:each="comment, i : ${commentList}">
+                                    <div class="d-flex flex-start">
+                                        <img class="rounded-circle shadow-1-strong me-3" th:src="${comment.userProfile}" alt="avatar" width="60" height="60" />
                                         <div>
-                                            <textarea rows="3" th:field="*{comment}" style="width: 100%"></textarea>
-                                            <button class="btn btn-light" type="submit">댓글 추가</button>
+                                            <h6 class="fw-bold mb-1" th:text="'작성자: '+ ${comment.userName}">Writer</h6>
+                                            <div class="d-flex align-items-center mb-3">
+                                                <p class="mb-0" th:text="'작성일: '+ ${#temporals.format(comment.createdAt, 'yy/MM/dd/HH:mm')}">
+                                                    createdAt
+                                                </p>
+                                                <!-- 댓글 좋아요 -->
+                                                <th:block th:if="${comment.likeStatus==true}">
+                                                    <form th:action="@{'/comments/' + ${comment.id} + '/unlike'}" method="post">
+                                                        <button type="submit" class="btn btn-link link-danger" style="font-size:15px"><i class="fa-regular fa-heart btn-danger"></i>[[${comment.likes}]] </button>
+                                                    </form>
+                                                </th:block>
+                                                <th:block th:unless="${comment.likeStatus==true}">
+                                                    <form th:action="@{'/comments/' + ${comment.id} + '/like'}" method="post">
+                                                        <button type="submit" class="btn btn-link link-danger" th:disabled="${#authorization.expression('hasRole(''ROLE_ANONYMOUS'')')}" style="font-size:15px"><i class="fa-regular fa-heart"></i>[[${comment.likes}]]</button>
+                                                    </form>
+                                                </th:block>
+                                            </div>
+                                            <pre class="mb-0 commentBox" th:text="${comment.comment}" name="comment" style="width:90%;word-break: keep-all; max-width: 44vw; white-space: pre-wrap"></pre>
+                                            <a class="showMore" th:index="${i.index}" onclick="showClick(this.getAttribute('index'))" style="color:gray;cursor:pointer" hidden></a>
                                         </div>
                                     </div>
-                                </form>
+                                    <hr class="my-0" />
+                                </div>
                             </div>
                         </div>
+
                     </div>
-                </div>
+
+                    <!-- 댓글 쓰기 박스 -->
+                    <div class="text-dark bg-light">
+                        <div class="card-body">
+                            <h5>Add a comment</h5>
+                            <form class="form-group" th:object="${commentCreateRequest}"  th:method="post" th:action="|@{/boards/{boardId}/comment (boardId=${boardInfo.id})}|">
+                                <div style="text-align: right">
+                                    <div>
+                                        <textarea rows="3" th:field="*{comment}" style="width: 100%"></textarea>
+                                        <button class="btn btn-light" type="submit">댓글 쓰기</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div> <!-- 댓글박스 끝 -->
+                </section>
             </div>
         </div>
     </div>
+
 </section>
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.4.12/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -149,10 +140,12 @@
         editor.session.setMode("ace/mode/"+lang);
         editor.setShowPrintMargin(false);
         editor.setReadOnly(true);
+        editor.setFontSize(20);
+        editor.resize();
         var mode = editor.session.getMode().$id;
         console.log(lang)
         console.log(mode);
-        let maxLength = 80;
+        let maxLength = 100;
         let itemLength = document.getElementsByClassName('commentBox').length
 
         for (let i = 0; i < itemLength; i++){
