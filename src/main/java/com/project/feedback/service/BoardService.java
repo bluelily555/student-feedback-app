@@ -32,6 +32,7 @@ public class BoardService {
     private final NotificationRepository notificationRepository;
     private final BoardImageManager boardImageManager;
 
+    // 글 목록 불러오기
     private List<BoardListDto> getBoardWriteDtos(List<BoardEntity> boardEntities) {
         List<BoardListDto> codeWriteDtoList = new ArrayList<>();
 
