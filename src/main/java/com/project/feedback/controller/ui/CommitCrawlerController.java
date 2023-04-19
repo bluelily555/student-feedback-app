@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -23,6 +24,10 @@ public class CommitCrawlerController {
     @GetMapping
     public String crawl(CommitCrawlerRequest request, Model model) {
         model.addAttribute("repositoryNames", findService.findAllRepositoryNames());
+
+        String lastCrawlDateTime = CommitCrawlerService.crawlDate.getYYMMDDHHMMSS();
+        model.addAttribute("lastCrawlDateTime", lastCrawlDateTime);
+
         if (request.isEmpty()) return "crawler/index";
 
         List<RepositoryEntity> repository = findService.findRepositoryByName(request.getRepositoryName());
