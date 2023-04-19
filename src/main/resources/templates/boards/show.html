@@ -55,18 +55,19 @@
                                 <a th:href="@{'/boards/' + ${board.id}}" class="text-primary" th:text="${board.title}"></a>
                             </h5>
                             <div sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'MENTOR','TEACHER')" >
-                            <p class="text-sm"><span class="op-6">Posted</span> <a class="text-black" th:href="@{'/boards/' + ${board.id}}" th:text="${#temporals.format(board.createdDate, 'yyyy년 M월 d일 a h시 m분')}"> </a><!-- <span class="op-6">ago by</span>--> <a class="text-gray" th:href="@{'/boards/' + ${board.id}}" th:text="'By ' + ${board.userName}">user</a></p>
+                            <p class="text-sm">
+                                <a class="badge bg-secondary" th:href="@{'/tasks/' + ${board.taskEntity.id}}" th:text=" '#' + ${board.taskEntity.getTitle()}">#Task Title</a>
+                                <a class="text-black mr-2" th:href="@{'/boards/' + ${board.id}}" th:text="'#' + ${board.taskEntity.getWeek()+'주' + board.taskEntity.getDayOfWeek() + '일'}">#Default Date</a>
+                                <span class="op-6">Posted</span> <a class="text-black" th:href="@{'/boards/' + ${board.id}}" th:text="${#temporals.format(board.createdDate, 'yyyy년 M월 d일 a h시 m분')}"> </a><!-- <span class="op-6">ago by</span>--> <a class="text-gray" th:href="@{'/boards/' + ${board.id}}" th:text="'By ' + ${board.userName}">user</a></p>
                             </div>
                             <div sec:authorize="hasAnyRole('STUDENT')" >
                                 <p class="text-sm"><span class="op-6">Posted</span> <a class="text-black" th:href="@{'/boards/' + ${board.id}}" th:text="${#temporals.format(board.createdDate, 'yyyy년 M월 d일 a h시 m분')}"> </a><!-- <span class="op-6">ago by</span>--> <a class="text-gray" th:href="@{'/boards/' + ${board.id}}"></a></p>
                             </div>
 
                             <div class="text-sm op-5">
-                                <a class="text-black mr-2" th:href="@{'/tasks/' + ${board.taskEntity.id}}" th:text=" '#' + ${board.taskEntity.getTitle()}">#Task Title</a>
-                                <a class="text-black mr-2" th:href="@{'/boards/' + ${board.id}}" th:text="'#' + ${board.taskEntity.getWeek()+'주' + board.taskEntity.getDayOfWeek() + '일'}">#Default Date</a>
                                 <a class="ms-3 candidate-list-favourite order-2 text-danger" href="#"><i class="fas fa-heart"></i></a>
                                 <a class="text-black mr-2" th:text="${board.likes}"></a>
-                                <a class="text-black ms-4 mr-2" th:text="'comment ' + ${board.comments} + ' 개'"></a>
+                                <i class="fa-regular fa-comment"></i><a class="text-black ms-1" th:text="${board.comments}"></a>
                             </div>
                         </div>
                         <div class="col-md-4 op-7" th:if="${#authentication.name} == ${board.userName} or ${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
