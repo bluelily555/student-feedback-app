@@ -42,8 +42,8 @@
                 <div th:each="taskList : ${taskList}">
                     <th th:attr="data-task_id=${taskList.id}">
                         <a href="/tasks/write.html" id="popUp" th:href="@{/tasks/{taskId}(taskId=${taskList.id})}" th:value="${taskList.title}" th:text="${taskList.title}"/>
-                        <div class="collapse" id="taskProgress" >
-                            <div class="card card-body"></div>
+                        <div id="taskProgress" >
+                            <div></div>
                         </div>
                     </th>
                 </div>
