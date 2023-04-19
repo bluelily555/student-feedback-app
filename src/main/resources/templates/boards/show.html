@@ -48,11 +48,12 @@
                 <!-- End of post 1 -->
                 <div th:each="board: ${boardList}" class="card row-hover pos-relative h-auto py-2 px-3 mb-2 border-warning border-top-0 border-right-0 border-bottom-0 rounded-0">
                     <div class="row align-items-center">
-                        <div class="col-md-10 mb-2 mb-sm-0">
-                            <h5>
-                                <span th:text="${board.id}"></span>
+                        <div class="col-md-10 mb-2 m-sm-0">
+                            <span th:if="${board.comments} == 0" class="badge rounded-pill bg-danger">Q</span>
+                            <span class="h6" th:text="${board.id}"></span>
+                            <span class="h5">
                                 <a th:href="@{'/boards/' + ${board.id}}" class="text-primary" th:text="${board.title} + '['+${board.comments}+']'"></a>
-                            </h5>
+                            </span>
                             <div sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'MENTOR','TEACHER')" >
                             <small class="text-sm">
                                 <a class="badge bg-secondary" th:href="@{'/tasks/' + ${board.taskEntity.id}}" th:text=" '#' + ${board.taskEntity.getTitle()}">#Task Title</a>
