@@ -128,7 +128,11 @@ public class FindService {
        List<UserEntity> users = new ArrayList<>();
 
        for(CourseUserEntity c : courseUserEntities){
-           users.add(c.getUser());
+           UserEntity userEntity = c.getUser();
+           // 학생만 추가
+           if(userEntity.getRole().equals(Role.ROLE_STUDENT)){
+               users.add(userEntity);
+           }
        }
 
        return users;
