@@ -32,7 +32,7 @@ public class CommitCrawlerController {
 
         List<RepositoryEntity> repository = findService.findRepositoryByName(request.getRepositoryName());
 
-        List<Commit> commits = commitCrawlerService.crawl(repository);
+        List<Commit> commits = commitCrawlerService.crawl(request.getRepositoryName(), repository);
 
         model.addAttribute("selectedName", request.getRepositoryName());
         model.addAttribute("commits", commits);
