@@ -280,6 +280,15 @@ public class FindService {
 
         }
 
+        if (loginUser.getRole() != Role.ROLE_STUDENT) return list;
+
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getUserName().equals(loginUser.getUserName())) {
+                list.add(0, list.remove(i));
+                break;
+            }
+        }
+
         return list;
 
     }
