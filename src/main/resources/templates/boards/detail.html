@@ -34,7 +34,7 @@
                         <pre class="prettyprint border mh-30" th:text="${boardInfo.content}"></pre>
                     </section>
 
-                    <div>
+                    <div th:if="${!boardInfo.codeContent.isBlank()}">
                         <h2>코드</h2>
                         <input type="hidden" id="language" th:value="${boardInfo.language}"></input>
                         <div id="codeContent" style="width:100%; height: 30vh; display: inline-block;" th:text="${boardInfo.codeContent}" th:value="${boardInfo.codeContent}"></div>
