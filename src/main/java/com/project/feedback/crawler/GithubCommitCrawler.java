@@ -2,9 +2,13 @@ package com.project.feedback.crawler;
 
 import com.project.feedback.domain.entity.RepositoryEntity;
 import lombok.extern.slf4j.Slf4j;
+import org.jsoup.Connection.Response;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -12,10 +16,11 @@ import java.time.format.DateTimeParseException;
 @Slf4j
 @Component
 public class GithubCommitCrawler extends AbstractCommitCrawler {
+    private static final String GITHUB_HOST = "https://github.com";
     private static final String URL_SELECTOR = ".Details > p > .markdown-title";
     private static final String COMMIT_SELECTOR = ".Details > p > .markdown-title";
     private static final String COMMITTED_DATETIME_SELECTOR = ".Details > div > div > relative-time";
-    private static final String COMMIT_URL_SUFFIX = "/commits/main";
+    private static final String COMMIT_BUTTON_SELECTOR = ".Details.d-flex > div > ul > li > a";
 
     public GithubCommitCrawler() {
         super(URL_SELECTOR, COMMIT_SELECTOR, COMMITTED_DATETIME_SELECTOR);
@@ -23,20 +28,35 @@ public class GithubCommitCrawler extends AbstractCommitCrawler {
 
     @Override
     public Commit execute(RepositoryEntity repository) {
-        repository.setAddress(repository.getAddress() + COMMIT_URL_SUFFIX);
+        try {
+            Response response = Jsoup.connect(repository.getAddress())
+                    .followRedirects(true)
+                    .execute();
+            Document html = response.parse();
+            Elements commitButton = html.select(COMMIT_BUTTON_SELECTOR);
+            if (!commitButton.isEmpty()) {
+                String commitPath = commitButton.attr("href");
+                repository.setAddress(GITHUB_HOST + commitPath);
+            }
+        } catch (IOException e) {
+            log.error("[wrong url] user:{} {}", repository.getUser().getRealName(), e.getMessage());
+            return Commit.wrong(repository);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
         return super.execute(repository);
     }
 
     @Override
     String getAddress(String address) {
-        return address.substring(0, address.length() - COMMIT_URL_SUFFIX.length());
+        return address;
     }
 
     @Override
     String parseUrl(Elements urlElement) {
         if (urlElement.isEmpty()) return null;
         String url = urlElement.attr("href");
-        return url.isBlank() ? null : "https://github.com/" + url;
+        return url.isBlank() ? null : GITHUB_HOST + url;
     }
 
     @Override
