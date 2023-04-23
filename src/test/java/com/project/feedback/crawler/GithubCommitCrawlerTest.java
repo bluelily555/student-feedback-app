@@ -16,7 +16,7 @@ class GithubCommitCrawlerTest {
         String algorithm = "https://github.com/Kyeongrok/java-algorithm";
         RepositoryEntity repository = RepositoryFixture.repository(algorithm, dummy);
         Commit commit = assertDoesNotThrow(() -> githubCommitCrawler.execute(repository));
-        assertEquals(algorithm, commit.getAddress());
+        assertTrue(commit.getAddress().startsWith(algorithm + "/commits"));
     }
 
     @Test
@@ -34,13 +34,23 @@ class GithubCommitCrawlerTest {
     }
 
     @Test
-    void execute_git_url() {
+    void execute_tree_url() {
         UserEntity dummy = UserEntity.builder().build();
-        String gitCloneURL = "https://github.com/Kyeongrok/java-algorithm.git";
-        RepositoryEntity repository = RepositoryFixture.repository(gitCloneURL, dummy);
+        String treeURL = "https://github.com/Kyeongrok/java-algorithm/tree/main/src";
+        String commitURL = "https://github.com/Kyeongrok/java-algorithm/commits/main/src";
+        RepositoryEntity repository = RepositoryFixture.repository(treeURL, dummy);
 
         Commit commit = githubCommitCrawler.execute(repository);
+        assertEquals(commitURL, commit.getAddress());
+    }
 
-        assertEquals(gitCloneURL, commit.getAddress());
+    @Test
+    void execute_git_url() {
+        UserEntity dummy = UserEntity.builder().build();
+        String algorithm = "https://github.com/Kyeongrok/java-algorithm";
+        String algorithmGit = "https://github.com/Kyeongrok/java-algorithm.git";
+        RepositoryEntity repository = RepositoryFixture.repository(algorithmGit, dummy);
+        Commit commit = assertDoesNotThrow(() -> githubCommitCrawler.execute(repository));
+        assertTrue(commit.getAddress().startsWith(algorithm + "/commits"));
     }
 }
