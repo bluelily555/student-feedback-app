@@ -39,7 +39,8 @@ public class GithubCommitCrawler extends AbstractCommitCrawler {
                 repository.setAddress(GITHUB_HOST + commitPath);
             }
         } catch (IOException e) {
-            log.error(e.getMessage());
+            log.error("[wrong url] user:{} {}", repository.getUser().getRealName(), e.getMessage());
+            return Commit.wrong(repository);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

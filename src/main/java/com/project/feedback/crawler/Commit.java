@@ -1,5 +1,6 @@
 package com.project.feedback.crawler;
 
+import com.project.feedback.domain.entity.RepositoryEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,6 +22,13 @@ public class Commit {
 
     public static Commit empty() {
         return new Commit();
+    }
+
+    public static Commit wrong(RepositoryEntity repository) {
+        Commit commit = Commit.empty();
+        commit.setUsername(repository.getName());
+        commit.setAddress(repository.getAddress());
+        return commit;
     }
 
     public String getCommittedDatetime() {
