@@ -1,7 +1,7 @@
 package com.project.feedback.crawler;
 
-import com.project.feedback.infra.outgoing.entity.RepositoryEntity;
-import com.project.feedback.infra.outgoing.entity.UserEntity;
+import com.project.feedback.infra.outgoing.jpa.RepositoryEntity;
+import com.project.feedback.infra.outgoing.jpa.UserEntity;
 import com.project.feedback.fixture.RepositoryFixture;
 import org.junit.jupiter.api.Test;
 

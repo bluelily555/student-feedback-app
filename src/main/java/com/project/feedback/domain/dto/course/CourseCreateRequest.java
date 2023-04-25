@@ -1,8 +1,8 @@
 package com.project.feedback.domain.dto.course;
 
 import com.project.feedback.domain.CourseStatus;
-import com.project.feedback.infra.outgoing.entity.CourseEntity;
-import com.project.feedback.infra.outgoing.entity.UserEntity;
+import com.project.feedback.infra.outgoing.jpa.CourseEntity;
+import com.project.feedback.infra.outgoing.jpa.UserEntity;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 

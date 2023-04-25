@@ -7,7 +7,7 @@ import com.project.feedback.domain.dto.course.CourseCreateRequest;
 import com.project.feedback.domain.dto.course.CourseCreateResponse;
 import com.project.feedback.domain.dto.mainInfo.CourseTaskListResponse;
 import com.project.feedback.domain.dto.mainInfo.StudentInfo;
-import com.project.feedback.infra.outgoing.entity.UserEntity;
+import com.project.feedback.infra.outgoing.jpa.UserEntity;
 import com.project.feedback.application.CourseService;
 import com.project.feedback.application.FindService;
 import io.swagger.annotations.Api;

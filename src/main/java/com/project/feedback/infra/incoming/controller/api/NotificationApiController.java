@@ -1,7 +1,7 @@
 package com.project.feedback.infra.incoming.controller.api;
 
 import com.project.feedback.domain.dto.notification.NotificationResponse;
-import com.project.feedback.infra.outgoing.entity.UserEntity;
+import com.project.feedback.infra.outgoing.jpa.UserEntity;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.application.FindService;

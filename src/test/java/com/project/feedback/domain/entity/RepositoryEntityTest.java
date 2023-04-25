@@ -1,8 +1,8 @@
 package com.project.feedback.domain.entity;
 
 import com.project.feedback.fixture.RepositoryFixture;
-import com.project.feedback.infra.outgoing.entity.RepositoryEntity;
-import com.project.feedback.infra.outgoing.entity.UserEntity;
+import com.project.feedback.infra.outgoing.jpa.RepositoryEntity;
+import com.project.feedback.infra.outgoing.jpa.UserEntity;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

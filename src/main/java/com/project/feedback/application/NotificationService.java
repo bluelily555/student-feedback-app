@@ -1,9 +1,9 @@
 package com.project.feedback.application;
 
 import com.project.feedback.domain.dto.notification.NotificationResponse;
-import com.project.feedback.infra.outgoing.entity.BoardEntity;
-import com.project.feedback.infra.outgoing.entity.NotificationEntity;
-import com.project.feedback.infra.outgoing.entity.UserEntity;
+import com.project.feedback.infra.outgoing.jpa.BoardEntity;
+import com.project.feedback.infra.outgoing.jpa.NotificationEntity;
+import com.project.feedback.infra.outgoing.jpa.UserEntity;
 import com.project.feedback.domain.enums.NotificationType;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;

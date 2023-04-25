@@ -1,7 +1,5 @@
-package com.project.feedback.infra.outgoing.entity;
+package com.project.feedback.infra.outgoing.jpa;
 
-import com.project.feedback.infra.outgoing.entity.CourseEntity;
-import com.project.feedback.infra.outgoing.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

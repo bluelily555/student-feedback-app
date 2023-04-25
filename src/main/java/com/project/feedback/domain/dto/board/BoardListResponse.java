@@ -1,6 +1,6 @@
 package com.project.feedback.domain.dto.board;
 
-import com.project.feedback.infra.outgoing.entity.BoardEntity;
+import com.project.feedback.infra.outgoing.jpa.BoardEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -3,7 +3,7 @@ package com.project.feedback.application;
 import com.project.feedback.crawler.Commit;
 import com.project.feedback.crawler.CommitCrawler;
 import com.project.feedback.domain.CrawlDate;
-import com.project.feedback.infra.outgoing.entity.RepositoryEntity;
+import com.project.feedback.infra.outgoing.jpa.RepositoryEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

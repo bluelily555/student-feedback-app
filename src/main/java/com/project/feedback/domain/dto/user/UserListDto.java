@@ -1,7 +1,7 @@
 package com.project.feedback.domain.dto.user;
 
 import com.project.feedback.domain.Role;
-import com.project.feedback.infra.outgoing.entity.UserEntity;
+import com.project.feedback.infra.outgoing.jpa.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

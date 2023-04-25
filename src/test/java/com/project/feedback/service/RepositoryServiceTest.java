@@ -1,8 +1,8 @@
 package com.project.feedback.service;
 
 import com.project.feedback.application.RepositoryService;
-import com.project.feedback.infra.outgoing.entity.RepositoryEntity;
-import com.project.feedback.infra.outgoing.entity.UserEntity;
+import com.project.feedback.infra.outgoing.jpa.RepositoryEntity;
+import com.project.feedback.infra.outgoing.jpa.UserEntity;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.fixture.RepositoryFixture;

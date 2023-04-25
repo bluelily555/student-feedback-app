@@ -1,7 +1,7 @@
 package com.project.feedback.repository;
 
 
-import com.project.feedback.infra.outgoing.entity.CommentEntity;
+import com.project.feedback.infra.outgoing.jpa.CommentEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

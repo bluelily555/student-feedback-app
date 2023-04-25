@@ -1,6 +1,6 @@
 package com.project.feedback.auth;
 
-import com.project.feedback.infra.outgoing.entity.UserEntity;
+import com.project.feedback.infra.outgoing.jpa.UserEntity;
 import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.application.FindService;
 import com.project.feedback.application.UserService;

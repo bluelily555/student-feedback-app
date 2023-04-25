@@ -1,7 +1,7 @@
 package com.project.feedback.infra.incoming.controller.ui;
 
 import com.project.feedback.domain.dto.repository.RepositoryRequest;
-import com.project.feedback.infra.outgoing.entity.UserEntity;
+import com.project.feedback.infra.outgoing.jpa.UserEntity;
 import com.project.feedback.application.FindService;
 import com.project.feedback.application.RepositoryService;
 import lombok.RequiredArgsConstructor;

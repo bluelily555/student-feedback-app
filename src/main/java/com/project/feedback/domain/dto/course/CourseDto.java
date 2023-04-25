@@ -1,6 +1,6 @@
 package com.project.feedback.domain.dto.course;
 
-import com.project.feedback.infra.outgoing.entity.CourseEntity;
+import com.project.feedback.infra.outgoing.jpa.CourseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

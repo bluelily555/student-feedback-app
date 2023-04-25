@@ -1,4 +1,4 @@
-package com.project.feedback.infra.outgoing.entity;
+package com.project.feedback.infra.outgoing.jpa;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

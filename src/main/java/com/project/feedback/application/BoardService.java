@@ -8,7 +8,7 @@ import com.project.feedback.domain.enums.LikeContentType;
 import com.project.feedback.domain.enums.NotificationType;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
-import com.project.feedback.infra.outgoing.entity.*;
+import com.project.feedback.infra.outgoing.jpa.*;
 import com.project.feedback.infra.outgoing.repository.TaskRepository;
 import com.project.feedback.repository.*;
 import com.project.feedback.upload.BoardImageManager;

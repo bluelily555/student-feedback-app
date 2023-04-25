@@ -1,6 +1,6 @@
 package com.project.feedback.domain.dto.repository;
 
-import com.project.feedback.infra.outgoing.entity.RepositoryEntity;
+import com.project.feedback.infra.outgoing.jpa.RepositoryEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
