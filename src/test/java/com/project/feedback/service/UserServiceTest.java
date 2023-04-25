@@ -1,10 +1,13 @@
 package com.project.feedback.service;
 
+import com.project.feedback.application.BoardService;
+import com.project.feedback.application.CourseService;
+import com.project.feedback.application.FindService;
+import com.project.feedback.application.TaskService;
 import com.project.feedback.domain.dao.Impl.UserDAOImpl;
-import com.project.feedback.repository.CourseRepository;
-import com.project.feedback.repository.CourseUserRepository;
+import com.project.feedback.infra.outgoing.repository.CourseRepository;
+import com.project.feedback.infra.outgoing.repository.CourseUserRepository;
 import com.project.feedback.repository.TokenRepository;
-import com.project.feedback.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import static org.mockito.Mockito.mock;

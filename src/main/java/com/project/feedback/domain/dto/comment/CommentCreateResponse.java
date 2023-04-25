@@ -1,6 +1,6 @@
 package com.project.feedback.domain.dto.comment;
 
-import com.project.feedback.domain.entity.CommentEntity;
+import com.project.feedback.infra.outgoing.entity.CommentEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

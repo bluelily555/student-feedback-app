@@ -1,7 +1,7 @@
 package com.project.feedback.repository;
 
-import com.project.feedback.domain.entity.BoardEntity;
-import com.project.feedback.domain.entity.TaskEntity;
+import com.project.feedback.infra.outgoing.entity.BoardEntity;
+import com.project.feedback.infra.outgoing.entity.TaskEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,9 +1,9 @@
 package com.project.feedback.domain.dto.task;
 
 import com.project.feedback.domain.TaskStatus;
-import com.project.feedback.domain.entity.CourseEntity;
-import com.project.feedback.domain.entity.TaskEntity;
-import com.project.feedback.domain.entity.UserEntity;
+import com.project.feedback.infra.outgoing.entity.CourseEntity;
+import com.project.feedback.infra.outgoing.entity.TaskEntity;
+import com.project.feedback.infra.outgoing.entity.UserEntity;
 import lombok.*;
 
 @Getter

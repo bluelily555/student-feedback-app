@@ -1,6 +1,6 @@
 package com.project.feedback.domain.dao;
 
-import com.project.feedback.domain.entity.UserEntity;
+import com.project.feedback.infra.outgoing.entity.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

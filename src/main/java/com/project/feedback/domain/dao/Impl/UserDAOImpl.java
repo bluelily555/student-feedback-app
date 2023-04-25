@@ -1,8 +1,8 @@
 package com.project.feedback.domain.dao.Impl;
 
 import com.project.feedback.domain.dao.UserDAO;
-import com.project.feedback.domain.entity.UserEntity;
-import com.project.feedback.repository.UserRepository;
+import com.project.feedback.infra.outgoing.entity.UserEntity;
+import com.project.feedback.infra.outgoing.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

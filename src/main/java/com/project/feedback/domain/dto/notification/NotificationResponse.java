@@ -1,7 +1,7 @@
 package com.project.feedback.domain.dto.notification;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.project.feedback.domain.entity.NotificationEntity;
+import com.project.feedback.infra.outgoing.entity.NotificationEntity;
 import com.project.feedback.domain.enums.NotificationType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

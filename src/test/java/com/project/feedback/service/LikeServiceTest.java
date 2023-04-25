@@ -1,7 +1,8 @@
 package com.project.feedback.service;
 
-import com.project.feedback.domain.entity.LikeEntity;
-import com.project.feedback.domain.entity.UserEntity;
+import com.project.feedback.application.LikeService;
+import com.project.feedback.infra.outgoing.entity.LikeEntity;
+import com.project.feedback.infra.outgoing.entity.UserEntity;
 import com.project.feedback.domain.enums.LikeContentType;
 import com.project.feedback.fixture.LikeFixture;
 import com.project.feedback.repository.LikeRepository;

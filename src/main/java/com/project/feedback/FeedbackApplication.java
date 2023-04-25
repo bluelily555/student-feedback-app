@@ -1,7 +1,7 @@
 package com.project.feedback;
 
-import com.project.feedback.service.CourseService;
-import com.project.feedback.service.UserService;
+import com.project.feedback.application.CourseService;
+import com.project.feedback.application.UserService;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.SpringApplication;

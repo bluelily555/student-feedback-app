@@ -1,7 +1,7 @@
 package com.project.feedback.observer.notification.event;
 
-import com.project.feedback.domain.entity.NotificationEntity;
-import com.project.feedback.domain.entity.UserEntity;
+import com.project.feedback.infra.outgoing.entity.NotificationEntity;
+import com.project.feedback.infra.outgoing.entity.UserEntity;
 import com.project.feedback.domain.enums.NotificationType;
 
 

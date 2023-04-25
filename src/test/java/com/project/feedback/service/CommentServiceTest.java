@@ -1,10 +1,12 @@
 package com.project.feedback.service;
 
+import com.project.feedback.application.CommentService;
+import com.project.feedback.application.FindService;
 import com.project.feedback.domain.dto.comment.CommentCreateRequest;
 import com.project.feedback.domain.dto.comment.CommentCreateResponse;
-import com.project.feedback.domain.entity.BoardEntity;
-import com.project.feedback.domain.entity.CommentEntity;
-import com.project.feedback.domain.entity.UserEntity;
+import com.project.feedback.infra.outgoing.entity.BoardEntity;
+import com.project.feedback.infra.outgoing.entity.CommentEntity;
+import com.project.feedback.infra.outgoing.entity.UserEntity;
 import com.project.feedback.repository.CommentRepository;
 import com.project.feedback.repository.LikeRepository;
 import org.junit.jupiter.api.Assertions;

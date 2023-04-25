@@ -1,6 +1,8 @@
 package com.project.feedback.domain.entity;
 
 import com.project.feedback.fixture.LikeFixture;
+import com.project.feedback.infra.outgoing.entity.LikeEntity;
+import com.project.feedback.infra.outgoing.entity.UserEntity;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
