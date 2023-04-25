@@ -1,7 +1,7 @@
 package com.project.feedback.application.entity;
 
 import com.project.feedback.domain.CourseStatus;
-import com.project.feedback.infra.outgoing.entity.CourseEntity;
+import com.project.feedback.infra.outgoing.jpa.CourseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

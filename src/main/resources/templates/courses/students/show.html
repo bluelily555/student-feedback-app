@@ -61,7 +61,7 @@
                 </td>
                 <div th:each="status : ${studentTask.status}">
                   <td id="test-td" th:attr="data-task_id=${status.taskId}, data-task_name=${status.taskName}, data-user_id=${studentTask.id}"
-                      th:classappend="${status.taskStatus == 'Task등록'} ? 'table-warning' : ''">
+                      th:classappend="${status.taskStatus == 'CREATED'} ? 'table-warning' : ''">
                       <div th:if="${studentTask.userName == authName}">
                           <select id="status" th:value="${status.taskId}"
                                   class="form-select form-select-sm" style="width:130px;float:left" th:attr="data-task_id=${status.taskId},data-user_id=${studentTask.id}">
@@ -78,7 +78,7 @@
 <!--                          <span class="badge bg-secondary" th:if="${status.taskStatus == 'Task등록'}">Task진행 예정</span>-->
 <!--                          <span th:text="${status.taskStatus}"></span>-->
 <!--                          <span th:text="${status.taskStatus == 'ERROR'}"></span>-->
-                          <span th:if="${status.taskStatus == 'Task등록'}">Task등록</span>
+                          <span th:if="${status.taskStatus == 'CREATED'}">Task등록</span>
                       </div>
                   </td>
 

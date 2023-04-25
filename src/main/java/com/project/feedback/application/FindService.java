@@ -1,6 +1,11 @@
 package com.project.feedback.application;
 
+import com.project.feedback.application.entity.CourseStudent;
+import com.project.feedback.application.entity.Task;
+import com.project.feedback.application.entity.User;
+import com.project.feedback.application.entity.UserTask;
 import com.project.feedback.domain.Role;
+import com.project.feedback.domain.TaskStatus;
 import com.project.feedback.domain.dto.board.BoardListDto;
 import com.project.feedback.domain.dto.mainInfo.CourseTaskListResponse;
 import com.project.feedback.domain.dto.mainInfo.StatusInfo;
@@ -8,17 +13,17 @@ import com.project.feedback.domain.dto.mainInfo.StudentInfo;
 import com.project.feedback.domain.dto.mainInfo.TaskInfo;
 import com.project.feedback.domain.dto.task.TaskListDto;
 import com.project.feedback.domain.dto.task.TaskListResponse;
-import com.project.feedback.infra.outgoing.entity.BoardEntity;
-import com.project.feedback.infra.outgoing.entity.CommentEntity;
+import com.project.feedback.infra.outgoing.jpa.BoardEntity;
+import com.project.feedback.infra.outgoing.jpa.CommentEntity;
 import com.project.feedback.infra.outgoing.adapter.TaskAdapter;
 import com.project.feedback.infra.outgoing.adapter.UserTaskAdapter;
-import com.project.feedback.infra.outgoing.entity.CourseEntity;
-import com.project.feedback.infra.outgoing.entity.CourseUserEntity;
-import com.project.feedback.infra.outgoing.entity.RepositoryEntity;
-import com.project.feedback.infra.outgoing.entity.TaskEntity;
-import com.project.feedback.infra.outgoing.entity.TokenEntity;
-import com.project.feedback.infra.outgoing.entity.UserEntity;
-import com.project.feedback.infra.outgoing.entity.UserTaskEntity;
+import com.project.feedback.infra.outgoing.jpa.CourseEntity;
+import com.project.feedback.infra.outgoing.jpa.CourseUserEntity;
+import com.project.feedback.infra.outgoing.jpa.RepositoryEntity;
+import com.project.feedback.infra.outgoing.jpa.TaskEntity;
+import com.project.feedback.infra.outgoing.jpa.TokenEntity;
+import com.project.feedback.infra.outgoing.jpa.UserEntity;
+import com.project.feedback.infra.outgoing.jpa.UserTaskEntity;
 import com.project.feedback.domain.enums.LikeContentType;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
@@ -242,69 +247,66 @@ public class FindService {
 
     @Cacheable(value = "get_students_with_task", key = "#courseId + '_' + #week + '_' + #day + '_' + #loginUser.id")
     public List<StudentInfo> getStudentsWithTask(Long courseId, Long week, Long day, UserEntity loginUser){
+
         // course와 week에 해당하는 task목록
         List<TaskEntity> taskEntities = taskRepository.findByCourseIdAndWeekAndDay(courseId, week, day);
-        // filter 정보에 해당하는 task id 정보만 저장
-        List<Long> taskIds = new ArrayList<>();
-        for(TaskEntity taskEntity : taskEntities){
-            taskIds.add(taskEntity.getId());
 
-        }
         // course에 해당하는 USER 정보 가져오기
-        List<UserEntity> users = findUserByCourseId(courseId, loginUser).stream()
+        List<UserEntity> userEntities = findUserByCourseId(courseId, loginUser).stream()
                 .sorted(Comparator.comparing(UserEntity::getRealName))
                 .collect(Collectors.toList());
 
+        // CourseStudent Domain사용
+        CourseStudent courseStudent = new CourseStudent(taskEntities, userEntities);
 
-        int size = taskEntities.size();
+        List<UserTaskEntity> userTaskEntities = userTaskAdapter.findByUserIdIn(courseStudent.getUserIds());
+        List<UserTask> userTasks = userTaskEntities.stream()
+                .map(userTaskEntity -> UserTask.builder()
+                        .id(userTaskEntity.getId())
+                        .userId(userTaskEntity.getUser().getId())
+                        .taskId(userTaskEntity.getTaskEntity().getId())
+                        .build())
+                .collect(Collectors.toList());
 
-        List<StudentInfo> list = new ArrayList<>(); // 결과
-        for(UserEntity user : users){
+        courseStudent.setUserTasks(userTasks);
 
-            List<StatusInfo> statusInfo = new ArrayList<>();
-            Map<String, String> map = new HashMap<>();
+        int taskSize = taskEntities.size();
+
+        List<StudentInfo> studentInfoList = new ArrayList<>(); // 결과
+        for(UserEntity user : userEntities){
 
             List<Long> userIds = new ArrayList(
-                Collections.nCopies(size, user.getId())
+                Collections.nCopies(taskSize, user.getId())
             );
 
             //데이터 셋팅
-            taskEntities.forEach(
-                taskEntity -> {
-                    StatusInfo st = StatusInfo.builder()
-                        .taskName(taskEntity.getTitle())
-                        .taskId(taskEntity.getId())
-                        .taskStatus("Task등록")
-                        .build();
-                    statusInfo.add(st);
-                }
-            );
+            List<StatusInfo> statusInfo = taskEntities.stream()
+                    .map(taskEntity ->{
+                        // filter 정보에 해당하는 task id 정보만 저장
+                        UserTaskEntity userTask = userTaskEntities.stream()
+                                .filter(userTaskEntity -> userTaskEntity.getUser().getId() == user.getId() && userTaskEntity.getTaskEntity().getId() == taskEntity.getId())
+                                .findFirst()
+                                .orElse(UserTaskEntity.builder()
+                                        .status(TaskStatus.CREATED)
+                                        .build());
+                        return StatusInfo.of(taskEntity.getId(), taskEntity.getTitle(), userTask.getStatus().toString());
+                    })
+                    .collect(Collectors.toList());
 
-            map.put("studentName", user.getRealName());
 
-            userTaskAdapter.findByUserIdAndTaskEntityIdIn(userIds, taskIds).forEach(
-                userTaskEntity -> {
-                    for(StatusInfo s1 : statusInfo){
-                        if(userTaskEntity.getTaskEntity().getId()== s1.getTaskId() && userTaskEntity.getUser().getId() == user.getId()){
-                            s1.setTaskStatus(userTaskEntity.getStatus().toString());
-                        }
-                    }
-                }
-            );
-            list.add(StudentInfo.of(user, statusInfo));
-
+            studentInfoList.add(StudentInfo.of(user, statusInfo));
         }
 
-        if (loginUser.getRole() != Role.ROLE_STUDENT) return list;
+        if (loginUser.getRole() != Role.ROLE_STUDENT) return studentInfoList;
 
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getUserName().equals(loginUser.getUserName())) {
-                list.add(0, list.remove(i));
+        for (int i = 0; i < studentInfoList.size(); i++) {
+            if (studentInfoList.get(i).getUserName().equals(loginUser.getUserName())) {
+                studentInfoList.add(0, studentInfoList.remove(i));
                 break;
             }
         }
 
-        return list;
+        return studentInfoList;
 
     }
 

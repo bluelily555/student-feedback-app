@@ -1,6 +1,6 @@
 package com.project.feedback.infra.outgoing.repository;
 
-import com.project.feedback.infra.outgoing.entity.CourseUserEntity;
+import com.project.feedback.infra.outgoing.jpa.CourseUserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

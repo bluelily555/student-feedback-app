@@ -1,7 +1,7 @@
 package com.project.feedback.domain.dto.board;
 
-import com.project.feedback.infra.outgoing.entity.BoardEntity;
-import com.project.feedback.infra.outgoing.entity.TaskEntity;
+import com.project.feedback.infra.outgoing.jpa.BoardEntity;
+import com.project.feedback.infra.outgoing.jpa.TaskEntity;
 import lombok.*;
 
 import java.util.List;

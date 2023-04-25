@@ -1,7 +1,7 @@
 package com.project.feedback.domain.dao.Impl;
 
 import com.project.feedback.domain.dao.UserDAO;
-import com.project.feedback.infra.outgoing.entity.UserEntity;
+import com.project.feedback.infra.outgoing.jpa.UserEntity;
 import com.project.feedback.infra.outgoing.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

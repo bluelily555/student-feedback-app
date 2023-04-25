@@ -1,8 +1,6 @@
-package com.project.feedback.infra.outgoing.entity;
+package com.project.feedback.infra.outgoing.jpa;
 
 import com.project.feedback.domain.TaskStatus;
-import com.project.feedback.infra.outgoing.entity.TaskEntity;
-import com.project.feedback.infra.outgoing.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

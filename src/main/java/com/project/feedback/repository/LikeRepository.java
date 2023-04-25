@@ -1,7 +1,7 @@
 package com.project.feedback.repository;
 
-import com.project.feedback.infra.outgoing.entity.LikeEntity;
-import com.project.feedback.infra.outgoing.entity.UserEntity;
+import com.project.feedback.infra.outgoing.jpa.LikeEntity;
+import com.project.feedback.infra.outgoing.jpa.UserEntity;
 import com.project.feedback.domain.enums.LikeContentType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -2,7 +2,7 @@ package com.project.feedback.infra.incoming.controller.ui;
 
 import com.project.feedback.crawler.Commit;
 import com.project.feedback.domain.dto.commitCrawler.CommitCrawlerRequest;
-import com.project.feedback.infra.outgoing.entity.RepositoryEntity;
+import com.project.feedback.infra.outgoing.jpa.RepositoryEntity;
 import com.project.feedback.application.CommitCrawlerService;
 import com.project.feedback.application.FindService;
 import lombok.RequiredArgsConstructor;

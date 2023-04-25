@@ -1,8 +1,8 @@
 package com.project.feedback.domain.dto.task;
 
 import com.project.feedback.domain.dto.board.BoardListDto;
-import com.project.feedback.infra.outgoing.entity.BoardEntity;
-import com.project.feedback.infra.outgoing.entity.TaskEntity;
+import com.project.feedback.infra.outgoing.jpa.BoardEntity;
+import com.project.feedback.infra.outgoing.jpa.TaskEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

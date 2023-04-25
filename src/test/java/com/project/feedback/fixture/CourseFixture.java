@@ -1,6 +1,6 @@
 package com.project.feedback.fixture;
 
-import com.project.feedback.infra.outgoing.entity.CourseEntity;
+import com.project.feedback.infra.outgoing.jpa.CourseEntity;
 
 public class CourseFixture {
     public static CourseEntity courseEntity() {
