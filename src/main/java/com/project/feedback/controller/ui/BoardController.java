@@ -94,7 +94,7 @@ public class BoardController {
 
     @GetMapping("/{boardId}")
     public String getBoard(@PathVariable("boardId")Long boardId, Model model,
-                             @PageableDefault(size = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable,
+                             @PageableDefault(size = 50, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable,
                            Authentication auth)
     {
         BoardListDto boardListDto = boardService.getBoardDetail(boardId);
