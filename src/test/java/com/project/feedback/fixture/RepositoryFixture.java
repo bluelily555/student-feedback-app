@@ -1,8 +1,8 @@
 package com.project.feedback.fixture;
 
 import com.project.feedback.domain.dto.repository.RepositoryRequest;
-import com.project.feedback.domain.entity.RepositoryEntity;
-import com.project.feedback.domain.entity.UserEntity;
+import com.project.feedback.infra.outgoing.entity.RepositoryEntity;
+import com.project.feedback.infra.outgoing.entity.UserEntity;
 
 public class RepositoryFixture {
     public static RepositoryEntity repository(String address, UserEntity user) {

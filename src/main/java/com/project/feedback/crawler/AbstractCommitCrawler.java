@@ -1,6 +1,6 @@
 package com.project.feedback.crawler;
 
-import com.project.feedback.domain.entity.RepositoryEntity;
+import com.project.feedback.infra.outgoing.entity.RepositoryEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;

@@ -1,14 +1,13 @@
 package com.project.feedback.domain.dto.course;
 
 import com.project.feedback.domain.CourseStatus;
-import com.project.feedback.domain.entity.CourseEntity;
-import com.project.feedback.domain.entity.UserEntity;
+import com.project.feedback.infra.outgoing.entity.CourseEntity;
+import com.project.feedback.infra.outgoing.entity.UserEntity;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Getter

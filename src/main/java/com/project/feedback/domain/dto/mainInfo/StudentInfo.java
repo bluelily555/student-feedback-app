@@ -1,6 +1,6 @@
 package com.project.feedback.domain.dto.mainInfo;
 
-import com.project.feedback.domain.entity.UserEntity;
+import com.project.feedback.infra.outgoing.entity.UserEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

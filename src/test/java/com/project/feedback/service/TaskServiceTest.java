@@ -1,18 +1,20 @@
 package com.project.feedback.service;
 
+import com.project.feedback.application.FindService;
+import com.project.feedback.application.TaskService;
 import com.project.feedback.domain.Role;
 import com.project.feedback.domain.dto.task.TaskCreateRequest;
 import com.project.feedback.domain.dto.task.TaskCreateResponse;
 import com.project.feedback.domain.dto.task.TaskDeleteResponse;
-import com.project.feedback.domain.entity.BoardEntity;
-import com.project.feedback.domain.entity.TaskEntity;
-import com.project.feedback.domain.entity.UserEntity;
+import com.project.feedback.infra.outgoing.entity.BoardEntity;
+import com.project.feedback.infra.outgoing.entity.TaskEntity;
+import com.project.feedback.infra.outgoing.entity.UserEntity;
 import com.project.feedback.exception.CustomException;
 import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.fixture.CourseFixture;
 import com.project.feedback.fixture.TaskFixture;
 import com.project.feedback.repository.BoardRepository;
-import com.project.feedback.repository.TaskRepository;
+import com.project.feedback.infra.outgoing.repository.TaskRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

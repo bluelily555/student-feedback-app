@@ -1,10 +1,10 @@
 package com.project.feedback.domain.dto.board;
 
 
-import com.project.feedback.domain.entity.BoardEntity;
-import com.project.feedback.domain.entity.ImageEntity;
-import com.project.feedback.domain.entity.TaskEntity;
-import com.project.feedback.domain.entity.UserEntity;
+import com.project.feedback.infra.outgoing.entity.BoardEntity;
+import com.project.feedback.infra.outgoing.entity.ImageEntity;
+import com.project.feedback.infra.outgoing.entity.TaskEntity;
+import com.project.feedback.infra.outgoing.entity.UserEntity;
 import lombok.*;
 
 

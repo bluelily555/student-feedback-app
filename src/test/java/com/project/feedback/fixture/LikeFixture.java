@@ -1,7 +1,7 @@
 package com.project.feedback.fixture;
 
-import com.project.feedback.domain.entity.LikeEntity;
-import com.project.feedback.domain.entity.UserEntity;
+import com.project.feedback.infra.outgoing.entity.LikeEntity;
+import com.project.feedback.infra.outgoing.entity.UserEntity;
 import com.project.feedback.domain.enums.LikeContentType;
 
 public class LikeFixture {

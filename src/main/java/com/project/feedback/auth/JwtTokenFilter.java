@@ -1,14 +1,10 @@
 package com.project.feedback.auth;
 
-import com.project.feedback.domain.entity.TokenEntity;
-import com.project.feedback.domain.entity.UserEntity;
+import com.project.feedback.infra.outgoing.entity.UserEntity;
 import com.project.feedback.exception.ErrorCode;
-import com.project.feedback.repository.TokenRepository;
-import com.project.feedback.service.FindService;
-import com.project.feedback.service.UserService;
-import io.jsonwebtoken.ExpiredJwtException;
+import com.project.feedback.application.FindService;
+import com.project.feedback.application.UserService;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

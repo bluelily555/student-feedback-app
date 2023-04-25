@@ -2,7 +2,7 @@ package com.project.feedback.fixture;
 
 import com.project.feedback.domain.dto.task.TaskCreateRequest;
 import com.project.feedback.domain.dto.task.TaskCreateResponse;
-import com.project.feedback.domain.entity.TaskEntity;
+import com.project.feedback.infra.outgoing.entity.TaskEntity;
 
 public class TaskFixture {
     public static TaskCreateRequest taskCreateRequest(String status) {

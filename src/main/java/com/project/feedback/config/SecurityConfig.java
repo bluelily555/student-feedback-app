@@ -1,39 +1,21 @@
 package com.project.feedback.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.feedback.auth.ExceptionHandlerFilter;
 import com.project.feedback.auth.JwtTokenFilter;
-import com.project.feedback.controller.ui.CustomErrorController;
-import com.project.feedback.domain.Response;
 import com.project.feedback.domain.Role;
-import com.project.feedback.exception.CustomException;
-import com.project.feedback.exception.ErrorCode;
 import com.project.feedback.security.AuthenticationManager;
 import com.project.feedback.security.CustomAccessDeniedHandler;
-import com.project.feedback.service.FindService;
-import com.project.feedback.service.UserService;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import com.project.feedback.application.FindService;
+import com.project.feedback.application.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
 
 @EnableWebSecurity
 @Configuration

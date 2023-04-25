@@ -1,7 +1,7 @@
 package com.project.feedback.repository;
 
-import com.project.feedback.domain.entity.RepositoryEntity;
-import com.project.feedback.domain.entity.UserEntity;
+import com.project.feedback.infra.outgoing.entity.RepositoryEntity;
+import com.project.feedback.infra.outgoing.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

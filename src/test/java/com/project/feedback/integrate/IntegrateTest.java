@@ -1,18 +1,10 @@
 package com.project.feedback.integrate;
 
 
-import com.project.feedback.domain.dto.comment.CommentCreateRequest;
-import com.project.feedback.domain.dto.comment.CommentCreateResponse;
-import com.project.feedback.domain.entity.CommentEntity;
-import com.project.feedback.fixture.CommentDtoFixture;
 import com.project.feedback.repository.CommentRepository;
-import com.project.feedback.service.CommentService;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.project.feedback.application.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
