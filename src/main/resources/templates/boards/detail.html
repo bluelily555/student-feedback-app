@@ -146,35 +146,57 @@
         console.log(lang)
         console.log(mode);
         let maxLength = 100;
-        let itemLength = document.getElementsByClassName('commentBox').length
+        let comment_boxs = document.getElementsByClassName('commentBox')
+        let itemLength = comment_boxs.length
 
         for (let i = 0; i < itemLength; i++){
-            items.push(document.getElementsByClassName('commentBox').item(i).textContent)
-
-            let content = document.getElementsByClassName('commentBox').item(i).textContent
+            const comment_box = comment_boxs.item(i);
+            items.push(comment_box.textContent)
+            let content = comment_box.textContent
             let content_txt_short = content.substring(0, maxLength) + "...";
             let more_btn = document.getElementsByClassName("showMore").item(i)
             if (content.length > maxLength) {
-                document.getElementsByClassName('commentBox').item(i).textContent = content_txt_short
+                comment_box.textContent = content_txt_short
                 more_btn.textContent = "더보기"
                 more_btn.removeAttribute("hidden")
+
+                toggleIsfolded(comment_box)
             }
         }
     });
+
+    function toggleIsfolded(target_element) {
+        const has_is_folded = target_element.parentNode.querySelector('.is-folded') !== null
+        if (has_is_folded) {
+            target_element.parentNode.querySelector('.is-folded').remove()
+        } else{
+            const newElement = document.createElement('div')
+            newElement.classList.add('is-folded')
+            newElement.hidden = true
+            target_element.parentNode.appendChild(newElement)
+        }
+    }
     function showClick(id){
         console.log(id)
-        let content = document.getElementsByClassName('commentBox').item(id).textContent;
+        let target_comment = document.getElementsByClassName('commentBox').item(id);
+        let content = target_comment.textContent;
         let maxLength = 80;
         let content_txt_short = content.substring(0, maxLength) + "...";
-        let content_txt_origin = document.getElementsByClassName('commentBox').item(id).textContent
+        let content_txt_origin = target_comment.textContent
         let more_btn = document.getElementsByClassName("showMore").item(id)
-        if (document.getElementsByClassName('commentBox').item(id).textContent.length > maxLength+4) {
+        let text_content_length = target_comment.textContent.length;
+
+        const has_is_folded = target_comment.parentNode.querySelector('.is-folded') !== null
+        console.log("length:", text_content_length, `${maxLength}`, `hasDot:${has_is_folded}`);
+        if (!has_is_folded) {
             // 펼쳐진 상태
-            document.getElementsByClassName('commentBox').item(id).textContent = content_txt_short
+            target_comment.textContent = content_txt_short
             more_btn.textContent = "더보기"
+            toggleIsfolded(target_comment)
         }else{
-            document.getElementsByClassName('commentBox').item(id).textContent = items[id]
+            target_comment.textContent = items[id]
             more_btn.textContent = "접기"
+            toggleIsfolded(target_comment)
         }
     }
 
