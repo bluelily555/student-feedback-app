@@ -19,7 +19,7 @@
                         <h1 class="fw-bolder mb-1" th:text="${boardInfo.title}"/>
                         <!-- Post meta content-->
                         <div class="text-muted fst-italic mb-2">
-                            <span th:text="${#temporals.format(boardInfo.createdDate, 'yyyy-MM-dd HH:mm')}"></span><span sec:authorize="hasRole('ROLE_ADMIN')" th:text="${' '+boardInfo.userName}">by user</span>
+                            <span th:text="${#temporals.format(boardInfo.createdDate, 'yyyy-MM-dd HH:mm')}"></span><span style="color: white;" sec:authorize="hasRole('ROLE_ADMIN')" th:text="${' '+boardInfo.userName}">by user</span>
                         </div>
                         <!-- Post categories-->
                         <a class="badge bg-secondary text-decoration-none link-light" th:href="@{'/tasks/' + ${boardInfo.taskEntity.id}}" th:text="${boardInfo.taskEntity.title}" href="#!"></a>
@@ -31,7 +31,7 @@
                     <!-- Post content-->
                     <section class="mb-5">
                         <h2>내용</h2>
-                        <pre class="prettyprint border mh-30" th:text="${boardInfo.content}"></pre>
+                        <pre class="prettyprint border mh-30" th:text="${boardInfo.content}" style="white-space: pre-wrap; min-height: 40vh"></pre>
                     </section>
 
                     <div th:if="${!boardInfo.codeContent.isBlank()}">
