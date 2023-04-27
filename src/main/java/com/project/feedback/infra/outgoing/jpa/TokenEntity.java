@@ -12,10 +12,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "token")
-public class TokenEntity {
+public class TokenEntity extends TimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
     private String accessToken;
     private String refreshToken;
 
