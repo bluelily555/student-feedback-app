@@ -39,7 +39,8 @@ public class SecurityConfig {
     };
     private static final String[] POST_ADMIN_MENTOR_MANAGE_USER = {
             "/api/v1/tasks",
-            "/api/v1/users/**/role/change"
+            "/api/v1/users/**/role/change",
+            "/crawler"
     };
     private static final String[] DELETE_ADMIN_MENTOR_MANAGE_USER = {
             "/api/v1/tasks"
@@ -62,8 +63,6 @@ public class SecurityConfig {
             "/api/*/users/join",
             "/api/*/users/login",
             "/users/join",
-
-
     };
 
 
