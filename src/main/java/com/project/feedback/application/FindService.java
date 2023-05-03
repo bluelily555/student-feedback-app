@@ -245,7 +245,7 @@ public class FindService {
         return courseTaskListResponse;
     }
 
-    @Cacheable(value = "get_students_with_task", key = "#courseId + '_' + #week + '_' + #day + '_' + #loginUser.id")
+    @Cacheable(value = "get_students_with_task", key = "#courseId + '_' + #week + '_' + #day")
     public List<StudentInfo> getStudentsWithTask(Long courseId, Long week, Long day, UserEntity loginUser){
 
         // course와 week에 해당하는 task목록
