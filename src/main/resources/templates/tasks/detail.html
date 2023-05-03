@@ -45,7 +45,8 @@
                 <div>
                 <span class="text-sm text-grey-m2 align-middle" style="font-weight:bold;">설명:</span>
                     <div class="col-sm-10">
-                      <label name="description" th:text="${taskDetail.description}" sec:authorize="hasAnyRole('STUDENT', 'TEACHER')" readonly></label>
+                      <a name="description" th:href="${taskDetail.description}" th:text="${taskDetail.description}" sec:authorize="hasAnyRole('STUDENT', 'TEACHER')" readonly></a>
+<!--                      <label name="description" th:text="${taskDetail.description}" sec:authorize="hasAnyRole('STUDENT', 'TEACHER')" readonly></label>-->
                       <textarea class="form-control" name="description" id="description"th:text="${taskDetail.description}" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')" placeholder="설명이 없습니다."></textarea>
                     </div>
                   </div>
